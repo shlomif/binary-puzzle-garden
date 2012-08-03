@@ -1,0 +1,16 @@
+=pod
+
+=encoding utf8
+
+Welcome to the Binary Puzzle Garden, which aims to provide solvers and in
+the future possibly other programs for the “Binary Puzzle” from:
+
+http://www.binarypuzzle.com/ .
+
+License is the MIT/X11 Licence. There's not much here yet - see the scala/
+directory for the first prototype.
+
+Thanks to Meir Maor for giving a talk about Scala on August Penguin 2012
+( http://august.penguin.org.il/ ) which inspired me to start working on this.
+
+=cut
