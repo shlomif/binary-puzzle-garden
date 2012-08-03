@@ -6,10 +6,12 @@
 
 CLASSES = ExampleSuite.class
 
-all: $(CLASSES)
+SCALA_TEST_JAR = scalatest_2.9.0-2.0.M3.jar
 
-ExampleSuite.class: %.class: %.scala
-	scalac -cp scalatest_2.9.0-2.0.M3.jar $<
+all: $(SCALA_TEST_JAR) $(CLASSES)
 
-test: all
-	scala -cp scalatest_2.9.0-2.0.M3.jar org.scalatest.run ExampleSuite
+ExampleSuite.class: %.class: %.scala $(SCALA_TEST_JAR)
+	scalac -cp $(SCALA_TEST_JAR) $<
+
+test: all $(SCALA_TEST_JAR)
+	scala -cp $(SCALA_TEST_JAR) org.scalatest.run ExampleSuite
