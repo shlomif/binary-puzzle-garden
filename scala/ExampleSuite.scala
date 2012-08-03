@@ -1,3 +1,7 @@
+// Sample test suite from
+// http://www.scalatest.org/getting_started_with_fun_suite
+// Under Apache 2.0 license.
+
 import org.scalatest.FunSuite
 import scala.collection.mutable.Stack
 
@@ -10,7 +14,7 @@ class ExampleSuite extends FunSuite {
         stack.push(2)
         val oldSize = stack.size
         val result = stack.pop()
-            assert(result === 2)
+        assert(result === 2)
         assert(stack.size === oldSize - 1)
     }
 
