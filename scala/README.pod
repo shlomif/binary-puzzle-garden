@@ -1,0 +1,36 @@
+=pod
+
+=encoding utf8
+
+=head1 Introduction
+
+Welcome to the Scala prototype of Binary Puzzle Garden, which aims to provide
+solvers and in the future possibly other programs for the “Binary Puzzle” from:
+
+http://www.binarypuzzle.com/ .
+
+License is the MIT/X11 Licence.
+
+Thanks to Meir Maor for giving a talk about Scala on August Penguin 2012
+( http://august.penguin.org.il/ ) which inspired me to start working on this.
+
+=head1 Running the test suite.
+
+For running the test suite you need:
+
+=over 4
+
+=item * Scala (and all of its dependencies).
+
+=item * The file scalatest_2.9.0-2.0.M3.jar
+
+Can be found at http://www.scalatest.org/ . Should be placed in the current
+directory.
+
+=item * Run "make test".
+
+Type C<make test> on the command-line.
+
+=back
+
+=cut
