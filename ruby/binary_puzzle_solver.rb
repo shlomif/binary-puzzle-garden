@@ -31,7 +31,7 @@
 
 module Binary_Puzzle_Solver
 
-    class Coords
+    class Coord
 
         attr_reader :x, :y
 
@@ -43,7 +43,7 @@ module Binary_Puzzle_Solver
         end
 
         def reverse
-            return Coords.new(:x=>self.y,:y=>self.x)
+            return Coord.new(:x=>self.y,:y=>self.x)
         end
 
     end
@@ -57,7 +57,7 @@ module Binary_Puzzle_Solver
 
         attr_reader :state
 
-        def initialize (params)
+        def initialize (params={})
             @state = UNKNOWN
             if params.has_key?('state') then
                 set_state(params[:state])
@@ -68,12 +68,12 @@ module Binary_Puzzle_Solver
 
         def set_state (new_state)
             if (not VALID_STATES.has_key?(new_state))
-                raise RuntimeError("Invalid state " + new_state.to_s);
+                raise RuntimeError, "Invalid state " + new_state.to_s;
             end
             if (@state != UNKNOWN)
-                raise RuntimeError("Cannot reassign a value to the already set state.")
+                raise RuntimeError, "Cannot reassign a value to the already set state."
             end
-            @state = initial_state
+            @state = new_state
 
             return
         end
@@ -112,13 +112,13 @@ module Binary_Puzzle_Solver
         end
     end
 
-    def gen_board_from_string_v1 (string)
+    def Binary_Puzzle_Solver.gen_board_from_string_v1(string)
         lines = string.lines.map { |l| l.chomp }
         line_lens = lines.map { |l| l.length }
         min_line_len = line_lens.min
         max_line_len = line_lens.max
-        if (min_line_len != max_line_lin)
-            raise RuntimeError("lines are not uniform in length")
+        if (min_line_len != max_line_len)
+            raise RuntimeError, "lines are not uniform in length"
         end
         width = min_line_len
         height = lines.length
@@ -127,14 +127,14 @@ module Binary_Puzzle_Solver
 
         (0 ... height).each do |y|
             (0 ... width).each do |x|
-                c = lines[y][x]
+                c = lines[y][x,1]
                 state = false
                 if (c == '1')
-                    state = Cell.ONE
+                    state = Cell::ONE
                 elsif (c == '0')
-                    state = Cell.ZERO
+                    state = Cell::ZERO
                 elsif (c != ' ')
-                    raise RuntimeError("invalid character at line #{y+1} character #{x}")
+                    raise RuntimeError, "invalid character '#{c}' at line #{y+1} character #{x}"
                 end
 
                 if state
