@@ -120,21 +120,23 @@ module Binary_Puzzle_Solver
         if (min_line_len != max_line_len)
             raise RuntimeError, "lines are not uniform in length"
         end
-        width = min_line_len
+        width = min_line_len - 2
         height = lines.length
 
         board = Board.new(:width => width, :height => height)
 
         (0 ... height).each do |y|
+            l = lines[y]
+            if not l =~ /^\|[01 ]+\|$/
+                raise RuntimeError, "Invalid format for line #{y+1}"
+            end
             (0 ... width).each do |x|
-                c = lines[y][x,1]
+                c = l[x+1,1]
                 state = false
                 if (c == '1')
                     state = Cell::ONE
                 elsif (c == '0')
                     state = Cell::ZERO
-                elsif (c != ' ')
-                    raise RuntimeError, "invalid character '#{c}' at line #{y+1} character #{x}"
                 end
 
                 if state

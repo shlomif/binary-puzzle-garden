@@ -45,12 +45,12 @@ describe "construct_board" do
 
         $ws = ' '
         input_str = <<"EOF"
-1  0#{$ws}#{$ws}
-  00 1
- 00  1
-#{$ws}#{$ws}#{$ws}#{$ws}#{$ws}#{$ws}
-00 1#{$ws}#{$ws}
- 1  00
+|1  0  |
+|  00 1|
+| 00  1|
+|      |
+|00 1  |
+| 1  00|
 EOF
 
         board = Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
