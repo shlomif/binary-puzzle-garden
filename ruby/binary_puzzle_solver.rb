@@ -38,6 +38,8 @@ module Binary_Puzzle_Solver
         def initialize (params)
             @x = params[:x]
             @y = params[:y]
+
+            return
         end
 
         def reverse
@@ -56,18 +58,24 @@ module Binary_Puzzle_Solver
         attr_reader :state
 
         def initialize (params)
-            initial_state = UNKNOWN
+            @state = UNKNOWN
             if params.has_key?('state') then
-                initial_state = params[:state]
+                set_state(params[:state])
             end
-            set_state(initial_state);
+
+            return
         end
 
         def set_state (new_state)
             if (not VALID_STATES.has_key?(new_state))
                 raise RuntimeError("Invalid state " + new_state.to_s);
             end
+            if (@state != UNKNOWN)
+                raise RuntimeError("Cannot reassign a value to the already set state.")
+            end
             @state = initial_state
+
+            return
         end
     end
 
@@ -76,6 +84,66 @@ module Binary_Puzzle_Solver
         def initialize (params)
             @width = params[:width]
             @height = params[:height]
+            @cells = (0 .. maxy()).map{ (0 .. maxx()).map{ Cell.new } }
+
+            return
+        end
+
+        def maxx
+            return width() - 1
+        end
+
+        def maxy
+            return height() - 1
+        end
+
+        def _get_cell(coord)
+            return @cells[coord.y][coord.x]
+        end
+
+        def set_cell_state(coord, state)
+            _get_cell(coord).set_state(state)
+
+            return
+        end
+
+        def get_cell_state(coord)
+            return _get_cell(coord).state
         end
     end
+
+    def gen_board_from_string_v1 (string)
+        lines = string.lines.map { |l| l.chomp }
+        line_lens = lines.map { |l| l.length }
+        min_line_len = line_lens.min
+        max_line_len = line_lens.max
+        if (min_line_len != max_line_lin)
+            raise RuntimeError("lines are not uniform in length")
+        end
+        width = min_line_len
+        height = lines.length
+
+        board = Board.new(:width => width, :height => height)
+
+        (0 ... height).each do |y|
+            (0 ... width).each do |x|
+                c = lines[y][x]
+                state = false
+                if (c == '1')
+                    state = Cell.ONE
+                elsif (c == '0')
+                    state = Cell.ZERO
+                elsif (c != ' ')
+                    raise RuntimeError("invalid character at line #{y+1} character #{x}")
+                end
+
+                if state
+                    board.set_cell_state(Coord.new(:x => x, :y => y), state)
+                end
+            end
+        end
+
+        return board
+    end
 end
+
