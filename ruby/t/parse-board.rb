@@ -74,5 +74,11 @@ EOF
         board.get_cell_state(
             Binary_Puzzle_Solver::Coord.new(:x => 5, :y => 1)
         ).should == ONE
+
+        # Check for dimensions of the board.
+        board.limit(:y).should == 6
+        board.limit(:x).should == 6
+        board.max_idx(:y).should == 5
+        board.max_idx(:x).should == 5
     end
 end
