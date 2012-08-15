@@ -68,5 +68,11 @@ EOF
         board.get_cell_state(
             Binary_Puzzle_Solver::Coord.new(:x => 1, :y => 0)
         ).should == UNKNOWN
+        board.get_cell_state(
+            Binary_Puzzle_Solver::Coord.new(:x => 2, :y => 1)
+        ).should == ZERO
+        board.get_cell_state(
+            Binary_Puzzle_Solver::Coord.new(:x => 5, :y => 1)
+        ).should == ONE
     end
 end
