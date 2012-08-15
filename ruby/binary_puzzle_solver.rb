@@ -80,25 +80,45 @@ module Binary_Puzzle_Solver
     end
 
     class Board
-        attr_reader :width, :height
         def initialize (params)
-            @width = params[:width]
-            @height = params[:height]
-            @cells = (0 .. maxy()).map{ (0 .. maxx()).map{ Cell.new } }
+            @dim_limits = {:x => params[:x], :y => params[:y]}
+            @cells = (0 .. max_idx(:y)).map {
+                (0 .. max_idx(:x)).map{ Cell.new }
+            }
 
             return
         end
 
-        def maxx
-            return width() - 1
+        def limit(dim)
+            return @dim_limits[dim]
         end
 
-        def maxy
-            return height() - 1
+        def max_idx(dim)
+            return limit(dim) - 1
         end
 
         def _get_cell(coord)
-            return @cells[coord.y][coord.x]
+
+            x = coord.x
+            y = coord.y
+
+            if (y < 0)
+                raise RuntimeError, "y cannot be lower than 0."
+            end
+
+            if (x < 0)
+                raise RuntimeError, "x cannot be lower than 0."
+            end
+
+            if (y > max_idx(:y))
+                raise RuntimeError, "y cannot be higher than max_idx."
+            end
+
+            if (x > max_idx(:x))
+                raise RuntimeError, "x cannot be higher than max_idx."
+            end
+
+            return @cells[y][x]
         end
 
         def set_cell_state(coord, state)
@@ -123,7 +143,7 @@ module Binary_Puzzle_Solver
         width = min_line_len - 2
         height = lines.length
 
-        board = Board.new(:width => width, :height => height)
+        board = Board.new(:x => width, :y => height)
 
         (0 ... height).each do |y|
             l = lines[y]
