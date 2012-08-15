@@ -130,6 +130,24 @@ module Binary_Puzzle_Solver
         def get_cell_state(coord)
             return _get_cell(coord).state
         end
+
+        # There is an equivalence between the dimensions, so
+        # a view allows us to view the board rotated.
+        def get_view(params)
+            return Binary_Puzzle_Solver::Board_View.new(self, params[:reverse])
+        end
+    end
+
+    class Board_View < Board
+        def initialize (board, direction)
+            @board = board
+            @direction = direction
+            if direction
+                @dirs_map = {:x => :y, :y => :x}
+            else
+                @dirs_map = {:x => :x, :y => :y}
+            end
+        end
     end
 
     def Binary_Puzzle_Solver.gen_board_from_string_v1(string)

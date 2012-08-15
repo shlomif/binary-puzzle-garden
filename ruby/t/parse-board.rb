@@ -80,5 +80,7 @@ EOF
         board.limit(:x).should == 6
         board.max_idx(:y).should == 5
         board.max_idx(:x).should == 5
+
+        view = board.get_view(:reverse => false)
     end
 end
