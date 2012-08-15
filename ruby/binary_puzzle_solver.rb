@@ -42,7 +42,7 @@ module Binary_Puzzle_Solver
             return
         end
 
-        def reverse
+        def rotate
             return Coord.new(:x=>self.y,:y=>self.x)
         end
 
@@ -134,15 +134,15 @@ module Binary_Puzzle_Solver
         # There is an equivalence between the dimensions, so
         # a view allows us to view the board rotated.
         def get_view(params)
-            return Binary_Puzzle_Solver::Board_View.new(self, params[:reverse])
+            return Binary_Puzzle_Solver::Board_View.new(self, params[:rotate])
         end
     end
 
     class Board_View < Board
-        def initialize (board, direction)
+        def initialize (board, rotation)
             @board = board
-            @direction = direction
-            if direction
+            @rotation = rotation
+            if rotation
                 @dims_map = {:x => :y, :y => :x}
             else
                 @dims_map = {:x => :x, :y => :y}
@@ -151,7 +151,7 @@ module Binary_Puzzle_Solver
 
         def _get_cell(coord)
             return @board._get_cell(
-                if @direction then coord.reverse else coord end
+                if @rotation then coord.rotate else coord end
             )
         end
 

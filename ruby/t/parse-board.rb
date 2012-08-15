@@ -81,7 +81,7 @@ EOF
         board.max_idx(:y).should == 5
         board.max_idx(:x).should == 5
 
-        view = board.get_view(:reverse => false)
+        view = board.get_view(:rotate => false)
 
         view.get_cell_state(
             Binary_Puzzle_Solver::Coord.new(:x => 0, :y => 0)
@@ -105,7 +105,7 @@ EOF
         view.max_idx(:y).should == 5
         view.max_idx(:x).should == 5
 
-        rotated_view = board.get_view(:reverse => true)
+        rotated_view = board.get_view(:rotate => true)
 
         rotated_view.get_cell_state(
             Binary_Puzzle_Solver::Coord.new(:y => 0, :x => 0)
