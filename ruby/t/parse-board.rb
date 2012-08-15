@@ -82,5 +82,28 @@ EOF
         board.max_idx(:x).should == 5
 
         view = board.get_view(:reverse => false)
+
+        view.get_cell_state(
+            Binary_Puzzle_Solver::Coord.new(:x => 0, :y => 0)
+        ).should == ONE
+        view.get_cell_state(
+            Binary_Puzzle_Solver::Coord.new(:x => 3, :y => 0)
+        ).should == ZERO
+        view.get_cell_state(
+            Binary_Puzzle_Solver::Coord.new(:x => 1, :y => 0)
+        ).should == UNKNOWN
+        view.get_cell_state(
+            Binary_Puzzle_Solver::Coord.new(:x => 2, :y => 1)
+        ).should == ZERO
+        view.get_cell_state(
+            Binary_Puzzle_Solver::Coord.new(:x => 5, :y => 1)
+        ).should == ONE
+
+        # Check for dimensions of the view.
+        view.limit(:y).should == 6
+        view.limit(:x).should == 6
+        view.max_idx(:y).should == 5
+        view.max_idx(:x).should == 5
+
     end
 end

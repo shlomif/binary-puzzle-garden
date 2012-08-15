@@ -143,10 +143,20 @@ module Binary_Puzzle_Solver
             @board = board
             @direction = direction
             if direction
-                @dirs_map = {:x => :y, :y => :x}
+                @dims_map = {:x => :y, :y => :x}
             else
-                @dirs_map = {:x => :x, :y => :y}
+                @dims_map = {:x => :x, :y => :y}
             end
+        end
+
+        def _get_cell(coord)
+            return @board._get_cell(
+                if @direction then coord.reverse else coord end
+            )
+        end
+
+        def limit(dim)
+            return @board.limit(@dims_map[dim])
         end
     end
 
