@@ -105,5 +105,29 @@ EOF
         view.max_idx(:y).should == 5
         view.max_idx(:x).should == 5
 
+        rotated_view = board.get_view(:reverse => true)
+
+        rotated_view.get_cell_state(
+            Binary_Puzzle_Solver::Coord.new(:y => 0, :x => 0)
+        ).should == ONE
+        rotated_view.get_cell_state(
+            Binary_Puzzle_Solver::Coord.new(:y => 3, :x => 0)
+        ).should == ZERO
+        rotated_view.get_cell_state(
+            Binary_Puzzle_Solver::Coord.new(:y => 1, :x => 0)
+        ).should == UNKNOWN
+        rotated_view.get_cell_state(
+            Binary_Puzzle_Solver::Coord.new(:y => 2, :x => 1)
+        ).should == ZERO
+        rotated_view.get_cell_state(
+            Binary_Puzzle_Solver::Coord.new(:y => 5, :x => 1)
+        ).should == ONE
+
+        # Check for dimensions of the rotated_view.
+        rotated_view.limit(:y).should == 6
+        rotated_view.limit(:x).should == 6
+        rotated_view.max_idx(:y).should == 5
+        rotated_view.max_idx(:x).should == 5
+
     end
 end
