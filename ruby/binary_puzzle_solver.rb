@@ -31,6 +31,9 @@
 
 module Binary_Puzzle_Solver
 
+    class GameIntegrityException < RuntimeError
+    end
+
     class Coord
 
         attr_reader :x, :y
@@ -79,13 +82,50 @@ module Binary_Puzzle_Solver
         end
     end
 
+    # A summary for a row or column.
+    class RowSummary
+        attr_reader :limit
+        def initialize (limit)
+            @limit = limit
+
+            if (limit % 2 != 0)
+                raise RuntimeError, "Limit must be even"
+            end
+
+            @counts = {
+                Binary_Puzzle_Solver::Cell::ZERO => 0,
+                Binary_Puzzle_Solver::Cell::ONE => 0,
+            }
+
+            return
+        end
+
+        def get_count (value)
+            return @counts[value]
+        end
+
+        def inc_count (value)
+            new_val = (@counts[value] += 1)
+
+            if (new_val > limit()/2)
+                raise GameIntegrityException, "Too many #{value}"
+            end
+
+            return
+        end
+
+    end
+
     class Board
         def initialize (params)
             @dim_limits = {:x => params[:x], :y => params[:y]}
             @cells = (0 .. max_idx(:y)).map {
                 (0 .. max_idx(:x)).map{ Cell.new }
             }
-
+            @row_summaries = {
+                :x => (0 .. max_idx(:x)).map { RowSummary.new(limit(:y)); },
+                :y => (0 .. max_idx(:y)).map { RowSummary.new(limit(:x)); }
+            }
             return
         end
 
@@ -123,7 +163,8 @@ module Binary_Puzzle_Solver
 
         def set_cell_state(coord, state)
             _get_cell(coord).set_state(state)
-
+            get_row_summary(:dim => :x, :idx => coord.x).inc_count(state)
+            get_row_summary(:dim => :y, :idx => coord.y).inc_count(state)
             return
         end
 
@@ -135,6 +176,19 @@ module Binary_Puzzle_Solver
         # a view allows us to view the board rotated.
         def get_view(params)
             return Binary_Puzzle_Solver::Board_View.new(self, params[:rotate])
+        end
+
+        def get_row_summary(params)
+            idx = params[:idx]
+            dim = params[:dim]
+
+            if (idx < 0)
+                raise RuntimeError, "idx cannot be lower than 0."
+            end
+            if (idx > max_idx(dim))
+                raise RuntimeError, "idx cannot be higher than max_idx."
+            end
+            return @row_summaries[dim][idx]
         end
     end
 
@@ -157,6 +211,13 @@ module Binary_Puzzle_Solver
 
         def limit(dim)
             return @board.limit(@dims_map[dim])
+        end
+
+        def get_row_summary(params)
+            return @board.get_row_summary(
+                :idx => params[:idx],
+                :dim => @dims_map[params[:dim]]
+            )
         end
     end
 

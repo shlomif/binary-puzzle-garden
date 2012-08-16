@@ -29,6 +29,7 @@
 #
 # 2. http://en.wikipedia.org/wiki/MIT_License
 
+require 'ruby-debug'
 require "binary_puzzle_solver.rb"
 
 class Object
@@ -98,6 +99,11 @@ EOF
         view.get_cell_state(
             Binary_Puzzle_Solver::Coord.new(:x => 5, :y => 1)
         ).should == ONE
+
+        view.get_row_summary(:dim => :x, :idx => 3
+        ).get_count(ONE).should == 1
+        view.get_row_summary(:dim => :x, :idx => 3
+        ).get_count(ZERO).should == 2
 
         # Check for dimensions of the view.
         view.limit(:y).should == 6
