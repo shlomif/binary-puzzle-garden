@@ -104,6 +104,14 @@ EOF
         ).get_count(ONE).should == 1
         view.get_row_summary(:dim => :x, :idx => 3
         ).get_count(ZERO).should == 2
+        view.get_row_summary(:dim => :x, :idx => 0
+        ).get_count(ONE).should == 1
+        view.get_row_summary(:dim => :x, :idx => 0
+        ).get_count(ZERO).should == 1
+        view.get_row_summary(:dim => :y, :idx => 1
+        ).get_count(ZERO).should == 2
+        view.get_row_summary(:dim => :y, :idx => 1
+        ).get_count(ONE).should == 1
 
         # Check for dimensions of the view.
         view.limit(:y).should == 6
