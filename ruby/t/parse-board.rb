@@ -145,3 +145,34 @@ EOF
 
     end
 end
+
+describe "rudimentary_deduction" do
+    it "6*6 Easy board No. 1 should" do
+
+        input_str = <<'EOF'
+|1  0  |
+|  00 1|
+| 00  1|
+|      |
+|00 1  |
+| 1  00|
+EOF
+
+        board = Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
+
+        # ONE = Binary_Puzzle_Solver::Cell::ONE
+        # ZERO = Binary_Puzzle_Solver::Cell::ZERO
+        # UNKNOWN = Binary_Puzzle_Solver::Cell::UNKNOWN
+
+        view = board.get_view(:rotate => false)
+        view.check_and_handle_sequences_in_row(:idx => 1)
+
+        board.get_cell_state(
+            Binary_Puzzle_Solver::Coord.new(:x => 1, :y => 1)
+        ).should == ONE
+        board.get_cell_state(
+            Binary_Puzzle_Solver::Coord.new(:x => 4, :y => 1)
+        ).should == ONE
+
+    end
+end

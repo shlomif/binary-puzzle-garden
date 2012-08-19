@@ -219,6 +219,69 @@ module Binary_Puzzle_Solver
                 :dim => @dims_map[params[:dim]]
             )
         end
+
+        def check_and_handle_sequences_in_row(params)
+            row_idx = params[:idx]
+
+            prev_cell_states = []
+
+            max_in_a_row = 2
+
+            handle_prev_cell_states = lambda { |x|
+                if prev_cell_states.length > max_in_a_row then
+                    raise GameIntegrityException, "Too many #{prev_cell_states[0]} in a row"
+                elsif (prev_cell_states.length == max_in_a_row)
+                    coords = Array.new
+                    start_x = x - max_in_a_row - 1;
+                    if (start_x >= 0)
+                        coords.push(Binary_Puzzle_Solver::Coord.new(
+                            :x => start_x, :y => row_idx
+                        ))
+                    end
+                    if (x < max_idx(:x))
+                        coords.push(Binary_Puzzle_Solver::Coord.new(
+                            :x => x, :y => row_idx
+                        ))
+                    end
+                    coords.each do |c|
+                        if (get_cell_state(c) == Binary_Puzzle_Solver::Cell::UNKNOWN)
+                            # TODO : Add a suitable "move" or "deduction"
+                            # object to the queue.
+                            set_cell_state(c,
+                               if prev_cell_states[0] == Binary_Puzzle_Solver::Cell::ZERO then
+                                   Binary_Puzzle_Solver::Cell::ONE
+                               else
+                                   Binary_Puzzle_Solver::Cell::ZERO
+                               end
+                            )
+                        end
+                    end
+                end
+
+                return
+            }
+
+            (0 .. max_idx(:x)).each do |x|
+                 coord = Binary_Puzzle_Solver::Coord.new(
+                     :x => x, :y => row_idx
+                 )
+                 cell_state = get_cell_state(coord)
+
+                 if cell_state == Binary_Puzzle_Solver::Cell::UNKNOWN
+                     handle_prev_cell_states.call(x)
+                     prev_cell_states = []
+                 elsif ((prev_cell_states.length == 0) or (prev_cell_states[-1] != cell_state)) then
+                     handle_prev_cell_states.call(x)
+                     prev_cell_states = [cell_state]
+                 else
+                     prev_cell_states << cell_state
+                 end
+            end
+            handle_prev_cell_states.call(max_idx(:x) + 1)
+
+            return
+        end
+
     end
 
     def Binary_Puzzle_Solver.gen_board_from_string_v1(string)
