@@ -117,6 +117,7 @@ module Binary_Puzzle_Solver
     end
 
     class Board
+        attr_reader :num_moves_done
         def initialize (params)
             @dim_limits = {:x => params[:x], :y => params[:y]}
             @cells = (0 .. max_idx(:y)).map {
@@ -126,7 +127,16 @@ module Binary_Puzzle_Solver
                 :x => (0 .. max_idx(:x)).map { RowSummary.new(limit(:y)); },
                 :y => (0 .. max_idx(:y)).map { RowSummary.new(limit(:x)); }
             }
+            flush_moves()
             return
+        end
+
+        def flush_moves()
+            @num_moves_done = 0
+        end
+
+        def increment_num_moves_done()
+            @num_moves_done += 1
         end
 
         def limit(dim)
@@ -201,6 +211,8 @@ module Binary_Puzzle_Solver
             else
                 @dims_map = {:x => :x, :y => :y}
             end
+
+            return
         end
 
         def _get_cell(coord)
@@ -255,13 +267,19 @@ module Binary_Puzzle_Solver
                         if (get_cell_state(c) == Binary_Puzzle_Solver::Cell::UNKNOWN)
                             # TODO : Add a suitable "move" or "deduction"
                             # object to the queue.
-                            set_cell_state(c,
+                            new_value =
                                if prev_cell_states[0] == Binary_Puzzle_Solver::Cell::ZERO then
                                    Binary_Puzzle_Solver::Cell::ONE
                                else
                                    Binary_Puzzle_Solver::Cell::ZERO
                                end
-                            )
+                            set_cell_state(c, new_value);
+                            @board.increment_num_moves_done()
+                            #append_move(
+                            #    :coord => c,
+                            #    :val => new_value,
+                            #    :reason => "Vicinity to two in a row",
+                            #)
                         end
                     end
                 end

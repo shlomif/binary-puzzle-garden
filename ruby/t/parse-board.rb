@@ -174,5 +174,7 @@ EOF
             Binary_Puzzle_Solver::Coord.new(:x => 4, :y => 1)
         ).should == ONE
 
+        board.num_moves_done.should == 2
+
     end
 end
