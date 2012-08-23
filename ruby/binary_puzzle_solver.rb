@@ -220,6 +220,14 @@ module Binary_Puzzle_Solver
             )
         end
 
+        def row_dim()
+            return :y
+        end
+
+        def col_dim()
+            return :x
+        end
+
         def check_and_handle_sequences_in_row(params)
             row_idx = params[:idx]
 
@@ -235,12 +243,12 @@ module Binary_Puzzle_Solver
                     start_x = x - max_in_a_row - 1;
                     if (start_x >= 0)
                         coords.push(Binary_Puzzle_Solver::Coord.new(
-                            :x => start_x, :y => row_idx
+                            col_dim() => start_x, row_dim() => row_idx
                         ))
                     end
-                    if (x < max_idx(:x))
+                    if (x < max_idx(col_dim()))
                         coords.push(Binary_Puzzle_Solver::Coord.new(
-                            :x => x, :y => row_idx
+                            col_dim() => x, row_dim() => row_idx
                         ))
                     end
                     coords.each do |c|
@@ -261,9 +269,9 @@ module Binary_Puzzle_Solver
                 return
             }
 
-            (0 .. max_idx(:x)).each do |x|
+            (0 .. max_idx(col_dim())).each do |x|
                  coord = Binary_Puzzle_Solver::Coord.new(
-                     :x => x, :y => row_idx
+                     col_dim() => x, row_dim() => row_idx
                  )
                  cell_state = get_cell_state(coord)
 
@@ -277,7 +285,7 @@ module Binary_Puzzle_Solver
                      prev_cell_states << cell_state
                  end
             end
-            handle_prev_cell_states.call(max_idx(:x) + 1)
+            handle_prev_cell_states.call(max_idx(col_dim()) + 1)
 
             return
         end
