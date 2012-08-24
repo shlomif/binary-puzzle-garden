@@ -117,7 +117,6 @@ module Binary_Puzzle_Solver
     end
 
     class Board
-        attr_reader :num_moves_done
         def initialize (params)
             @dim_limits = {:x => params[:x], :y => params[:y]}
             @cells = (0 .. max_idx(:y)).map {
@@ -127,16 +126,22 @@ module Binary_Puzzle_Solver
                 :x => (0 .. max_idx(:x)).map { RowSummary.new(limit(:y)); },
                 :y => (0 .. max_idx(:y)).map { RowSummary.new(limit(:x)); }
             }
-            flush_moves()
+            @old_moves = []
+            @new_moves = []
             return
         end
 
-        def flush_moves()
-            @num_moves_done = 0
+        def num_moves_done()
+            return @new_moves.length
         end
 
-        def increment_num_moves_done()
-            @num_moves_done += 1
+        def flush_moves()
+            @old_moves += @new_moves
+            @new_moves = []
+        end
+
+        def add_move(m)
+            @new_moves.push(m)
         end
 
         def limit(dim)
@@ -274,7 +279,7 @@ module Binary_Puzzle_Solver
                                    Binary_Puzzle_Solver::Cell::ZERO
                                end
                             set_cell_state(c, new_value);
-                            @board.increment_num_moves_done()
+                            @board.add_move(true)
                             #append_move(
                             #    :coord => c,
                             #    :val => new_value,
