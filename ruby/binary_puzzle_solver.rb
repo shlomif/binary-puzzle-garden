@@ -49,13 +49,6 @@ module Binary_Puzzle_Solver
             return Coord.new(:x=>self.y,:y=>self.x)
         end
 
-        def rotate_dir(dir)
-            if dir == :x
-                return :y
-            else
-                return :x
-            end
-        end
 
     end
 
@@ -148,6 +141,14 @@ module Binary_Puzzle_Solver
             @new_moves = []
 
             return
+        end
+
+        def rotate_dir(dir)
+            if dir == :x
+                return :y
+            else
+                return :x
+            end
         end
 
         def num_moves_done()
@@ -294,7 +295,7 @@ module Binary_Puzzle_Solver
                     :coord => _calc_mapped_coord(coord),
                     :val => params[:val],
                     :reason => params[:reason],
-                    :dir => (if @rotation then coord.rotate_dir(dir) else dir end)
+                    :dir => (if @rotation then rotate_dir(dir) else dir end)
                 )
             )
 
