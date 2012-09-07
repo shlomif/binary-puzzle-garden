@@ -235,6 +235,7 @@ describe "rudimentary_deduction" do
         # Move has (x=1,y=1) coordinate.
         m.coord.x.should == 1
         m.coord.y.should == 1
+        m.dir.should == :x
 
     end
 end

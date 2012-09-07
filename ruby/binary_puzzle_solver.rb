@@ -352,7 +352,7 @@ module Binary_Puzzle_Solver
                                 :coord => c,
                                 :val => new_value,
                                 :reason => "Vicinity to two in a row",
-                                :dir => row_dim()
+                                :dir => col_dim()
                             )
                         end
                     end
