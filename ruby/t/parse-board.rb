@@ -236,6 +236,7 @@ describe "rudimentary_deduction" do
         m.coord.x.should == 1
         m.coord.y.should == 1
         m.dir.should == :x
+        m.val.should == ONE
 
     end
 end
