@@ -188,4 +188,24 @@ describe "rudimentary_deduction" do
         board.num_moves_done.should == 2
 
     end
+    it "6*6 Easy board No. 1 should flush moves properly" do
+
+        board = get_6x6_easy_board()
+
+        # ONE = Binary_Puzzle_Solver::Cell::ONE
+        # ZERO = Binary_Puzzle_Solver::Cell::ZERO
+        # UNKNOWN = Binary_Puzzle_Solver::Cell::UNKNOWN
+
+        view = board.get_view(:rotate => false)
+        view.check_and_handle_sequences_in_row(:idx => 1)
+
+        board.flush_moves()
+
+        view = board.get_view(:rotate => true)
+        view.check_and_handle_sequences_in_row(:idx => 5)
+
+        # Checking that the moves were flushed.
+        board.num_moves_done.should == 2
+
+    end
 end
