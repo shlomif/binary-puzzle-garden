@@ -262,6 +262,10 @@ module Binary_Puzzle_Solver
             return (if @rotation then coord.rotate else coord end)
         end
 
+        def _calc_mapped_dir(dir)
+            return (if @rotation then rotate_dir(dir) else dir end)
+        end
+
         def _get_cell(coord)
             return @board._get_cell(_calc_mapped_coord(coord))
         end
@@ -295,7 +299,7 @@ module Binary_Puzzle_Solver
                     :coord => _calc_mapped_coord(coord),
                     :val => params[:val],
                     :reason => params[:reason],
-                    :dir => (if @rotation then rotate_dir(dir) else dir end)
+                    :dir => _calc_mapped_dir(dir)
                 )
             )
 
