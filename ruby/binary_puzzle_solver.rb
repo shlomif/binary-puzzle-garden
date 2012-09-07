@@ -257,10 +257,12 @@ module Binary_Puzzle_Solver
             return
         end
 
+        def _calc_mapped_coord(coord)
+            return (if @rotation then coord.rotate else coord end)
+        end
+
         def _get_cell(coord)
-            return @board._get_cell(
-                if @rotation then coord.rotate else coord end
-            )
+            return @board._get_cell(_calc_mapped_coord(coord))
         end
 
         def limit(dim)
@@ -289,7 +291,7 @@ module Binary_Puzzle_Solver
             @board.add_move(
                 Move.new(
                     # TODO : Extract a function for the coord rotation.
-                    :coord => (if @rotation then coord.rotate else coord end),
+                    :coord => _calc_mapped_coord(coord),
                     :val => params[:val],
                     :reason => params[:reason],
                     :dir => (if @rotation then coord.rotate_dir(dir) else dir end)
