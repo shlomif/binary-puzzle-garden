@@ -210,6 +210,16 @@ module Binary_Puzzle_Solver
             end
             return @row_summaries[dim][idx]
         end
+
+        def opposite_value(val)
+            if (val == Cell::ZERO)
+                return Cell::ONE
+            elsif (val == Cell::ONE)
+                return Cell::ZERO
+            else
+                raise RuntimeError, "'#{val}' must be zero or one."
+            end
+        end
     end
 
     class Board_View < Board
@@ -277,12 +287,7 @@ module Binary_Puzzle_Solver
                         if (get_cell_state(c) == Cell::UNKNOWN)
                             # TODO : Add a suitable "move" or "deduction"
                             # object to the queue.
-                            new_value =
-                               if prev_cell_states[0] == Cell::ZERO then
-                                   Cell::ONE
-                               else
-                                   Cell::ZERO
-                               end
+                            new_value = opposite_value(prev_cell_states[0])
                             set_cell_state(c, new_value);
                             @board.add_move(true)
                             #append_move(
