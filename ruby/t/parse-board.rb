@@ -41,11 +41,8 @@ class Object
     end
 end
 
-describe "construct_board" do
-    it "6*6 Easy board No. 1 should" do
-
-        $ws = ' '
-        input_str = <<"EOF"
+def get_6x6_easy_board()
+    input_str = <<'EOF'
 |1  0  |
 |  00 1|
 | 00  1|
@@ -53,8 +50,13 @@ describe "construct_board" do
 |00 1  |
 | 1  00|
 EOF
+    return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
+end
 
-        board = Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
+describe "construct_board" do
+    it "6*6 Easy board No. 1 should" do
+
+        board = get_6x6_easy_board()
 
         ONE = Binary_Puzzle_Solver::Cell::ONE
         ZERO = Binary_Puzzle_Solver::Cell::ZERO
@@ -149,16 +151,7 @@ end
 describe "rudimentary_deduction" do
     it "6*6 Easy board No. 1 should" do
 
-        input_str = <<'EOF'
-|1  0  |
-|  00 1|
-| 00  1|
-|      |
-|00 1  |
-| 1  00|
-EOF
-
-        board = Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
+        board = get_6x6_easy_board()
 
         # ONE = Binary_Puzzle_Solver::Cell::ONE
         # ZERO = Binary_Puzzle_Solver::Cell::ZERO
