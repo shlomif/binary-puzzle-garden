@@ -278,10 +278,10 @@ module Binary_Puzzle_Solver
                             # TODO : Add a suitable "move" or "deduction"
                             # object to the queue.
                             new_value =
-                               if prev_cell_states[0] == Binary_Puzzle_Solver::Cell::ZERO then
-                                   Binary_Puzzle_Solver::Cell::ONE
+                               if prev_cell_states[0] == Cell::ZERO then
+                                   Cell::ONE
                                else
-                                   Binary_Puzzle_Solver::Cell::ZERO
+                                   Cell::ZERO
                                end
                             set_cell_state(c, new_value);
                             @board.add_move(true)
