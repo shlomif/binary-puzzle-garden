@@ -128,6 +128,7 @@ module Binary_Puzzle_Solver
             }
             @old_moves = []
             @new_moves = []
+
             return
         end
 
@@ -138,10 +139,14 @@ module Binary_Puzzle_Solver
         def flush_moves()
             @old_moves += @new_moves
             @new_moves = []
+
+            return
         end
 
         def add_move(m)
             @new_moves.push(m)
+
+            return
         end
 
         def limit(dim)
