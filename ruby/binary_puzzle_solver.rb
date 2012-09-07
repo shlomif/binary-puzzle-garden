@@ -93,8 +93,8 @@ module Binary_Puzzle_Solver
             end
 
             @counts = {
-                Binary_Puzzle_Solver::Cell::ZERO => 0,
-                Binary_Puzzle_Solver::Cell::ONE => 0,
+                Cell::ZERO => 0,
+                Cell::ONE => 0,
             }
 
             return
@@ -274,7 +274,7 @@ module Binary_Puzzle_Solver
                         ))
                     end
                     coords.each do |c|
-                        if (get_cell_state(c) == Binary_Puzzle_Solver::Cell::UNKNOWN)
+                        if (get_cell_state(c) == Cell::UNKNOWN)
                             # TODO : Add a suitable "move" or "deduction"
                             # object to the queue.
                             new_value =
@@ -303,7 +303,7 @@ module Binary_Puzzle_Solver
                  )
                  cell_state = get_cell_state(coord)
 
-                 if cell_state == Binary_Puzzle_Solver::Cell::UNKNOWN
+                 if cell_state == Cell::UNKNOWN
                      handle_prev_cell_states.call(x)
                      prev_cell_states = []
                  elsif ((prev_cell_states.length == 0) or (prev_cell_states[-1] != cell_state)) then
