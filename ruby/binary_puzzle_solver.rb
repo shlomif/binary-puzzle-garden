@@ -258,12 +258,24 @@ module Binary_Puzzle_Solver
             return
         end
 
+        def rotate_coord(coord)
+            return coord.rotate
+        end
+
+        def _calc_mapped_item(item, rotation_method)
+            if @rotation then
+                return method(rotation_method).call(item)
+            else
+                return item
+            end
+        end
+
         def _calc_mapped_coord(coord)
-            return (if @rotation then coord.rotate else coord end)
+            return _calc_mapped_item(coord, :rotate_coord)
         end
 
         def _calc_mapped_dir(dir)
-            return (if @rotation then rotate_dir(dir) else dir end)
+            return _calc_mapped_item(dir, :rotate_dir)
         end
 
         def _get_cell(coord)
