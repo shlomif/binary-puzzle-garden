@@ -170,4 +170,22 @@ describe "rudimentary_deduction" do
         board.num_moves_done.should == 2
 
     end
+
+    it "6*6 Easy board No. 1 should" do
+
+        board = get_6x6_easy_board()
+
+        view = board.get_view(:rotate => true)
+        view.check_and_handle_sequences_in_row(:idx => 5)
+
+        board.get_cell_state(
+            Binary_Puzzle_Solver::Coord.new(:x => 5, :y => 0)
+        ).should == ZERO
+        board.get_cell_state(
+            Binary_Puzzle_Solver::Coord.new(:x => 5, :y => 3)
+        ).should == ZERO
+
+        board.num_moves_done.should == 2
+
+    end
 end
