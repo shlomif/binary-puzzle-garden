@@ -195,7 +195,7 @@ module Binary_Puzzle_Solver
         # There is an equivalence between the dimensions, so
         # a view allows us to view the board rotated.
         def get_view(params)
-            return Binary_Puzzle_Solver::Board_View.new(self, params[:rotate])
+            return Board_View.new(self, params[:rotate])
         end
 
         def get_row_summary(params)
@@ -264,12 +264,12 @@ module Binary_Puzzle_Solver
                     coords = Array.new
                     start_x = x - max_in_a_row - 1;
                     if (start_x >= 0)
-                        coords.push(Binary_Puzzle_Solver::Coord.new(
+                        coords.push(Coord.new(
                             col_dim() => start_x, row_dim() => row_idx
                         ))
                     end
                     if (x < max_idx(col_dim()))
-                        coords.push(Binary_Puzzle_Solver::Coord.new(
+                        coords.push(Coord.new(
                             col_dim() => x, row_dim() => row_idx
                         ))
                     end
@@ -298,7 +298,7 @@ module Binary_Puzzle_Solver
             }
 
             (0 .. max_idx(col_dim())).each do |x|
-                 coord = Binary_Puzzle_Solver::Coord.new(
+                 coord = Coord.new(
                      col_dim() => x, row_dim() => row_idx
                  )
                  cell_state = get_cell_state(coord)
