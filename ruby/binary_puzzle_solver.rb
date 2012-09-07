@@ -49,6 +49,14 @@ module Binary_Puzzle_Solver
             return Coord.new(:x=>self.y,:y=>self.x)
         end
 
+        def rotate_dir(dir)
+            if dir == :x
+                return :y
+            else
+                return :x
+            end
+        end
+
     end
 
     class Cell
@@ -116,6 +124,16 @@ module Binary_Puzzle_Solver
 
     end
 
+    class Move
+        attr_reader :coord, :dir, :reason, :val
+        def initialize (params)
+            @coord = params[:coord]
+            @dir = params[:dir]
+            @reason = params[:reason]
+            @val = params[:val]
+        end
+    end
+
     class Board
         def initialize (params)
             @dim_limits = {:x => params[:x], :y => params[:y]}
@@ -147,6 +165,10 @@ module Binary_Puzzle_Solver
             @new_moves.push(m)
 
             return
+        end
+
+        def get_new_move(idx)
+            return @new_moves[idx]
         end
 
         def limit(dim)
@@ -260,6 +282,23 @@ module Binary_Puzzle_Solver
             return :x
         end
 
+        def append_move (params)
+            coord = params[:coord]
+            dir = params[:dir]
+
+            @board.add_move(
+                Move.new(
+                    # TODO : Extract a function for the coord rotation.
+                    :coord => (if @rotation then coord.rotate else coord end),
+                    :val => params[:val],
+                    :reason => params[:reason],
+                    :dir => (if @rotation then coord.rotate_dir(dir) else dir end)
+                )
+            )
+
+            return
+        end
+
         def check_and_handle_sequences_in_row(params)
             row_idx = params[:idx]
 
@@ -289,12 +328,13 @@ module Binary_Puzzle_Solver
                             # object to the queue.
                             new_value = opposite_value(prev_cell_states[0])
                             set_cell_state(c, new_value);
-                            @board.add_move(true)
-                            #append_move(
-                            #    :coord => c,
-                            #    :val => new_value,
-                            #    :reason => "Vicinity to two in a row",
-                            #)
+                            # @board.add_move(true)
+                            append_move(
+                                :coord => c,
+                                :val => new_value,
+                                :reason => "Vicinity to two in a row",
+                                :dir => row_dim()
+                            )
                         end
                     end
                 end
