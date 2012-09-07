@@ -238,5 +238,13 @@ describe "rudimentary_deduction" do
         m.dir.should == :x
         m.val.should == ONE
 
+        m = board.get_new_move(1)
+
+        # Move has (x=1,y=1) coordinate.
+        m.coord.x.should == 4
+        m.coord.y.should == 1
+        m.dir.should == :x
+        m.val.should == ONE
+
     end
 end
