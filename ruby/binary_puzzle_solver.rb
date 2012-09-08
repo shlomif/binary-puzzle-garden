@@ -318,6 +318,11 @@ module Binary_Puzzle_Solver
             return
         end
 
+        def perform_and_append_move(params)
+            set_cell_state(params[:coord], params[:val])
+            append_move(params)
+        end
+
         def check_and_handle_sequences_in_row(params)
             row_idx = params[:idx]
 
@@ -343,14 +348,9 @@ module Binary_Puzzle_Solver
                     end
                     coords.each do |c|
                         if (get_cell_state(c) == Cell::UNKNOWN)
-                            # TODO : Add a suitable "move" or "deduction"
-                            # object to the queue.
-                            new_value = opposite_value(prev_cell_states[0])
-                            set_cell_state(c, new_value);
-                            # @board.add_move(true)
-                            append_move(
+                            perform_and_append_move(
                                 :coord => c,
-                                :val => new_value,
+                                :val => opposite_value(prev_cell_states[0]),
                                 :reason => "Vicinity to two in a row",
                                 :dir => col_dim()
                             )
@@ -405,11 +405,9 @@ module Binary_Puzzle_Solver
                     get_state.call(1) == get_state.call(-1))
                     then
 
-                    new_value = opposite_value(get_state.call(-1))
-                    set_cell_state(get_coord.call(0), new_value);
-                    append_move(
+                    perform_and_append_move(
                         :coord => get_coord.call(0),
-                        :val => new_value,
+                        :val => opposite_value(get_state.call(-1)),
                         :reason => "In between two identical cells",
                         :dir => col_dim()
                     )
