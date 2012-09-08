@@ -301,7 +301,7 @@ module Binary_Puzzle_Solver
             return :x
         end
 
-        def append_move (params)
+        def _append_move(params)
             coord = params[:coord]
             dir = params[:dir]
 
@@ -320,7 +320,7 @@ module Binary_Puzzle_Solver
 
         def perform_and_append_move(params)
             set_cell_state(params[:coord], params[:val])
-            append_move(params)
+            _append_move(params)
         end
 
         def check_and_handle_sequences_in_row(params)
