@@ -41,7 +41,7 @@ class Object
     end
 end
 
-def get_6x6_easy_board()
+def get_6x6_easy_board_1()
     input_str = <<'EOF'
 |1  0  |
 |  00 1|
@@ -56,7 +56,7 @@ end
 describe "construct_board" do
     it "6*6 Easy board No. 1 should" do
 
-        board = get_6x6_easy_board()
+        board = get_6x6_easy_board_1()
 
         ONE = Binary_Puzzle_Solver::Cell::ONE
         ZERO = Binary_Puzzle_Solver::Cell::ZERO
@@ -151,7 +151,7 @@ end
 describe "rudimentary_deduction" do
     it "6*6 Easy board No. 1 should" do
 
-        board = get_6x6_easy_board()
+        board = get_6x6_easy_board_1()
 
         # ONE = Binary_Puzzle_Solver::Cell::ONE
         # ZERO = Binary_Puzzle_Solver::Cell::ZERO
@@ -173,7 +173,7 @@ describe "rudimentary_deduction" do
 
     it "6*6 Easy board No. 1 should" do
 
-        board = get_6x6_easy_board()
+        board = get_6x6_easy_board_1()
 
         view = board.get_view(:rotate => true)
         view.check_and_handle_sequences_in_row(:idx => 5)
@@ -191,7 +191,7 @@ describe "rudimentary_deduction" do
 
     it "6*6 Easy board No. 1 should flush moves properly" do
 
-        board = get_6x6_easy_board()
+        board = get_6x6_easy_board_1()
 
         # ONE = Binary_Puzzle_Solver::Cell::ONE
         # ZERO = Binary_Puzzle_Solver::Cell::ZERO
@@ -212,7 +212,7 @@ describe "rudimentary_deduction" do
 
     it "6*6 Easy board No. 1 should" do
 
-        board = get_6x6_easy_board()
+        board = get_6x6_easy_board_1()
 
         # ONE = Binary_Puzzle_Solver::Cell::ONE
         # ZERO = Binary_Puzzle_Solver::Cell::ZERO
