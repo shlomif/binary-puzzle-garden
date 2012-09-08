@@ -382,6 +382,44 @@ module Binary_Puzzle_Solver
             return
         end
 
+        def check_and_handle_known_unknown_sameknown_in_row(params)
+            row_idx = params[:idx]
+
+            prev_cell_states = []
+
+            max_in_a_row = 2
+
+            (1 .. (max_idx(col_dim()) - 1)).each do |x|
+
+                get_coord = lambda { |offset|
+                    return Coord.new(
+                        col_dim() => x+offset, row_dim() => row_idx
+                    )
+                }
+                get_state = lambda { |offset|
+                    return get_cell_state(get_coord.call(offset))
+                }
+
+                if (get_state.call(-1) != Cell::UNKNOWN and
+                    get_state.call(0) == Cell::UNKNOWN and
+                    get_state.call(1) == get_state.call(-1))
+                    then
+
+                    new_value = opposite_value(get_state.call(-1))
+                    set_cell_state(get_coord.call(0), new_value);
+                    append_move(
+                        :coord => get_coord.call(0),
+                        :val => new_value,
+                        :reason => "In between two identical cells",
+                        :dir => col_dim()
+                    )
+                end
+
+            end
+
+            return
+        end
+
     end
 
     def Binary_Puzzle_Solver.gen_board_from_string_v1(string)

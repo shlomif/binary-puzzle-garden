@@ -247,4 +247,31 @@ describe "rudimentary_deduction" do
         m.val.should == ONE
 
     end
+
+    it "6*6 Easy board No. 1 should" do
+
+        board = get_6x6_easy_board_1()
+
+        # ONE = Binary_Puzzle_Solver::Cell::ONE
+        # ZERO = Binary_Puzzle_Solver::Cell::ZERO
+        # UNKNOWN = Binary_Puzzle_Solver::Cell::UNKNOWN
+
+        view = board.get_view(:rotate => true)
+        view.check_and_handle_known_unknown_sameknown_in_row(:idx => 1)
+
+        board.get_cell_state(
+            Binary_Puzzle_Solver::Coord.new(:x => 1, :y => 3)
+        ).should == ONE
+
+        board.num_moves_done.should == 1
+
+        m = board.get_new_move(0)
+
+        # Move has (x=1,y=1) coordinate.
+        m.coord.x.should == 1
+        m.coord.y.should == 3
+        m.dir.should == :y
+        m.val.should == ONE
+
+    end
 end
