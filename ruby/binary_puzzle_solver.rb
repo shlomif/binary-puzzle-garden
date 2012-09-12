@@ -128,6 +128,8 @@ module Binary_Puzzle_Solver
     end
 
     class Board
+
+        attr_reader :iters_quota
         def initialize (params)
             @dim_limits = {:x => params[:x], :y => params[:y]}
             @cells = (0 .. max_idx(:y)).map {
@@ -140,7 +142,13 @@ module Binary_Puzzle_Solver
             @old_moves = []
             @new_moves = []
 
+            @iters_quota = 0
+
             return
+        end
+
+        def add_to_iters_quota(delta)
+            @iters_quota += delta
         end
 
         def rotate_dir(dir)
@@ -243,6 +251,45 @@ module Binary_Puzzle_Solver
                 raise RuntimeError, "'#{val}' must be zero or one."
             end
         end
+
+        def try_to_solve_using (params)
+            methods_list = params[:methods]
+            views = [get_view(:rotate => false), get_view(:rotate => true), ]
+
+            catch :out_of_iters do
+                first_iter = true
+                while first_iter or num_moves_done() > 0
+                    first_iter = false
+                    flush_moves()
+                    for m in methods_list
+                        for v in views
+                            (0 .. v.max_idx(v.row_dim())).each do |row_idx|
+                                v.method(m).call(:idx => row_idx)
+                                @iters_quota -= 1
+                                if iters_quota == 0
+                                    throw :out_of_iters
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+
+            return
+        end
+
+        def as_string()
+            return (0 .. max_idx(:y)).map { |y|
+                ['|'] +
+                    (0 .. max_idx(:x)).map { |x|
+                    s = get_cell_state(
+                        Coord.new(:y => y, :x => x)
+                    )
+                    ((s == Cell::UNKNOWN) ? ' ' : s.to_s())
+                } +
+                ["|\n"]
+            }.inject([]) { |a,e| a+e }.join('')
+        end
     end
 
     class Board_View < Board
@@ -341,7 +388,7 @@ module Binary_Puzzle_Solver
                             col_dim() => start_x, row_dim() => row_idx
                         ))
                     end
-                    if (x < max_idx(col_dim()))
+                    if (x <= max_idx(col_dim()))
                         coords.push(Coord.new(
                             col_dim() => x, row_dim() => row_idx
                         ))

@@ -53,6 +53,18 @@ EOF
     return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
 end
 
+def get_6x6_easy_board_1__intermediate_board()
+    str = <<'EOF'
+|101010|
+|010011|
+|100101|
+|011010|
+|001101|
+|110100|
+EOF
+    return Binary_Puzzle_Solver.gen_board_from_string_v1(str)
+end
+
 describe "construct_board" do
     it "6*6 Easy board No. 1 should" do
 
@@ -274,4 +286,28 @@ describe "rudimentary_deduction" do
         m.val.should == ONE
 
     end
+
+    it "6*6 Easy process should" do
+
+        board = get_6x6_easy_board_1()
+
+        board.add_to_iters_quota(1_000_000_000);
+
+        board.try_to_solve_using(
+            :methods => [
+                :check_and_handle_sequences_in_row,
+                :check_and_handle_known_unknown_sameknown_in_row,
+            ]
+        );
+
+        final_board = get_6x6_easy_board_1__intermediate_board()
+
+        (0 .. board.max_idx(:y)).each do |y|
+            (0 .. board.max_idx(:x)).each do |x|
+                coord = Binary_Puzzle_Solver::Coord.new(:x => x, :y => y)
+                board.get_cell_state(coord).should == final_board.get_cell_state(coord)
+            end
+        end
+    end
+
 end
