@@ -300,6 +300,8 @@ describe "rudimentary_deduction" do
             ]
         );
 
+        good_num_iters = board.num_iters_done()
+
         final_board = get_6x6_easy_board_1__intermediate_board()
 
         (0 .. board.max_idx(:y)).each do |y|
@@ -308,6 +310,28 @@ describe "rudimentary_deduction" do
                 board.get_cell_state(coord).should == final_board.get_cell_state(coord)
             end
         end
+
+        resume_board = get_6x6_easy_board_1()
+
+        resume_board.add_to_iters_quota(10);
+
+        resume_board.try_to_solve_using(
+            :methods => [
+                :check_and_handle_sequences_in_row,
+                :check_and_handle_known_unknown_sameknown_in_row,
+            ]
+        );
+
+        resume_board.add_to_iters_quota(1_000_000_000)
+
+        resume_board.try_to_solve_using(
+            :methods => [
+                :check_and_handle_sequences_in_row,
+                :check_and_handle_known_unknown_sameknown_in_row,
+            ]
+        );
+
+        resume_board.num_iters_done.should == good_num_iters
     end
 
 end
