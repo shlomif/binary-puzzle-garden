@@ -129,7 +129,7 @@ module Binary_Puzzle_Solver
 
     class Board
 
-        attr_reader :iters_quota
+        attr_reader :iters_quota, :num_iters_done
         def initialize (params)
             @dim_limits = {:x => params[:x], :y => params[:y]}
             @cells = (0 .. max_idx(:y)).map {
@@ -143,6 +143,9 @@ module Binary_Puzzle_Solver
             @new_moves = []
 
             @iters_quota = 0
+            @num_iters_done = 0
+
+            @state = {:method_idx => 0, :view_idx => 0, :row_idx => 0, };
 
             return
         end
@@ -258,20 +261,31 @@ module Binary_Puzzle_Solver
 
             catch :out_of_iters do
                 first_iter = true
+
                 while first_iter or num_moves_done() > 0
                     first_iter = false
                     flush_moves()
-                    for m in methods_list
-                        for v in views
-                            (0 .. v.max_idx(v.row_dim())).each do |row_idx|
+                    while (@state[:method_idx] < methods_list.length)
+                        m = methods_list[@state[:method_idx]]
+                        while (@state[:view_idx] < views.length)
+                            v = views[@state[:view_idx]]
+                            while (@state[:row_idx] <= v.max_idx(v.row_dim()))
+                                row_idx = @state[:row_idx]
+                                @state[:row_idx] += 1
                                 v.method(m).call(:idx => row_idx)
                                 @iters_quota -= 1
+                                @num_iters_done += 1
                                 if iters_quota == 0
                                     throw :out_of_iters
                                 end
                             end
+                            @state[:view_idx] += 1
+                            @state[:row_idx] = 0
                         end
+                        @state[:method_idx] += 1
+                        @state[:view_idx] = 0
                     end
+                    @state[:method_idx] = 0
                 end
             end
 
