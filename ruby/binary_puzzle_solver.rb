@@ -132,12 +132,12 @@ module Binary_Puzzle_Solver
         attr_reader :iters_quota, :num_iters_done
         def initialize (params)
             @dim_limits = {:x => params[:x], :y => params[:y]}
-            @cells = (0 .. max_idx(:y)).map {
-                (0 .. max_idx(:x)).map{ Cell.new }
+            @cells = dim_range(:y).map {
+                dim_range(:x).map{ Cell.new }
             }
             @row_summaries = {
-                :x => (0 .. max_idx(:x)).map { RowSummary.new(limit(:y)); },
-                :y => (0 .. max_idx(:y)).map { RowSummary.new(limit(:x)); }
+                :x => dim_range(:x).map { RowSummary.new(limit(:y)); },
+                :y => dim_range(:y).map { RowSummary.new(limit(:x)); }
             }
             @old_moves = []
             @new_moves = []
@@ -148,6 +148,10 @@ module Binary_Puzzle_Solver
             @state = {:method_idx => 0, :view_idx => 0, :row_idx => 0, };
 
             return
+        end
+
+        def dim_range(dim)
+            return (0 .. max_idx(dim))
         end
 
         def add_to_iters_quota(delta)
@@ -293,9 +297,9 @@ module Binary_Puzzle_Solver
         end
 
         def as_string()
-            return (0 .. max_idx(:y)).map { |y|
+            return dim_range(:y).map { |y|
                 ['|'] +
-                    (0 .. max_idx(:x)).map { |x|
+                    dim_range(:x).map { |x|
                     s = get_cell_state(
                         Coord.new(:y => y, :x => x)
                     )
@@ -422,7 +426,7 @@ module Binary_Puzzle_Solver
                 return
             }
 
-            (0 .. max_idx(col_dim())).each do |x|
+            dim_range(col_dim()).each do |x|
                  coord = Coord.new(
                      col_dim() => x, row_dim() => row_idx
                  )
@@ -494,12 +498,12 @@ module Binary_Puzzle_Solver
 
         board = Board.new(:x => width, :y => height)
 
-        (0 ... height).each do |y|
+        board.dim_range(:y).each do |y|
             l = lines[y]
             if not l =~ /^\|[01 ]+\|$/
                 raise RuntimeError, "Invalid format for line #{y+1}"
             end
-            (0 ... width).each do |x|
+            board.dim_range(:x).each do |x|
                 c = l[x+1,1]
                 state = false
                 if (c == '1')
