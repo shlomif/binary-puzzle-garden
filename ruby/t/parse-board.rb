@@ -29,7 +29,6 @@
 #
 # 2. http://en.wikipedia.org/wiki/MIT_License
 
-require 'ruby-debug'
 require "binary_puzzle_solver.rb"
 
 class Object
