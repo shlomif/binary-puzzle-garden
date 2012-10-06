@@ -85,13 +85,15 @@ module Binary_Puzzle_Solver
 
     # A summary for a row or column.
     class RowSummary
-        attr_reader :limit
+        attr_reader :limit, :half_limit
         def initialize (limit)
             @limit = limit
 
             if (limit % 2 != 0)
                 raise RuntimeError, "Limit must be even"
             end
+
+            @half_limit = limit / 2
 
             @counts = {
                 Cell::ZERO => 0,
@@ -105,14 +107,32 @@ module Binary_Puzzle_Solver
             return @counts[value]
         end
 
+        def is_full(value)
+            return (get_count(value) == half_limit())
+        end
+
         def inc_count (value)
             new_val = (@counts[value] += 1)
 
-            if (new_val > limit()/2)
+            if (new_val > half_limit())
                 raise GameIntegrityException, "Too many #{value}"
             end
 
             return
+        end
+
+        def find_full_value()
+            if (is_full(Cell::ZERO))
+                if (is_full(Cell::ONE))
+                    return nil
+                else
+                    return Cell::ZERO
+                end
+            elsif (is_full(Cell::ONE))
+                return Cell::ONE
+            else
+                return nil
+            end
         end
 
     end
@@ -483,6 +503,33 @@ module Binary_Puzzle_Solver
             return
         end
 
+        def check_and_handle_cells_of_one_value_in_row_were_all_found(params)
+            row_idx = params[:idx]
+
+            full_val = get_row_summary(
+                :idx => row_idx, :dim => row_dim()
+            ).find_full_value()
+
+            if (full_val)
+                opposite_val = opposite_value(full_val)
+                dim_range(col_dim()).each do |x|
+                    coord = Coord.new(
+                        col_dim() => x, row_dim() => row_idx
+                    )
+                    cell_state = get_cell_state(coord)
+
+                    if cell_state == Cell::UNKNOWN
+                        perform_and_append_move(
+                            :coord => coord,
+                            :val => opposite_val,
+                            :reason => "Filling unknowns in row with an exceeded value with the other value",
+                            :dir => col_dim()
+                        )
+                    end
+                end
+            end
+            return
+        end
     end
 
     def Binary_Puzzle_Solver.gen_board_from_string_v1(string)

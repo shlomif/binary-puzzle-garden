@@ -126,6 +126,17 @@ EOF
     return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
 end
 
+def get_6x6_medium_board_1__after_cells_of_one_value_in_row_were_all_found()
+    input_str = <<'EOF'
+|110100|
+|001011|
+|1100  |
+|0101  |
+|001101|
+|1010  |
+EOF
+    return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
+end
 describe "construct_board" do
     it "6*6 Easy board No. 1 should" do
 
@@ -424,6 +435,16 @@ describe "rudimentary_deduction" do
         first_intermediate_board = get_6x6_medium_board_1__after_easy_moves()
 
         compare_boards(board, first_intermediate_board)
+
+        board.try_to_solve_using(
+            :methods => [
+                :check_and_handle_cells_of_one_value_in_row_were_all_found,
+            ]
+        )
+
+        second_intermediate_board = get_6x6_medium_board_1__after_cells_of_one_value_in_row_were_all_found()
+
+        compare_boards(board, second_intermediate_board)
     end
 
 end
