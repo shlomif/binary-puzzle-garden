@@ -40,6 +40,20 @@ class Object
     end
 end
 
+def compare_boards(got, expected)
+    got.max_idx(:x).should == expected.max_idx(:x)
+    got.max_idx(:y).should == expected.max_idx(:y)
+
+    (0 .. got.max_idx(:y)).each do |y|
+        (0 .. got.max_idx(:x)).each do |x|
+            coord = Binary_Puzzle_Solver::Coord.new(:x => x, :y => y)
+            got.get_cell_state(coord).should == expected.get_cell_state(coord)
+        end
+    end
+
+    return
+end
+
 def get_6x6_easy_board_1()
     input_str = <<'EOF'
 |1  0  |
@@ -351,12 +365,7 @@ describe "rudimentary_deduction" do
 
         final_board = get_6x6_easy_board_1__intermediate_board()
 
-        (0 .. board.max_idx(:y)).each do |y|
-            (0 .. board.max_idx(:x)).each do |x|
-                coord = Binary_Puzzle_Solver::Coord.new(:x => x, :y => y)
-                board.get_cell_state(coord).should == final_board.get_cell_state(coord)
-            end
-        end
+        compare_boards(board, final_board)
 
         resume_board = get_6x6_easy_board_1()
 
@@ -396,13 +405,7 @@ describe "rudimentary_deduction" do
 
         final_board = get_6x6_easy_board_2__intermediate_board()
 
-        (0 .. board.max_idx(:y)).each do |y|
-            (0 .. board.max_idx(:x)).each do |x|
-                coord = Binary_Puzzle_Solver::Coord.new(:x => x, :y => y)
-                board.get_cell_state(coord).should == final_board.get_cell_state(coord)
-            end
-        end
-
+        compare_boards(board, final_board)
     end
 
     it "Solving 6*6 Medium board No. 1 should" do
@@ -420,13 +423,7 @@ describe "rudimentary_deduction" do
 
         first_intermediate_board = get_6x6_medium_board_1__after_easy_moves()
 
-        (0 .. board.max_idx(:y)).each do |y|
-            (0 .. board.max_idx(:x)).each do |x|
-                coord = Binary_Puzzle_Solver::Coord.new(:x => x, :y => y)
-                board.get_cell_state(coord).should == first_intermediate_board.get_cell_state(coord)
-            end
-        end
-
+        compare_boards(board, first_intermediate_board)
     end
 
 end
