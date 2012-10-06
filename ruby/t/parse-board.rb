@@ -88,6 +88,30 @@ EOF
     return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
 end
 
+def get_6x6_medium_board_1()
+    input_str = <<'EOF'
+|    00|
+|      |
+| 1    |
+|01 1  |
+|0   0 |
+|  1   |
+EOF
+    return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
+end
+
+def get_6x6_medium_board_1__after_easy_moves()
+    input_str = <<'EOF'
+|   100|
+| 01   |
+|110   |
+|0101  |
+|001 0 |
+|101   |
+EOF
+    return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
+end
+
 describe "construct_board" do
     it "6*6 Easy board No. 1 should" do
 
@@ -376,6 +400,30 @@ describe "rudimentary_deduction" do
             (0 .. board.max_idx(:x)).each do |x|
                 coord = Binary_Puzzle_Solver::Coord.new(:x => x, :y => y)
                 board.get_cell_state(coord).should == final_board.get_cell_state(coord)
+            end
+        end
+
+    end
+
+    it "Solving 6*6 Medium board No. 1 should" do
+
+        board = get_6x6_medium_board_1()
+
+        board.add_to_iters_quota(1_000_000_000);
+
+        board.try_to_solve_using(
+            :methods => [
+                :check_and_handle_sequences_in_row,
+                :check_and_handle_known_unknown_sameknown_in_row,
+            ]
+        );
+
+        first_intermediate_board = get_6x6_medium_board_1__after_easy_moves()
+
+        (0 .. board.max_idx(:y)).each do |y|
+            (0 .. board.max_idx(:x)).each do |x|
+                coord = Binary_Puzzle_Solver::Coord.new(:x => x, :y => y)
+                board.get_cell_state(coord).should == first_intermediate_board.get_cell_state(coord)
             end
         end
 
