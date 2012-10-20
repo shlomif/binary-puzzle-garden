@@ -81,6 +81,16 @@ module Binary_Puzzle_Solver
 
             return
         end
+
+        def get_char()
+            if state == ZERO
+                return '0'
+            elsif state == ONE
+                return '1'
+            else
+                raise RuntimeError, "get_char() called on Unset state"
+            end
+        end
     end
 
     # A summary for a row or column.
@@ -121,13 +131,20 @@ module Binary_Puzzle_Solver
             return
         end
 
+        def are_both_not_exceeded()
+            return (get_count(Cell::ZERO) <= half_limit() and
+                    get_count(Cell::ONE) <= half_limit())
+        end
+
+        def are_both_full()
+            return (is_full(Cell::ZERO) and is_full(Cell::ONE))
+        end
+
         def find_full_value()
-            if (is_full(Cell::ZERO))
-                if (is_full(Cell::ONE))
-                    return nil
-                else
-                    return Cell::ZERO
-                end
+            if are_both_full()
+                return nil
+            elsif (is_full(Cell::ZERO))
+                return Cell::ZERO
             elsif (is_full(Cell::ONE))
                 return Cell::ONE
             else
@@ -250,6 +267,10 @@ module Binary_Puzzle_Solver
             return _get_cell(coord).state
         end
 
+        def get_cell_char(coord)
+            return _get_cell(coord).get_char()
+        end
+
         # There is an equivalence between the dimensions, so
         # a view allows us to view the board rotated.
         def get_view(params)
@@ -328,6 +349,43 @@ module Binary_Puzzle_Solver
                 ["|\n"]
             }.inject([]) { |a,e| a+e }.join('')
         end
+
+        def validate()
+            views = [get_view(:rotate => false), get_view(:rotate => true), ]
+
+            is_final = true
+
+            views.each do |v|
+                complete_rows_map = Hash.new
+
+                v.dim_range(v.row_dim()).each do |row_idx|
+                    summary = v.get_row_summary(
+                        :idx => row_idx,
+                        :dim => v.row_dim()
+                    )
+
+                    if not summary.are_both_not_exceeded() then
+                        raise GameIntegrityException, "Value exceeded"
+                    elsif summary.are_both_full() then
+                        row_string = v.get_row_string(:idx => row_idx)
+                        complete_rows_map[row_string] ||= []
+                        complete_rows_map[row_string] << row_string
+                        if (complete_rows_map[row_string].length > 1)
+                            raise GameIntegrityException, "Duplicate Rows"
+                        end
+                    else
+                        is_final = false
+                    end
+                end
+            end
+
+            if is_final
+                return :final
+            else
+                return :non_final
+            end
+        end
+
     end
 
     class Board_View < Board
@@ -369,6 +427,17 @@ module Binary_Puzzle_Solver
 
         def limit(dim)
             return @board.limit(@dims_map[dim])
+        end
+
+        def get_row_string(params)
+            return dim_range(col_dim()).collect { |i|
+                get_cell_char(
+                    Coord.new(
+                        col_dim() => i,
+                        row_dim() => params[:idx]
+                    )
+                )
+            }.join('')
         end
 
         def get_row_summary(params)

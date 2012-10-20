@@ -470,6 +470,8 @@ describe "rudimentary_deduction" do
         final_board = get_6x6_medium_board_1__final()
 
         compare_boards(board, final_board)
+
+        board.validate().should == :final
     end
 
 end
