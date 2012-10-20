@@ -436,6 +436,8 @@ describe "rudimentary_deduction" do
 
         board = get_6x6_medium_board_1()
 
+        board.validate().should == :non_final
+
         board.add_to_iters_quota(1_000_000_000);
 
         board.try_to_solve_using(
