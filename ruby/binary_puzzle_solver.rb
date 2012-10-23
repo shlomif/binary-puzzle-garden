@@ -588,10 +588,9 @@ module Binary_Puzzle_Solver
             is_final = true
 
             dim_range(row_dim()).each do |row_idx|
-                summary = get_row_summary(
-                    :idx => row_idx,
-                    :dim => row_dim()
-                )
+                row = RowHandle.new(self, row_idx)
+
+                summary = row.get_summary()
 
                 if not summary.are_both_not_exceeded() then
                     raise GameIntegrityException, "Value exceeded"
@@ -640,6 +639,18 @@ module Binary_Puzzle_Solver
 
                 return is_final
             end
+        end
+    end
+
+    class RowHandle
+        attr_reader :view, :idx
+        def initialize (init_view, init_idx)
+            @view = init_view
+            @idx = init_idx
+        end
+
+        def get_summary()
+            return view.get_row_summary(:idx => idx, :dim => view.row_dim());
         end
     end
 
