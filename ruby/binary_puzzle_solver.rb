@@ -436,6 +436,10 @@ module Binary_Puzzle_Solver
             return :x
         end
 
+        def get_row_handle(idx)
+            return RowHandle.new(self, idx)
+        end
+
         def _append_move(params)
             coord = params[:coord]
             dir = params[:dir]
@@ -588,7 +592,7 @@ module Binary_Puzzle_Solver
             is_final = true
 
             dim_range(row_dim()).each do |row_idx|
-                row = RowHandle.new(self, row_idx)
+                row = get_row_handle(row_idx)
                 ret = row.validate( :complete_rows_map => complete_rows_map )
                 is_final &&= ret[:is_final]
             end
