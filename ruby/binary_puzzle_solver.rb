@@ -528,16 +528,12 @@ module Binary_Puzzle_Solver
 
             max_in_a_row = 2
 
+            row = get_row_handle(row_idx)
+
             (1 .. (max_idx(col_dim()) - 1)).each do |x|
 
-                get_coord = lambda { |offset|
-                    return Coord.new(
-                        col_dim() => x+offset, row_dim() => row_idx
-                    )
-                }
-                get_state = lambda { |offset|
-                    return get_cell_state(get_coord.call(offset))
-                }
+                get_coord = lambda { |offset| row.get_coord(x+offset); }
+                get_state = lambda { |offset| row.get_state(x+offset); }
 
                 if (get_state.call(-1) != Cell::UNKNOWN and
                     get_state.call(0) == Cell::UNKNOWN and
@@ -625,6 +621,10 @@ module Binary_Puzzle_Solver
 
         def get_coord(x)
             return Coord.new(col_dim() => x, row_dim() => idx)
+        end
+
+        def get_state(x)
+            return view.get_cell_state(get_coord(x))
         end
 
         class CellsIter
