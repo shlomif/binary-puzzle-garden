@@ -589,13 +589,11 @@ module Binary_Puzzle_Solver
 
             dim_range(row_dim()).each do |row_idx|
                 row = RowHandle.new(self, row_idx)
-
-                row_verdict = row.check_for_duplicated(complete_rows_map)
-                is_final &&= row_verdict
-                row.check_for_too_many_consecutive()
-
-                return is_final
+                ret = row.validate( :complete_rows_map => complete_rows_map )
+                is_final &&= ret[:is_final]
             end
+
+            return is_final
         end
     end
 
@@ -684,6 +682,14 @@ module Binary_Puzzle_Solver
             handle_seq.call()
 
             return
+        end
+
+        def validate(params)
+            complete_rows_map = params[:complete_rows_map]
+
+            check_for_too_many_consecutive()
+
+            return { :is_final => check_for_duplicated(complete_rows_map), };
         end
     end
 
