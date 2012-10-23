@@ -627,23 +627,10 @@ module Binary_Puzzle_Solver
             return view.get_cell_state(get_coord(x))
         end
 
-        class CellsIter
-            include Enumerable
-
-            def initialize(row)
-                @row = row
-            end
-
-            def each
-                v = @row.view
-                v.dim_range(@row.col_dim()).each do |x|
-                    yield [x, v._get_cell(@row.get_coord(x))]
-                end
-            end
-        end
-
         def iter
-            return CellsIter.new(self)
+            return view.dim_range(col_dim()).map { |x|
+                [x, view._get_cell(get_coord(x))]
+            }
         end
 
         def check_for_duplicated(complete_rows_map)
