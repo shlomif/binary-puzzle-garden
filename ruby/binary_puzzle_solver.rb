@@ -560,21 +560,19 @@ module Binary_Puzzle_Solver
         def check_and_handle_cells_of_one_value_in_row_were_all_found(params)
             row_idx = params[:idx]
 
-            full_val = get_row_summary(
-                :idx => row_idx, :dim => row_dim()
-            ).find_full_value()
+            row = get_row_handle(row_idx)
+
+            full_val = row.get_summary().find_full_value()
 
             if (full_val)
                 opposite_val = opposite_value(full_val)
-                dim_range(col_dim()).each do |x|
-                    coord = Coord.new(
-                        col_dim() => x, row_dim() => row_idx
-                    )
-                    cell_state = get_cell_state(coord)
+
+                row.iter().each do |x, cell|
+                    cell_state = cell.state
 
                     if cell_state == Cell::UNKNOWN
                         perform_and_append_move(
-                            :coord => coord,
+                            :coord => row.get_coord(x),
                             :val => opposite_val,
                             :reason => "Filling unknowns in row with an exceeded value with the other value",
                             :dir => col_dim()
@@ -582,6 +580,7 @@ module Binary_Puzzle_Solver
                     end
                 end
             end
+
             return
         end
 
@@ -616,6 +615,10 @@ module Binary_Puzzle_Solver
             return view.get_row_string(:idx => idx)
         end
 
+        def get_coord(x)
+            return Coord.new(view.col_dim() => x, view.row_dim() => idx)
+        end
+
         class CellsIter
             include Enumerable
 
@@ -626,8 +629,7 @@ module Binary_Puzzle_Solver
             def each
                 v = @row.view
                 v.dim_range(v.col_dim()).each do |x|
-                    coord = Coord.new(v.col_dim() => x, v.row_dim() => @row.idx)
-                    yield [x, v._get_cell(coord)]
+                    yield [x, v._get_cell(@row.get_coord(x))]
                 end
             end
         end
