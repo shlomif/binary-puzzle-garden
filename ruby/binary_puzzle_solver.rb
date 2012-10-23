@@ -621,11 +621,8 @@ module Binary_Puzzle_Solver
                     end
                 }
 
-                dim_range(col_dim()).each do |x|
-                    coord = Coord.new(
-                        col_dim() => x, row_dim() => row_idx
-                    )
-                    cell_state = get_cell_state(coord)
+                row.iter().each do |x, cell|
+                    cell_state = cell.state
                     if cell_state == prev_cell_state then
                         count += 1
                     else
@@ -655,6 +652,26 @@ module Binary_Puzzle_Solver
 
         def get_string()
             return view.get_row_string(:idx => idx)
+        end
+
+        class CellsIter
+            include Enumerable
+
+            def initialize(row)
+                @row = row
+            end
+
+            def each
+                v = @row.view
+                v.dim_range(v.col_dim()).each do |x|
+                    coord = Coord.new(v.col_dim() => x, v.row_dim() => @row.idx)
+                    yield [x, v._get_cell(coord)]
+                end
+            end
+        end
+
+        def iter
+            return CellsIter.new(self)
         end
     end
 
