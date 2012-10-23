@@ -465,6 +465,8 @@ module Binary_Puzzle_Solver
         def check_and_handle_sequences_in_row(params)
             row_idx = params[:idx]
 
+            row = get_row_handle(row_idx)
+
             prev_cell_states = []
 
             max_in_a_row = 2
@@ -476,14 +478,10 @@ module Binary_Puzzle_Solver
                     coords = Array.new
                     start_x = x - max_in_a_row - 1;
                     if (start_x >= 0)
-                        coords.push(Coord.new(
-                            col_dim() => start_x, row_dim() => row_idx
-                        ))
+                        coords << row.get_coord(start_x)
                     end
-                    if (x <= max_idx(col_dim()))
-                        coords.push(Coord.new(
-                            col_dim() => x, row_dim() => row_idx
-                        ))
+                    if (x <= row.max_idx())
+                        coords << row.get_coord(x)
                     end
                     coords.each do |c|
                         if (get_cell_state(c) == Cell::UNKNOWN)
@@ -500,23 +498,21 @@ module Binary_Puzzle_Solver
                 return
             }
 
-            dim_range(col_dim()).each do |x|
-                 coord = Coord.new(
-                     col_dim() => x, row_dim() => row_idx
-                 )
-                 cell_state = get_cell_state(coord)
+            row.iter().each do |x, cell|
+                 cell_state = cell.state
 
                  if cell_state == Cell::UNKNOWN
                      handle_prev_cell_states.call(x)
                      prev_cell_states = []
-                 elsif ((prev_cell_states.length == 0) or (prev_cell_states[-1] != cell_state)) then
+                 elsif ((prev_cell_states.length == 0) or
+                        (prev_cell_states[-1] != cell_state)) then
                      handle_prev_cell_states.call(x)
                      prev_cell_states = [cell_state]
                  else
                      prev_cell_states << cell_state
                  end
             end
-            handle_prev_cell_states.call(max_idx(col_dim()) + 1)
+            handle_prev_cell_states.call(row.max_idx + 1)
 
             return
         end
@@ -530,7 +526,7 @@ module Binary_Puzzle_Solver
 
             row = get_row_handle(row_idx)
 
-            (1 .. (max_idx(col_dim()) - 1)).each do |x|
+            (1 .. (row.max_idx - 1)).each do |x|
 
                 get_coord = lambda { |offset| row.get_coord(x+offset); }
                 get_state = lambda { |offset| row.get_state(x+offset); }
@@ -617,6 +613,10 @@ module Binary_Puzzle_Solver
 
         def row_dim()
             return view.row_dim()
+        end
+
+        def max_idx()
+            return view.max_idx(view.col_dim())
         end
 
         def get_coord(x)
