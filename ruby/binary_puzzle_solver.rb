@@ -369,13 +369,45 @@ module Binary_Puzzle_Solver
                     elsif summary.are_both_full() then
                         row_string = v.get_row_string(:idx => row_idx)
                         complete_rows_map[row_string] ||= []
-                        complete_rows_map[row_string] << row_string
+                        complete_rows_map[row_string] << row_idx
                         if (complete_rows_map[row_string].length > 1)
-                            raise GameIntegrityException, "Duplicate Rows"
+                            i = complete_rows_map[row_string][0]
+                            j = complete_rows_map[row_string][1]
+                            raise GameIntegrityException, \
+                                "Duplicate Rows - #{i} and #{j}"
                         end
                     else
                         is_final = false
                     end
+
+                    count = 0
+                    prev_cell_state = Cell::UNKNOWN
+
+                    handle_seq = lambda {
+                        if ((prev_cell_state == Cell::ZERO) || \
+                            (prev_cell_state == Cell::ONE)) then
+                            if count > 2 then
+                                raise GameIntegrityException, "Too many #{prev_cell_state}"
+                            end
+                        end
+                    }
+
+                    v.dim_range(v.col_dim()).each do |x|
+                        coord = Coord.new(
+                            v.col_dim() => x, v.row_dim() => row_idx
+                        )
+                        cell_state = v.get_cell_state(coord)
+                        if cell_state == prev_cell_state then
+                            count += 1
+                        else
+                            handle_seq.call()
+                            count = 1
+                            prev_cell_state = cell_state
+                        end
+                    end
+
+                    handle_seq.call()
+
                 end
             end
 
