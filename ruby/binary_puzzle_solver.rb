@@ -608,15 +608,23 @@ module Binary_Puzzle_Solver
         end
 
         def get_summary()
-            return view.get_row_summary(:idx => idx, :dim => view.row_dim());
+            return view.get_row_summary(:idx => idx, :dim => row_dim());
         end
 
         def get_string()
             return view.get_row_string(:idx => idx)
         end
 
+        def col_dim()
+            return view.col_dim()
+        end
+
+        def row_dim()
+            return view.row_dim()
+        end
+
         def get_coord(x)
-            return Coord.new(view.col_dim() => x, view.row_dim() => idx)
+            return Coord.new(col_dim() => x, row_dim() => idx)
         end
 
         class CellsIter
@@ -628,7 +636,7 @@ module Binary_Puzzle_Solver
 
             def each
                 v = @row.view
-                v.dim_range(v.col_dim()).each do |x|
+                v.dim_range(@row.col_dim()).each do |x|
                     yield [x, v._get_cell(@row.get_coord(x))]
                 end
             end
