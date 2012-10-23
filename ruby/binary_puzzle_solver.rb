@@ -356,60 +356,8 @@ module Binary_Puzzle_Solver
             is_final = true
 
             views.each do |v|
-                complete_rows_map = Hash.new
-
-                v.dim_range(v.row_dim()).each do |row_idx|
-                    summary = v.get_row_summary(
-                        :idx => row_idx,
-                        :dim => v.row_dim()
-                    )
-
-                    if not summary.are_both_not_exceeded() then
-                        raise GameIntegrityException, "Value exceeded"
-                    elsif summary.are_both_full() then
-                        row_string = v.get_row_string(:idx => row_idx)
-                        complete_rows_map[row_string] ||= []
-                        complete_rows_map[row_string] << row_idx
-                        if (complete_rows_map[row_string].length > 1)
-                            i = complete_rows_map[row_string][0]
-                            j = complete_rows_map[row_string][1]
-                            raise GameIntegrityException, \
-                                "Duplicate Rows - #{i} and #{j}"
-                        end
-                    else
-                        is_final = false
-                    end
-
-                    count = 0
-                    prev_cell_state = Cell::UNKNOWN
-
-                    handle_seq = lambda {
-                        if ((prev_cell_state == Cell::ZERO) || \
-                            (prev_cell_state == Cell::ONE)) then
-                            if count > 2 then
-                                raise GameIntegrityException, \
-                                    "Too many #{prev_cell_state} in a row"
-                            end
-                        end
-                    }
-
-                    v.dim_range(v.col_dim()).each do |x|
-                        coord = Coord.new(
-                            v.col_dim() => x, v.row_dim() => row_idx
-                        )
-                        cell_state = v.get_cell_state(coord)
-                        if cell_state == prev_cell_state then
-                            count += 1
-                        else
-                            handle_seq.call()
-                            count = 1
-                            prev_cell_state = cell_state
-                        end
-                    end
-
-                    handle_seq.call()
-
-                end
+                view_final = v.validate_rows()
+                is_final &&= view_final
             end
 
             if is_final
@@ -631,6 +579,67 @@ module Binary_Puzzle_Solver
                 end
             end
             return
+        end
+
+        def validate_rows()
+            # TODO
+            complete_rows_map = Hash.new
+
+            is_final = true
+
+            dim_range(row_dim()).each do |row_idx|
+                summary = get_row_summary(
+                    :idx => row_idx,
+                    :dim => row_dim()
+                )
+
+                if not summary.are_both_not_exceeded() then
+                    raise GameIntegrityException, "Value exceeded"
+                elsif summary.are_both_full() then
+                    row_string = get_row_string(:idx => row_idx)
+                    complete_rows_map[row_string] ||= []
+                    complete_rows_map[row_string] << row_idx
+                    if (complete_rows_map[row_string].length > 1)
+                        i = complete_rows_map[row_string][0]
+                        j = complete_rows_map[row_string][1]
+                        raise GameIntegrityException, \
+                            "Duplicate Rows - #{i} and #{j}"
+                    end
+                else
+                    is_final = false
+                end
+
+                count = 0
+                prev_cell_state = Cell::UNKNOWN
+
+                handle_seq = lambda {
+                    if ((prev_cell_state == Cell::ZERO) || \
+                        (prev_cell_state == Cell::ONE)) then
+                        if count > 2 then
+                            raise GameIntegrityException, \
+                                "Too many #{prev_cell_state} in a row"
+                        end
+                    end
+                }
+
+                dim_range(col_dim()).each do |x|
+                    coord = Coord.new(
+                        col_dim() => x, row_dim() => row_idx
+                    )
+                    cell_state = get_cell_state(coord)
+                    if cell_state == prev_cell_state then
+                        count += 1
+                    else
+                        handle_seq.call()
+                        count = 1
+                        prev_cell_state = cell_state
+                    end
+                end
+
+                handle_seq.call()
+
+                return is_final
+            end
         end
     end
 
