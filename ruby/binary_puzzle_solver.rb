@@ -595,7 +595,7 @@ module Binary_Puzzle_Solver
                 if not summary.are_both_not_exceeded() then
                     raise GameIntegrityException, "Value exceeded"
                 elsif summary.are_both_full() then
-                    row_string = get_row_string(:idx => row_idx)
+                    row_string = row.get_string()
                     complete_rows_map[row_string] ||= []
                     complete_rows_map[row_string] << row_idx
                     if (complete_rows_map[row_string].length > 1)
@@ -651,6 +651,10 @@ module Binary_Puzzle_Solver
 
         def get_summary()
             return view.get_row_summary(:idx => idx, :dim => view.row_dim());
+        end
+
+        def get_string()
+            return view.get_row_string(:idx => idx)
         end
     end
 
