@@ -590,24 +590,8 @@ module Binary_Puzzle_Solver
             dim_range(row_dim()).each do |row_idx|
                 row = RowHandle.new(self, row_idx)
 
-                summary = row.get_summary()
-
-                if not summary.are_both_not_exceeded() then
-                    raise GameIntegrityException, "Value exceeded"
-                elsif summary.are_both_full() then
-                    row_string = row.get_string()
-                    complete_rows_map[row_string] ||= []
-                    complete_rows_map[row_string] << row_idx
-                    if (complete_rows_map[row_string].length > 1)
-                        i = complete_rows_map[row_string][0]
-                        j = complete_rows_map[row_string][1]
-                        raise GameIntegrityException, \
-                            "Duplicate Rows - #{i} and #{j}"
-                    end
-                else
-                    is_final = false
-                end
-
+                row_verdict = row.check_for_duplicated(complete_rows_map)
+                is_final &&= row_verdict
                 row.check_for_too_many_consecutive()
 
                 return is_final
@@ -649,6 +633,28 @@ module Binary_Puzzle_Solver
         def iter
             return CellsIter.new(self)
         end
+
+        def check_for_duplicated(complete_rows_map)
+            summary = get_summary()
+
+            if not summary.are_both_not_exceeded() then
+                raise GameIntegrityException, "Value exceeded"
+            elsif summary.are_both_full() then
+                s = get_string()
+                complete_rows_map[s] ||= []
+                dups = complete_rows_map[s]
+                dups << idx
+                if (dups.length > 1)
+                    i, j = dups[0], dups[1]
+                    raise GameIntegrityException, \
+                        "Duplicate Rows - #{i} and #{j}"
+                end
+                return true
+            else
+                return false
+            end
+        end
+
 
         def check_for_too_many_consecutive()
             count = 0
