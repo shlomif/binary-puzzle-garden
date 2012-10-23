@@ -48,8 +48,6 @@ module Binary_Puzzle_Solver
         def rotate
             return Coord.new(:x=>self.y,:y=>self.x)
         end
-
-
     end
 
     class Cell
@@ -267,10 +265,6 @@ module Binary_Puzzle_Solver
             return _get_cell(coord).state
         end
 
-        def get_cell_char(coord)
-            return _get_cell(coord).get_char()
-        end
-
         # There is an equivalence between the dimensions, so
         # a view allows us to view the board rotated.
         def get_view(params)
@@ -408,17 +402,6 @@ module Binary_Puzzle_Solver
 
         def limit(dim)
             return @board.limit(@dims_map[dim])
-        end
-
-        def get_row_string(params)
-            return dim_range(col_dim()).collect { |i|
-                get_cell_char(
-                    Coord.new(
-                        col_dim() => i,
-                        row_dim() => params[:idx]
-                    )
-                )
-            }.join('')
         end
 
         def get_row_summary(params)
@@ -604,7 +587,7 @@ module Binary_Puzzle_Solver
         end
 
         def get_string()
-            return view.get_row_string(:idx => idx)
+            return iter().map { |x, cell| cell.get_char() }.join('')
         end
 
         def col_dim()
