@@ -387,7 +387,8 @@ module Binary_Puzzle_Solver
                         if ((prev_cell_state == Cell::ZERO) || \
                             (prev_cell_state == Cell::ONE)) then
                             if count > 2 then
-                                raise GameIntegrityException, "Too many #{prev_cell_state}"
+                                raise GameIntegrityException, \
+                                    "Too many #{prev_cell_state} in a row"
                             end
                         end
                     }
