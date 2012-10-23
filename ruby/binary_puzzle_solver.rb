@@ -608,31 +608,7 @@ module Binary_Puzzle_Solver
                     is_final = false
                 end
 
-                count = 0
-                prev_cell_state = Cell::UNKNOWN
-
-                handle_seq = lambda {
-                    if ((prev_cell_state == Cell::ZERO) || \
-                        (prev_cell_state == Cell::ONE)) then
-                        if count > 2 then
-                            raise GameIntegrityException, \
-                                "Too many #{prev_cell_state} in a row"
-                        end
-                    end
-                }
-
-                row.iter().each do |x, cell|
-                    cell_state = cell.state
-                    if cell_state == prev_cell_state then
-                        count += 1
-                    else
-                        handle_seq.call()
-                        count = 1
-                        prev_cell_state = cell_state
-                    end
-                end
-
-                handle_seq.call()
+                row.check_for_too_many_consecutive()
 
                 return is_final
             end
@@ -672,6 +648,36 @@ module Binary_Puzzle_Solver
 
         def iter
             return CellsIter.new(self)
+        end
+
+        def check_for_too_many_consecutive()
+            count = 0
+            prev_cell_state = Cell::UNKNOWN
+
+            handle_seq = lambda {
+                if ((prev_cell_state == Cell::ZERO) || \
+                    (prev_cell_state == Cell::ONE)) then
+                    if count > 2 then
+                        raise GameIntegrityException, \
+                            "Too many #{prev_cell_state} in a row"
+                    end
+                end
+            }
+
+            iter().each do |x, cell|
+                cell_state = cell.state
+                if cell_state == prev_cell_state then
+                    count += 1
+                else
+                    handle_seq.call()
+                    count = 1
+                    prev_cell_state = cell_state
+                end
+            end
+
+            handle_seq.call()
+
+            return
         end
     end
 
