@@ -150,6 +150,34 @@ EOF
     return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
 end
 
+def get_8x8_easy_board_1__initial()
+    input_str = <<'EOF'
+|       0|
+| 00  1  |
+| 0   1 0|
+|  1     |
+|00 1  1 |
+|    1   |
+|11   0 1|
+| 1     1|
+EOF
+    return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
+end
+
+def get_8x8_easy_board_1__final()
+    input_str = <<'EOF'
+|01101010|
+|10010101|
+|10010110|
+|01101001|
+|00110110|
+|10011010|
+|11001001|
+|01100101|
+EOF
+    return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
+end
+
 describe "construct_board" do
     it "6*6 Easy board No. 1 should" do
 
@@ -474,6 +502,25 @@ describe "rudimentary_deduction" do
         compare_boards(board, final_board)
 
         board.validate().should == :final
+    end
+
+    it "Solving 8*8 Easy board No. 1 should" do
+
+        board = get_8x8_easy_board_1__initial()
+
+        board.add_to_iters_quota(1_000_000_000);
+
+        board.try_to_solve_using(
+            :methods => [
+                :check_and_handle_sequences_in_row,
+                :check_and_handle_known_unknown_sameknown_in_row,
+                :check_and_handle_cells_of_one_value_in_row_were_all_found,
+            ]
+        );
+
+        final_board = get_8x8_easy_board_1__final()
+
+        compare_boards(board, final_board)
     end
 
 end
