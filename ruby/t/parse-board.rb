@@ -32,7 +32,6 @@
 require "binary_puzzle_solver.rb"
 require "rspec"
 require "pry"
-require "pry_debug"
 
 class Object
     def ok()
@@ -195,16 +194,16 @@ EOF
     return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
 end
 
-def get_8x8_medium_board_1__intermediate()
+def get_8x8_medium_board_1__final()
     input_str = <<'EOF'
-| 0  010 |
+|10100101|
 |01010101|
-| 010101 |
+|10101010|
 |10011010|
 |01100101|
 |01100110|
 |10011001|
-| 101 01 |
+|01011010|
 EOF
     return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
 end
@@ -568,9 +567,9 @@ describe "rudimentary_deduction" do
             ]
         );
 
-        final_board = get_8x8_medium_board_1__intermediate()
+        final_board = get_8x8_medium_board_1__final()
 
-        binding.pry
+        # binding.pry
         compare_boards(board, final_board)
     end
 end
