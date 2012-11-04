@@ -30,6 +30,9 @@
 # 2. http://en.wikipedia.org/wiki/MIT_License
 
 require "binary_puzzle_solver.rb"
+require "rspec"
+require "pry"
+require "pry_debug"
 
 class Object
     def ok()
@@ -174,6 +177,34 @@ def get_8x8_easy_board_1__final()
 |10011010|
 |11001001|
 |01100101|
+EOF
+    return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
+end
+
+def get_8x8_medium_board_1__initial()
+    input_str = <<'EOF'
+|    0 0 |
+|0 0 0 0 |
+|        |
+|    1 1 |
+|0  0    |
+|0  00   |
+|       1|
+| 1 1    |
+EOF
+    return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
+end
+
+def get_8x8_medium_board_1__intermediate()
+    input_str = <<'EOF'
+| 0  010 |
+|01010101|
+| 010101 |
+|10011010|
+|01100101|
+|01100110|
+|10011001|
+| 101 01 |
 EOF
     return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
 end
@@ -523,4 +554,23 @@ describe "rudimentary_deduction" do
         compare_boards(board, final_board)
     end
 
+    it "Solving 8*8 Medium board No. 1 should" do
+
+        board = get_8x8_medium_board_1__initial()
+
+        board.add_to_iters_quota(1_000_000_000);
+
+        board.try_to_solve_using(
+            :methods => [
+                :check_and_handle_sequences_in_row,
+                :check_and_handle_known_unknown_sameknown_in_row,
+                :check_and_handle_cells_of_one_value_in_row_were_all_found,
+            ]
+        );
+
+        final_board = get_8x8_medium_board_1__intermediate()
+
+        binding.pry
+        compare_boards(board, final_board)
+    end
 end
