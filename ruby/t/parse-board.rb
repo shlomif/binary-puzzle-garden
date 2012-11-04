@@ -49,7 +49,14 @@ def compare_boards(got, expected)
     (0 .. got.max_idx(:y)).each do |y|
         (0 .. got.max_idx(:x)).each do |x|
             coord = Binary_Puzzle_Solver::Coord.new(:x => x, :y => y)
+            begin
             got.get_cell_state(coord).should == expected.get_cell_state(coord)
+            rescue
+                puts "Wrong coord in x=#{x} y=#{y}"
+                puts "Got == #{got.as_string()}"
+                puts "Expected == #{expected.as_string()}"
+                raise
+            end
         end
     end
 
