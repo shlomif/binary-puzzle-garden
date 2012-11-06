@@ -1,4 +1,6 @@
 all:
 
 test: all
-	rspec -I. --color t/*.rb
+	rspec -I. --color test/*.rb
+
+.PHONY: all test
