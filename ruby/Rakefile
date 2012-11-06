@@ -1,3 +1,4 @@
+require "bundler/gem_tasks"
 # Taken from:
 # https://github.com/saizai/iorcc/blob/master/2012/entries/saizai_tic_tac_toe/tic_tac_toe.rake
 #
