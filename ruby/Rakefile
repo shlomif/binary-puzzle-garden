@@ -1,0 +1,18 @@
+# Taken from:
+# https://github.com/saizai/iorcc/blob/master/2012/entries/saizai_tic_tac_toe/tic_tac_toe.rake
+#
+# Thanks to judofyr from #ruby-lang on Freenode for some insights
+#
+# Require whatever test libraries you need
+require 'rspec'
+require 'rspec/core/rake_task'
+
+# This works if you're using RSpec
+RSpec::Core::RakeTask.new(:test) do |t|
+    t.pattern = File.join(
+        File.expand_path(File.dirname(__FILE__)), './test/*.rb'
+    )
+    # t.options = '-v'
+end
+
+task :default => :test
