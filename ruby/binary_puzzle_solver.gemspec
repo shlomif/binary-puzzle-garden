@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
     s.authors     = ["Shlomi Fish"]
     s.email       = ["shlomif@cpan.org"]
     # TODO : add a better home page on http://www.shlomifish.org/ .
-    s.homepage    = "http://github.com/shlomif/binary-puzzle-garden"
+    s.homepage    = "http://www.shlomifish.org/open-source/projects/japanese-puzzle-games/binary-puzzle/"
     s.summary     = %q{A solver for http://www.binarypuzzle.com/ instances}
     s.description = %q{This is a solver for instances of the so-called Binary
       Puzzle from http://www.binarypuzzle.com/ . It is incomplete, but
