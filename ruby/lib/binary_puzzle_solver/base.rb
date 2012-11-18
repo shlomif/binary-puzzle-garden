@@ -559,6 +559,76 @@ module Binary_Puzzle_Solver
             return
         end
 
+        def check_exceeded_numbers_while_accounting_for_two_unknown_gaps(params)
+            row_idx = params[:idx]
+
+            row = get_row_handle(row_idx)
+
+            gaps = {}
+
+            next_gap = []
+            row.iter().each do |x, cell|
+                if (cell.state == Cell::UNKNOWN)
+                    next_gap << x
+                else
+                    l = next_gap.length
+                    if (l > 0)
+                        if not gaps[l]
+                            gaps[l] = []
+                        end
+                        gaps[l] << next_gap
+                        next_gap = []
+                    end
+                end
+            end
+
+            if (gaps.has_key?(2)) then
+                implicit_counts = {Cell::ZERO => 0, Cell::ONE => 0,}
+                gaps[2].each do |gap|
+                    x_s = []
+                    if (gap[0] > 0)
+                        x_s << gap[0]-1
+                    end
+                    if (gap[-1] < row.max_idx)
+                        x_s << gap[-1]+1
+                    end
+
+                    bordering_values = {Cell::ZERO => 0, Cell::ONE => 0,}
+                    x_s.each do |x|
+                        bordering_values[row.get_state(x)] += 1
+                    end
+
+                    for v in [Cell::ZERO, Cell::ONE] do
+                       if bordering_values[opposite_value(v)] > 0
+                           implicit_counts[v] += 1
+                       end
+                    end
+                end
+
+                for v in [Cell::ZERO, Cell::ONE] do
+                    if (row.get_summary().get_count(v) + implicit_counts[v] \
+                        == row.get_summary.half_limit() \
+                    ) then
+                        gap_keys = gaps.keys.select { |x| x != 2 }
+                        opposite_val = opposite_value(v)
+                        gap_keys.each do |k|
+                            gaps[k].each do |gap|
+                                gap.each do |x|
+                                    perform_and_append_move(
+                                        :coord => row.get_coord(x),
+                                        :val => opposite_val,
+                                        :reason => \
+    "Analysis of gaps and their neighboring values",
+                                        :dir => row.col_dim()
+                                    )
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+
         def validate_rows()
             # TODO
             complete_rows_map = Hash.new
