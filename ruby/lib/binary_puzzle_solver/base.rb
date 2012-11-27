@@ -481,8 +481,9 @@ module Binary_Puzzle_Solver
                 return
             }
 
-            row.iter().each do |x, cell|
-                 cell_state = cell.state
+            row.iter_of_handles().each do |h|
+                 x = h.x
+                 cell_state = h.get_cell.state
 
                  if cell_state == Cell::UNKNOWN
                      handle_prev_cell_states.call(x)
@@ -542,7 +543,10 @@ module Binary_Puzzle_Solver
             if (full_val)
                 opposite_val = opposite_value(full_val)
 
-                row.iter().each do |x, cell|
+                row.iter_of_handles().each do |cell_h|
+                    x = cell_h.x
+                    cell = cell_h.get_cell
+
                     cell_state = cell.state
 
                     if cell_state == Cell::UNKNOWN
@@ -567,9 +571,9 @@ module Binary_Puzzle_Solver
             gaps = {}
 
             next_gap = []
-            row.iter().each do |x, cell|
-                if (cell.state == Cell::UNKNOWN)
-                    next_gap << x
+            row.iter_of_handles().each do |cell_h|
+                if (cell_h.get_state == Cell::UNKNOWN)
+                    next_gap << cell_h.x
                 else
                     l = next_gap.length
                     if (l > 0)
@@ -657,7 +661,7 @@ module Binary_Puzzle_Solver
         end
 
         def get_string()
-            return iter().map { |x, cell| cell.get_char() }.join('')
+            return iter_of_handles().map { |cell_h| cell_h.get_char() }.join('')
         end
 
         def col_dim()
@@ -680,10 +684,22 @@ module Binary_Puzzle_Solver
             return view.get_cell_state(get_coord(x))
         end
 
+        def get_cell(x)
+            return view._get_cell(get_coord(x))
+        end
+
         def iter
             return view.dim_range(col_dim()).map { |x|
-                [x, view._get_cell(get_coord(x))]
+                [x, get_cell(x)]
             }
+        end
+
+        def get_cell_handle(x)
+            return CellHandle.new(self, x)
+        end
+
+        def iter_of_handles
+            return view.dim_range(col_dim()).map { |x| get_cell_handle(x) }
         end
 
         def check_for_duplicated(complete_rows_map)
@@ -722,8 +738,8 @@ module Binary_Puzzle_Solver
                 end
             }
 
-            iter().each do |x, cell|
-                cell_state = cell.state
+            iter_of_handles().each do |cell_h|
+                cell_state = cell_h.get_state
                 if cell_state == prev_cell_state then
                     count += 1
                 else
@@ -744,6 +760,34 @@ module Binary_Puzzle_Solver
             check_for_too_many_consecutive()
 
             return { :is_final => check_for_duplicated(complete_rows_map), };
+        end
+    end
+
+    class CellHandle
+
+        attr_reader :row_handle, :x
+
+        def initialize (row_handle, x)
+            @row_handle = row_handle
+            @x = x
+
+            return
+        end
+
+        def get_coord()
+            return row_handle.get_coord(x)
+        end
+
+        def get_state()
+            return row_handle.get_state(x)
+        end
+
+        def get_cell()
+            return row_handle.get_cell(x)
+        end
+
+        def get_char()
+            return get_cell().get_char()
         end
     end
 
