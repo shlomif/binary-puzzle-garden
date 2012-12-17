@@ -251,6 +251,31 @@ EOF
     return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
 end
 
+def get_6x6_hard_board_2__initial()
+    input_str = <<'EOF'
+| 11  1|
+|00    |
+|      |
+|  1  0|
+|      |
+|   0  |
+EOF
+    return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
+end
+
+def get_6x6_hard_board_2__intermediate()
+    input_str = <<'EOF'
+|011001|
+|001   |
+|1 0   |
+|  1  0|
+|  0   |
+| 1001 |
+EOF
+    return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
+end
+
+
 describe "construct_board" do
     it "6*6 Easy board No. 1 should" do
 
@@ -649,4 +674,26 @@ describe "rudimentary_deduction" do
         # binding.pry
         compare_boards(board, intermediate_board_2)
     end
+
+    it "Solving 6*6 Hard board No. 2 should" do
+
+        board = get_6x6_hard_board_2__initial()
+
+        board.add_to_iters_quota(1_000_000_000);
+
+        board.try_to_solve_using(
+            :methods => [
+                :check_and_handle_sequences_in_row,
+                :check_and_handle_known_unknown_sameknown_in_row,
+                :check_and_handle_cells_of_one_value_in_row_were_all_found,
+                :check_exceeded_numbers_while_accounting_for_two_unknown_gaps,
+            ]
+        );
+
+        intermediate_board = get_6x6_hard_board_2__intermediate();
+
+        # binding.pry
+        compare_boards(board, intermediate_board)
+    end
+
 end
