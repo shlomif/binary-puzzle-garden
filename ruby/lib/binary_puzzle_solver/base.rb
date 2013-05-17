@@ -650,17 +650,10 @@ module Binary_Puzzle_Solver
 
             oppose_v = opposite_value(v)
 
-            coords = []
             values = row.iter_of_states().to_a
-
-            row.iter_of_handles().each do |h|
-                x = h.x
-                cell_state = h.get_cell.state
-
-                if cell_state == Cell::UNKNOWN
-                    coords << x
-                end
-            end
+            coords = (0 .. values.length-1).select {
+                |x| values[x] == Cell::UNKNOWN
+            }
 
             coords_copy = Array.new(coords)
 
