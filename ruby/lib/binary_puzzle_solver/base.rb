@@ -633,6 +633,60 @@ module Binary_Puzzle_Solver
             end
         end
 
+        def check_try_placing_last_of_certain_digit_in_row(params)
+            row_idx = params[:idx]
+
+            row = get_row_handle(row_idx)
+
+            summary = row.get_summary()
+
+            v = [Cell::ZERO, Cell::ONE].find {
+                |v| summary.get_count(v) == summary.half_limit() - 1
+            }
+
+            if (v) then
+                oppose_v = opposite_value(v)
+
+                coords = []
+                values = []
+
+                row.iter_of_handles().each do |h|
+                    x = h.x
+                    cell_state = h.get_cell.state
+
+                    values << cell_state
+
+                    if cell_state == Cell::UNKNOWN
+                        coords << x
+                    end
+                end
+
+                coords_copy = Array.new(coords)
+
+                for x in coords do
+                    v_s = Array.new(values)
+                    for x_to_fill in coords_copy do
+                        v_s[x_to_fill] = ((x_to_fill == x) ? v : oppose_v)
+                    end
+
+                    # Is there a three in a row?
+                    if ((0 .. (v_s.length - 3)).to_a.index { |i|
+                        (1 .. 2).all? { |offset| v_s[i] == v_s[i+offset] }
+                    }) then
+                        perform_and_append_move(
+                            :coord => row.get_coord(x),
+                            :val => oppose_v,
+                            :reason => "Trying opposite value that is the last remaining results in three-in-a-row",
+                            :dir => col_dim()
+                        )
+                        return
+                    end
+                end
+            end
+
+            return
+        end
+
         def validate_rows()
             # TODO
             complete_rows_map = Hash.new
