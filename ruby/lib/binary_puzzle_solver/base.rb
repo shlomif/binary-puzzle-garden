@@ -609,23 +609,26 @@ module Binary_Puzzle_Solver
                     end
                 end
 
-                for v in [Cell::ZERO, Cell::ONE] do
-                    if (row.get_summary().get_count(v) + implicit_counts[v] \
-                        == row.get_summary.half_limit() \
-                    ) then
-                        gap_keys = gaps.keys.select { |x| x != 2 }
-                        opposite_val = opposite_value(v)
-                        gap_keys.each do |k|
-                            gaps[k].each do |gap|
-                                gap.each do |x|
-                                    perform_and_append_move(
-                                        :coord => row.get_coord(x),
-                                        :val => opposite_val,
-                                        :reason => \
-    "Analysis of gaps and their neighboring values",
-                                        :dir => row.col_dim()
-                                    )
-                                end
+                summ = row.get_summary()
+
+                v = [Cell::ZERO, Cell::ONE].find {
+                    |v| summ.get_count(v) + implicit_counts[v] \
+                        == summ.half_limit()
+                }
+
+                if v then
+                    gap_keys = gaps.keys.select { |x| x != 2 }
+                    opposite_val = opposite_value(v)
+                    gap_keys.each do |k|
+                        gaps[k].each do |gap|
+                            gap.each do |x|
+                                perform_and_append_move(
+                                    :coord => row.get_coord(x),
+                                    :val => opposite_val,
+                                    :reason => \
+                                    "Analysis of gaps and their neighboring values",
+                                    :dir => row.col_dim()
+                                )
                             end
                         end
                     end
