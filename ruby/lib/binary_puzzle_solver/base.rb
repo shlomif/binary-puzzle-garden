@@ -651,13 +651,11 @@ module Binary_Puzzle_Solver
             oppose_v = opposite_value(v)
 
             coords = []
-            values = []
+            values = row.iter_of_states().to_a
 
             row.iter_of_handles().each do |h|
                 x = h.x
                 cell_state = h.get_cell.state
-
-                values << cell_state
 
                 if cell_state == Cell::UNKNOWN
                     coords << x
@@ -756,6 +754,10 @@ module Binary_Puzzle_Solver
 
         def iter_of_handles
             return view.dim_range(col_dim()).map { |x| get_cell_handle(x) }
+        end
+
+        def iter_of_states
+            return iter_of_handles.map { |x| x.get_state() }
         end
 
         def check_for_duplicated(complete_rows_map)
