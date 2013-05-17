@@ -651,9 +651,7 @@ module Binary_Puzzle_Solver
             oppose_v = opposite_value(v)
 
             values = row.iter_of_states().to_a
-            coords = (0 .. values.length-1).select {
-                |x| values[x] == Cell::UNKNOWN
-            }
+            coords = row.where_values_are(Cell::UNKNOWN)
 
             coords_copy = Array.new(coords)
 
@@ -751,6 +749,11 @@ module Binary_Puzzle_Solver
 
         def iter_of_states
             return iter_of_handles.map { |x| x.get_state() }
+        end
+
+        def where_values_are(v)
+            return iter_of_handles.select { |x|
+                x.get_state() == v }.map { |h| h.x }
         end
 
         def check_for_duplicated(complete_rows_map)
