@@ -311,6 +311,38 @@ EOF
     return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
 end
 
+def get_10x10_easy_board_1__initial()
+    input_str = <<'EOF'
+|       1  |
+| 00  0  1 |
+| 0  1  0 0|
+|  1   1   |
+|1 1      1|
+|       1  |
+| 0  1   0 |
+|    11   0|
+| 0 0  1  0|
+|0   0   1 |
+EOF
+    return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
+end
+
+def get_10x10_easy_board_1__final()
+    input_str = <<'EOF'
+|0110010101|
+|1001100110|
+|1001101010|
+|0110011001|
+|1010100101|
+|0101010110|
+|1001101001|
+|0110110100|
+|1010011010|
+|0101001011|
+EOF
+    return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
+end
+
 describe "construct_board" do
     it "6*6 Easy board No. 1 should" do
 
@@ -769,4 +801,24 @@ describe "rudimentary_deduction" do
         compare_boards(board, intermediate_board)
     end
 
+    it "Solving 10*10 Easy board No. 1 should" do
+
+        board = get_10x10_easy_board_1__initial()
+
+        board.add_to_iters_quota(1_000_000_000);
+
+        board.try_to_solve_using(
+            :methods => [
+                :check_and_handle_sequences_in_row,
+                :check_and_handle_known_unknown_sameknown_in_row,
+                :check_and_handle_cells_of_one_value_in_row_were_all_found,
+                :check_exceeded_numbers_while_accounting_for_two_unknown_gaps,
+                :check_try_placing_last_of_certain_digit_in_row,
+            ]
+        );
+
+        final_board = get_10x10_easy_board_1__final()
+
+        compare_boards(board, final_board)
+    end
 end
