@@ -53,8 +53,8 @@ def compare_boards(got, expected)
             got.get_cell_state(coord).should == expected.get_cell_state(coord)
             rescue
                 puts "Wrong coord in x=#{x} y=#{y}"
-                puts "Got == #{got.as_string()}"
-                puts "Expected == #{expected.as_string()}"
+                puts "Got ==\n#{got.as_string()}\n"
+                puts "Expected ==\n#{expected.as_string()}\n"
                 raise
             end
         end
