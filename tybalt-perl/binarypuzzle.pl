@@ -33,7 +33,6 @@ OTHER DEALINGS IN THE SOFTWARE.
 use strict;
 use warnings;
 
-use List::MoreUtils (qw( any ));
 
 my @puzzles = (<<END) =~ /(?:.+\n)+/g;
 
@@ -142,9 +141,37 @@ my ($half, $m1, $prev);
 
 package BinaryPuzzle::Board;
 
+use List::MoreUtils (qw( any ));
+
 use MooX qw/late/;
 
 has 'str_ref' => (isa => 'ScalarRef[Str]', is => 'rw');
+
+sub _replace
+{
+    my $s = shift;
+    my ($d) = $s =~ /(\d)/g;
+    return $s =~ s/ /1-$d/er;
+}
+
+sub tips
+{
+    my ($self) = @_;
+
+    my $str_ref = $self->str_ref;
+
+    return
+    (
+        $$str_ref =~ s/^(?=(?:.*1){$half}).*?\K /0/m or # max 1, needs 0
+        $$str_ref =~ s/^(?=(?:.*0){$half}).*?\K /1/m or # max 0, needs 1
+        (any {
+                my $pat = $_;
+                $$str_ref =~ s#($pat)#_replace($1)#e
+            } (' 00', '0 0', '00 ', ' 11', '1 1', '11 ')
+        ) or
+        0
+    );
+}
 
 sub _medium_helper
 {
@@ -268,32 +295,6 @@ sub earlyvalidate
     return;
 }
 
-sub _replace
-{
-    my $s = shift;
-    my ($d) = $s =~ /(\d)/g;
-    return $s =~ s/ /1-$d/er;
-}
-
-sub tips
-{
-    my ($str_ref) = @_;
-
-    return
-    (
-        $$str_ref =~ s/^(?=(?:.*1){$half}).*?\K /0/m or # max 1, needs 0
-        $$str_ref =~ s/^(?=(?:.*0){$half}).*?\K /1/m or # max 0, needs 1
-        (any {
-                my $pat = $_;
-                $$str_ref =~ s#($pat)#_replace($1)#e
-            } (' 00', '0 0', '00 ', ' 11', '1 1', '11 ')
-        ) or
-        0
-    );
-}
-
-
-
 
 sub code_or_transpose
 {
@@ -377,7 +378,7 @@ for my $puz (@puzzles)
 
         print("\n$$str_ref\n");
 
-        return code_or_transpose(\&tips, $str_ref)
+        return obj__code_or_transpose('tips', $obj)
         || obj__code_or_transpose('medium', $obj)
         || obj__code_or_transpose('hard', $obj)
         || $do_fork->($str_ref);
