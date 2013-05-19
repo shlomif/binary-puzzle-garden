@@ -136,7 +136,7 @@ my @puzzles = (<<END) =~ /(?:.+\n)+/g;
 
 END
 
-my ($half, $m1, $prev);
+my ($half, $m1);
 
 package BinaryPuzzle::Board;
 
@@ -145,6 +145,7 @@ use List::MoreUtils (qw( any ));
 use MooX qw/late/;
 
 has 'str_ref' => (isa => 'ScalarRef[Str]', is => 'rw');
+has 'prev' => (isa => 'Str', is => 'rw', default => sub { ''; });
 
 sub transpose
 {
@@ -152,7 +153,7 @@ sub transpose
 
     my $str_ref = $self->str_ref;
 
-    $prev = $$str_ref;
+    $self->prev($$str_ref);
     my $new = '';
     $new .= "\n" while $$str_ref =~ s/^(.)/ $new .= $1; ''/gem;
     $$str_ref = $new;
@@ -278,7 +279,7 @@ sub code_or_transpose
         }
         else
         {
-            ${$self->str_ref} = $prev;
+            ${$self->str_ref} = $self->prev;
             return 0;
         }
     }
@@ -286,12 +287,12 @@ sub code_or_transpose
 
 sub earlyvalidate
 {
-    my ($obj) = @_;
+    my ($self) = @_;
 
-    my $str_ref = $obj->str_ref;
+    my $str_ref = $self->str_ref;
 
-    $obj->transpose();
-    my $both = "\n$prev\n\n$$str_ref\n";
+    $self->transpose();
+    my $both = "\n" . $self->prev . "\n\n$$str_ref\n";
 
     my $verify = sub {
         my ($dim, $v) = @_;
@@ -313,17 +314,14 @@ sub earlyvalidate
     };
 
     $verify->('column', $$str_ref);
-    $verify->('row', $prev);
+    $verify->('row', $self->prev);
 
-    $$str_ref = $prev;
+    $$str_ref = $self->prev;
 
     return;
 }
 
 package main;
-
-
-
 
 for my $puz (@puzzles)
 {
