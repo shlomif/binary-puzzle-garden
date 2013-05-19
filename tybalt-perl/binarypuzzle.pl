@@ -266,7 +266,9 @@ for (@puzzles)
 
     my @stack = ($_);
 
-    my ($count, $fork, $backup) = (0, 0, -1);
+    my $count = 0;
+    my $fork = 0;
+    my $backup = -1;
 
     my $do_fork = sub {
         if (/ /)
