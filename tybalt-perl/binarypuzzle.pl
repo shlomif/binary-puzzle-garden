@@ -260,6 +260,30 @@ sub hard
     return $sum;
 }
 
+sub code_or_transpose
+{
+    my ($self, $meth) = @_;
+
+    if ($self->$meth())
+    {
+        return 1;
+    }
+    else
+    {
+        $self->transpose();
+        if ($self->$meth())
+        {
+            $self->transpose();
+            return 1;
+        }
+        else
+        {
+            ${$self->str_ref} = $prev;
+            return 0;
+        }
+    }
+}
+
 package main;
 
 
@@ -299,29 +323,6 @@ sub earlyvalidate
     return;
 }
 
-sub obj__code_or_transpose
-{
-    my ($meth, $obj) = @_;
-
-    if ($obj->$meth())
-    {
-        return 1;
-    }
-    else
-    {
-        $obj->transpose();
-        if ($obj->$meth())
-        {
-            $obj->transpose();
-            return 1;
-        }
-        else
-        {
-            ${$obj->str_ref} = $prev;
-            return 0;
-        }
-    }
-}
 
 for my $puz (@puzzles)
 {
@@ -359,9 +360,9 @@ for my $puz (@puzzles)
 
         print("\n$$str_ref\n");
 
-        return obj__code_or_transpose('tips', $obj)
-        || obj__code_or_transpose('medium', $obj)
-        || obj__code_or_transpose('hard', $obj)
+        return $obj->code_or_transpose('tips')
+        || $obj->code_or_transpose('medium')
+        || $obj->code_or_transpose('hard')
         || $do_fork->($obj);
     };
 
