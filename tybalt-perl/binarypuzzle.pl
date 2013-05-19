@@ -284,9 +284,6 @@ sub code_or_transpose
     }
 }
 
-package main;
-
-
 sub earlyvalidate
 {
     my ($obj) = @_;
@@ -322,6 +319,10 @@ sub earlyvalidate
 
     return;
 }
+
+package main;
+
+
 
 
 for my $puz (@puzzles)
@@ -382,7 +383,7 @@ for my $puz (@puzzles)
             while ($try_move->($obj))
             {
                 $count++;
-                earlyvalidate($obj);
+                $obj->earlyvalidate;
             };
 
             print "count: $count  fork: $fork  backup: $backup\n\n";
@@ -391,7 +392,7 @@ for my $puz (@puzzles)
             {
                 die "incomplete";
             }
-            earlyvalidate($obj);
+            $obj->earlyvalidate;
         };
         if ($@)
         {
