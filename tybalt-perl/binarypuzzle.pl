@@ -137,7 +137,7 @@ END
 
 my ($half, $m1, $prev);
 
-sub transpose ()
+sub transpose
 	{
 	($prev, my $new) = $_;
 	$new .= "\n" while s/^(.)/ $new .= $1; ''/gem;
@@ -238,11 +238,11 @@ for (@puzzles)
 			{
 			$count++, earlyvalidate() while print("\n$_\n"),
 				tips ||
-				(transpose + tips ? 1 + transpose : ($_ = $prev, 0)) ||
+				(transpose() + tips ? 1 + transpose() : ($_ = $prev, 0)) ||
 				medium ||
-				(transpose + medium ? 1 + transpose : ($_ = $prev, 0)) ||
+				(transpose() + medium ? 1 + transpose() : ($_ = $prev, 0)) ||
 				hard ||
-				(transpose + hard ? 1 + transpose : ($_ = $prev, 0)) ||
+				(transpose() + hard ? 1 + transpose() : ($_ = $prev, 0)) ||
 				do { / / && print("fork\n") + ++$fork + push @stack,
 					s/^.*\K /1/sr; s/^.*\K /0/s };
 
