@@ -328,26 +328,26 @@ for my $puz (@puzzles)
     };
 
     STACK:
-    while ($_ = pop @stack)
+    while (my $state = pop @stack)
     {
         $backup++;
         print "new\n";
 
         eval
         {
-            while ($try_move->(\$_))
+            while ($try_move->(\$state))
             {
                 $count++;
-                earlyvalidate(\$_);
+                earlyvalidate(\$state);
             };
 
             print "count: $count  fork: $fork  backup: $backup\n\n";
 
-            if ($_ =~ / /)
+            if ($state =~ / /)
             {
                 die "incomplete";
             }
-            earlyvalidate(\$_);
+            earlyvalidate(\$state);
         };
         if ($@)
         {
