@@ -139,7 +139,8 @@ my ($half, $m1, $prev);
 
 sub transpose
 {
-    ($prev, my $new) = $_;
+    $prev = $_;
+    my $new = '';
     $new .= "\n" while s/^(.)/ $new .= $1; ''/gem;
     $_ = $new;
     return 0;
