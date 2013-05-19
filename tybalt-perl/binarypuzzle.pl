@@ -210,28 +210,32 @@ sub tips
 sub medium
 {
     my ($str_ref) = @_;
-    local $_ = $$str_ref;
 
-    my $ret = (
-    s/^(?=(?:.*1){$m1}).*?\K (?=.*?[ 0]{3})/0/m or # avoid 000/111
-    s/^(?=(?:.*0){$m1}).*?\K (?=.*?[ 1]{3})/1/m or
-    s/^(?=(?:.*1){$m1}).*?[ 0]{3}.*?\K /0/m or
-    s/^(?=(?:.*0){$m1}).*?[ 1]{3}.*?\K /1/m or
+    my $ret;
 
-     do{
-        my ($sum, $new) = 0;
-        for my $i (/^\d* \d* \d*$/gm) # cet as opposite
-        {
-            my $p = $i =~ s/ /[01]/gr;
-            /($p)/ or next;
-            $new = $1 ^ $i =~ tr| 01|\1\0\0|r;
-            $sum += s/$i/$new/;
-        }
-        $sum;
-    } or
-    0);
+    for ($$str_ref)
+    {
+        $ret =
+        (
+            s/^(?=(?:.*1){$m1}).*?\K (?=.*?[ 0]{3})/0/m or # avoid 000/111
+            s/^(?=(?:.*0){$m1}).*?\K (?=.*?[ 1]{3})/1/m or
+            s/^(?=(?:.*1){$m1}).*?[ 0]{3}.*?\K /0/m or
+            s/^(?=(?:.*0){$m1}).*?[ 1]{3}.*?\K /1/m or
 
-    $$str_ref = $_;
+            do{
+                my ($sum, $new) = 0;
+                for my $i (/^\d* \d* \d*$/gm) # cet as opposite
+                {
+                    my $p = $i =~ s/ /[01]/gr;
+                    /($p)/ or next;
+                    $new = $1 ^ $i =~ tr| 01|\1\0\0|r;
+                    $sum += s/$i/$new/;
+                }
+                $sum;
+            } or
+            0
+        );
+    }
 
     return $ret;
 }
