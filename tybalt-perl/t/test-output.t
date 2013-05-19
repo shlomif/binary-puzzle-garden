@@ -5,6 +5,8 @@ use warnings;
 
 use Test::More tests => 1;
 
+use Test::Differences (qw( eq_or_diff ));
+
 {
     my $WS = ' ';
     my $good_output = <<"EOF_GAME";
@@ -495,7 +497,7 @@ EOF_GAME
 
 
     # TEST
-    is (
+    eq_or_diff (
         scalar(`$^X binarypuzzle.pl`),
         $good_output,
         "Good output is OK."
