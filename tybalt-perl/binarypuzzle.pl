@@ -275,20 +275,25 @@ for (@puzzles)
 
         eval
         {
-            $count++, earlyvalidate() while do {
-                print("\n$_\n");
-                code_or_transpose(\&tips)
-                || code_or_transpose(\&medium)
-                || code_or_transpose(\&hard)
-                || do {
-                    if (/ /)
-                    {
-                        print("fork\n");
-                        $fork++;
-                        push @stack, s/^.*\K /1/rs;
-                    }
-                    s/^.*\K /0/s;
-                };
+            while (do {
+                    print("\n$_\n");
+                    code_or_transpose(\&tips)
+                    || code_or_transpose(\&medium)
+                    || code_or_transpose(\&hard)
+                    || do {
+                        if (/ /)
+                        {
+                            print("fork\n");
+                            $fork++;
+                            push @stack, s/^.*\K /1/rs;
+                        }
+                        s/^.*\K /0/s;
+                    };
+                }
+            )
+            {
+                $count++;
+                earlyvalidate();
             };
 
             print "count: $count  fork: $fork  backup: $backup\n\n";
