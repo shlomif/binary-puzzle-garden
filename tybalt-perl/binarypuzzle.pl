@@ -1,4 +1,3 @@
-#!/usr/bin/perl
 
 =head1 COPYRIGHT & LICENSE
 
@@ -147,6 +146,20 @@ use MooX qw/late/;
 
 has 'str_ref' => (isa => 'ScalarRef[Str]', is => 'rw');
 
+sub transpose
+{
+    my ($self) = @_;
+
+    my $str_ref = $self->str_ref;
+
+    $prev = $$str_ref;
+    my $new = '';
+    $new .= "\n" while $$str_ref =~ s/^(.)/ $new .= $1; ''/gem;
+    $$str_ref = $new;
+
+    return 0;
+}
+
 sub _replace
 {
     my $s = shift;
@@ -249,23 +262,14 @@ sub hard
 
 package main;
 
-sub transpose
-{
-    my ($str_ref) = @_;
-
-    $prev = $$str_ref;
-    my $new = '';
-    $new .= "\n" while $$str_ref =~ s/^(.)/ $new .= $1; ''/gem;
-    $$str_ref = $new;
-
-    return 0;
-}
 
 sub earlyvalidate
 {
-    my ($str_ref) = @_;
+    my ($obj) = @_;
 
-    transpose($str_ref);
+    my $str_ref = $obj->str_ref;
+
+    $obj->transpose();
     my $both = "\n$prev\n\n$$str_ref\n";
 
     my $verify = sub {
@@ -305,10 +309,10 @@ sub obj__code_or_transpose
     }
     else
     {
-        transpose($obj->str_ref);
+        $obj->transpose();
         if ($obj->$meth())
         {
-            transpose($obj->str_ref);
+            $obj->transpose();
             return 1;
         }
         else
@@ -375,7 +379,7 @@ for my $puz (@puzzles)
             while ($try_move->(\$state))
             {
                 $count++;
-                earlyvalidate(\$state);
+                earlyvalidate($obj);
             };
 
             print "count: $count  fork: $fork  backup: $backup\n\n";
@@ -384,7 +388,7 @@ for my $puz (@puzzles)
             {
                 die "incomplete";
             }
-            earlyvalidate(\$state);
+            earlyvalidate($obj);
         };
         if ($@)
         {
