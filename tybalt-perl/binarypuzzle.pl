@@ -238,14 +238,13 @@ sub hard
 {
     my ($str_ref) = @_;
 
-    local $_ = $$str_ref;
-
     my $ret = (do {  # 101010/101--- -> 101-0-
         my ($sum, $new, $mod) = 0;
-        for my $i (/^\d* \d* \d* \d*$/gm) # find single of 3, set oppo
+        # find single of 3, set oppo
+        for my $i ($$str_ref =~ /^\d* \d* \d* \d*$/gm)
         {
             my $p = $i =~ s/ /[01]/gr;
-            /($p)/ ? ($new = $1) : next;
+            $$str_ref =~ /($p)/ ? ($new = $1) : next;
             if( $i =~ tr/0// < $i =~ tr/1// ) # needs singleton 1
             {
                 $mod = ($i =~ tr/ 01/1 /r & $new) =~ tr/01/ 0/r | $i;
@@ -254,14 +253,13 @@ sub hard
             {
                 $mod = ($i =~ tr/ 01/1 /r & $new) =~ tr/01/1 /r | $i;
             }
-            $sum += s/$i/$mod/;
+            $sum += ($$str_ref =~ s/$i/$mod/);
             print "i $i  mod $mod\n";
         }
         $sum;
     } or
     0);
 
-    $$str_ref = $_;
     return $ret;
 }
 
