@@ -222,18 +222,21 @@ sub medium
             s/^(?=(?:.*1){$m1}).*?[ 0]{3}.*?\K /0/m or
             s/^(?=(?:.*0){$m1}).*?[ 1]{3}.*?\K /1/m or
 
-            do{
+            do {
                 my ($sum, $new) = 0;
+                I_LOOP:
                 for my $i (/^\d* \d* \d*$/gm) # cet as opposite
                 {
                     my $p = $i =~ s/ /[01]/gr;
-                    /($p)/ or next;
+                    if ($_ !~ /($p)/)
+                    {
+                        next I_LOOP;
+                    }
                     $new = $1 ^ $i =~ tr| 01|\1\0\0|r;
                     $sum += s/$i/$new/;
                 }
                 $sum;
-            } or
-            0
+            }
         );
     }
 
