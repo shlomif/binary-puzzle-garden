@@ -151,8 +151,10 @@ sub transpose
 
 sub earlyvalidate
 {
-    transpose(\$_);
-    my $both = "\n$prev\n\n$_\n";
+    my ($str_ref) = @_;
+
+    transpose($str_ref);
+    my $both = "\n$prev\n\n$$str_ref\n";
 
     my $verify = sub {
         my ($dim, $v) = @_;
@@ -170,10 +172,10 @@ sub earlyvalidate
         }
     };
 
-    $verify->('column', $_);
+    $verify->('column', $$str_ref);
     $verify->('row', $prev);
 
-    $_ = $prev;
+    $$str_ref = $prev;
 
     return;
 }
@@ -327,7 +329,7 @@ for (@puzzles)
             while ($try_move->())
             {
                 $count++;
-                earlyvalidate();
+                earlyvalidate(\$_);
             };
 
             print "count: $count  fork: $fork  backup: $backup\n\n";
@@ -336,7 +338,7 @@ for (@puzzles)
             {
                 die "incomplete";
             }
-            earlyvalidate();
+            earlyvalidate(\$_);
         };
         $@ ? print "failed $@" : last;
     }
