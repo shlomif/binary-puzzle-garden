@@ -151,21 +151,21 @@ sub earlyvalidate
     transpose();
     my $both = "\n$prev\n\n$_\n";
 
-    /(000)/ || /(111)/ and die "three $1 in a column$both";
-    if (my @m = grep tr/1// != tr/0//, /^\d+$/gm)
-    {
-        die "unequal column count @m$both";
-    }
-    /^(\d+)\n\C*\1\n/m and die "error: duplicate column <$1>\n$both";
+    my $verify = sub {
+        my ($dim) = @_;
+        /(000)/ || /(111)/ and die "three $1 in a $dim$both";
+        if (my @m = grep tr/1// != tr/0//, /^\d+$/gm)
+        {
+            die "unequal $dim count @m$both";
+        }
+        /^(\d+)\n\C*\1\n/m and die "error: duplicate $dim <$1>\n$both";
+    };
 
+    $verify->('column');
     $_ = $prev;
+    $verify->('row');
 
-    /(000)/ || /(111)/ and die "three $1 in a row$both";
-    if (my @m = grep tr/1// != tr/0//, /^\d+$/gm)
-    {
-        die "unequal column count @m$both";
-    }
-    /^(\d+)\n\C*\1\n/m and die "error: duplicate row <$1>\n$both";
+    return;
 }
 
 sub tips
