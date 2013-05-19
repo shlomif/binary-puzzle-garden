@@ -283,7 +283,9 @@ for (@puzzles)
                 || do {
                     if (/ /)
                     {
-                        ((print("fork\n") + (++$fork)) + push(@stack, s/^.*\K /1/rs))
+                        print("fork\n");
+                        $fork++;
+                        push @stack, s/^.*\K /1/rs;
                     }
                     s/^.*\K /0/s;
                 };
