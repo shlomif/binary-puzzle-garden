@@ -323,6 +323,7 @@ for (@puzzles)
         || $do_fork->(\$_);
     };
 
+    STACK:
     while ($_ = pop @stack)
     {
         $backup++;
@@ -344,7 +345,14 @@ for (@puzzles)
             }
             earlyvalidate(\$_);
         };
-        $@ ? print "failed $@" : last;
+        if ($@)
+        {
+            print "failed $@";
+        }
+        else
+        {
+            last STACK;
+        }
     }
 }
 
