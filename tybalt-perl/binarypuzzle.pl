@@ -199,35 +199,34 @@ sub medium ()
 
 sub hard ()
 {
-    do{  # 101010/101--- -> 101-0-
-        my ($sum, $new, $mod) = 0;
-        FIND_SINGLE_OF_3:
-        for my $i (/^\d* \d* \d* \d*$/gm) # find single of 3, set oppo
+    my $sum = 0;
+    my $new;
+    my $mod;
+    FIND_SINGLE_OF_3:
+    for my $i (/^\d* \d* \d* \d*$/gm) # find single of 3, set oppo
+    {
+        my $p = $i =~ s/ /[01]/gr;
+        if (my ($match) = /($p)/)
         {
-            my $p = $i =~ s/ /[01]/gr;
-            if (my ($match) = /($p)/)
-            {
-                $new = $match;
-            }
-            else
-            {
-                next FIND_SINGLE_OF_3;
-            }
-
-            if( $i =~ tr/0// < $i =~ tr/1// ) # needs singleton 1
-            {
-                $mod = ($i =~ tr/ 01/1 /r & $new) =~ tr/01/ 0/r | $i;
-            }
-            else
-            {
-                $mod = ($i =~ tr/ 01/1 /r & $new) =~ tr/01/1 /r | $i;
-            }
-            $sum += s/$i/$mod/;
-            print "i $i  mod $mod\n";
+            $new = $match;
         }
-        $sum;
-    } or
-    0;
+        else
+        {
+            next FIND_SINGLE_OF_3;
+        }
+
+        if( $i =~ tr/0// < $i =~ tr/1// ) # needs singleton 1
+        {
+            $mod = ($i =~ tr/ 01/1 /r & $new) =~ tr/01/ 0/r | $i;
+        }
+        else
+        {
+            $mod = ($i =~ tr/ 01/1 /r & $new) =~ tr/01/1 /r | $i;
+        }
+        $sum += s/$i/$mod/;
+        print "i $i  mod $mod\n";
+    }
+    return $sum;
 }
 
 for (@puzzles[-1])
