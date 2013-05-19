@@ -31,6 +31,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 =cut
 
 use strict;
+use warnings;
 
 my @puzzles = (<<END) =~ /(?:.+\n)+/g;
 
