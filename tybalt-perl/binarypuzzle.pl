@@ -201,10 +201,19 @@ sub hard ()
 {
     do{  # 101010/101--- -> 101-0-
         my ($sum, $new, $mod) = 0;
+        FIND_SINGLE_OF_3:
         for my $i (/^\d* \d* \d* \d*$/gm) # find single of 3, set oppo
         {
             my $p = $i =~ s/ /[01]/gr;
-            /($p)/ ? ($new = $1) : next;
+            if (my ($match) = /($p)/)
+            {
+                $new = $match;
+            }
+            else
+            {
+                next FIND_SINGLE_OF_3;
+            }
+
             if( $i =~ tr/0// < $i =~ tr/1// ) # needs singleton 1
             {
                 $mod = ($i =~ tr/ 01/1 /r & $new) =~ tr/01/ 0/r | $i;
