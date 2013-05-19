@@ -289,13 +289,15 @@ sub code_or_transpose
     }
 }
 
-for (@puzzles)
+for my $puz (@puzzles)
 {
-    tr/-/ /;
-    $half = tr/\n// / 2;
+    $puz =~ tr/-/ /;
+    $half = ($puz =~ tr/\n//) / 2;
     $m1 = $half - 1;
 
-    my @stack = ($_);
+    my @stack;
+
+    push @stack, $puz;
 
     my $count = 0;
     my $fork = 0;
