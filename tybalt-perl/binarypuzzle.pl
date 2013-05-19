@@ -169,7 +169,7 @@ sub _replace
     return $s =~ s/ /1-$d/er;
 }
 
-sub tips
+sub _move_tips
 {
     my ($self) = @_;
 
@@ -209,7 +209,7 @@ sub _medium_helper
     return $sum;
 }
 
-sub medium
+sub _move_medium
 {
     my ($self) = @_;
 
@@ -226,7 +226,7 @@ sub medium
     );
 }
 
-sub hard
+sub _move_hard
 {
     my ($self) = @_;
 
@@ -264,7 +264,9 @@ sub hard
 
 sub _code_or_transpose
 {
-    my ($self, $meth) = @_;
+    my ($self, $meth_base) = @_;
+
+    my $meth = "_move_$meth_base";
 
     if ($self->$meth())
     {
