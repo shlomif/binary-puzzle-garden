@@ -337,10 +337,10 @@ for my $puz (@puzzles)
     my $fork = 0;
     my $backup = -1;
 
-    my $obj;
-
     my $do_fork = sub {
-        my ($str_ref) = @_;
+        my $obj = shift;
+
+        my $str_ref = $obj->str_ref;
 
         if ($$str_ref =~ / /)
         {
@@ -353,20 +353,22 @@ for my $puz (@puzzles)
     };
 
     my $try_move = sub {
-        my ($str_ref) = @_;
+        my $obj = shift;
+
+        my $str_ref = $obj->str_ref;
 
         print("\n$$str_ref\n");
 
         return obj__code_or_transpose('tips', $obj)
         || obj__code_or_transpose('medium', $obj)
         || obj__code_or_transpose('hard', $obj)
-        || $do_fork->($str_ref);
+        || $do_fork->($obj);
     };
 
     STACK:
     while (my $state = pop @stack)
     {
-        $obj = BinaryPuzzle::Board->new(
+        my $obj = BinaryPuzzle::Board->new(
             {
                 str_ref => \$state,
             }
@@ -376,7 +378,7 @@ for my $puz (@puzzles)
 
         eval
         {
-            while ($try_move->(\$state))
+            while ($try_move->($obj))
             {
                 $count++;
                 earlyvalidate($obj);
