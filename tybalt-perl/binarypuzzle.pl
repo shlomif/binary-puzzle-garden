@@ -262,7 +262,7 @@ sub hard
     return $sum;
 }
 
-sub code_or_transpose
+sub _code_or_transpose
 {
     my ($self, $meth) = @_;
 
@@ -290,7 +290,7 @@ sub call_moves
 {
     my ($self) = @_;
 
-    return (first { $self->code_or_transpose($_) } qw(tips medium hard));
+    return (first { $self->_code_or_transpose($_) } qw(tips medium hard));
 }
 
 sub earlyvalidate
