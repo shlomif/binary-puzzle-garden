@@ -33,6 +33,8 @@ OTHER DEALINGS IN THE SOFTWARE.
 use strict;
 use warnings;
 
+use List::MoreUtils (qw( any ));
+
 my @puzzles = (<<END) =~ /(?:.+\n)+/g;
 
 1--0--
@@ -181,29 +183,28 @@ sub earlyvalidate
     return;
 }
 
+sub _replace
+{
+    my $s = shift;
+    my ($d) = $s =~ /(\d)/g;
+    return $s =~ s/ /1-$d/er;
+}
+
 sub tips
 {
     my ($str_ref) = @_;
-    my $ret;
 
-    for ($$str_ref)
-    {
-        $ret =
-        (
-            s/^(?=(?:.*1){$half}).*?\K /0/m or # max 1, needs 0
-            s/^(?=(?:.*0){$half}).*?\K /1/m or # max 0, needs 1
-
-            s/ 00/100/ or # avoid 000
-            s/0 0/010/ or
-            s/00 /001/ or
-            s/ 11/011/ or # avoid 111
-            s/1 1/101/ or
-            s/11 /110/ or
-            0
-        );
-    }
-
-    return $ret;
+    return
+    (
+        $$str_ref =~ s/^(?=(?:.*1){$half}).*?\K /0/m or # max 1, needs 0
+        $$str_ref =~ s/^(?=(?:.*0){$half}).*?\K /1/m or # max 0, needs 1
+        (any {
+                my $pat = $_;
+                $$str_ref =~ s#($pat)#_replace($1)#e
+            } (' 00', '0 0', '00 ', ' 11', '1 1', '11 ')
+        ) or
+        0
+    );
 }
 
 sub medium
