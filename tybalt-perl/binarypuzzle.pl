@@ -146,6 +146,44 @@ use MooX qw/late/;
 
 has 'str_ref' => (isa => 'ScalarRef[Str]', is => 'rw');
 
+sub _medium_helper
+{
+    my ($str_ref) = @_;
+
+    my ($sum, $new) = 0;
+
+    I_LOOP:
+    for my $i ($$str_ref =~ /^\d* \d* \d*$/gm) # cet as opposite
+    {
+        my $p = $i =~ s/ /[01]/gr;
+        if ($$str_ref !~ /($p)/)
+        {
+            next I_LOOP;
+        }
+        $new = $1 ^ $i =~ tr| 01|\1\0\0|r;
+        $sum += ($$str_ref =~ s/$i/$new/);
+    }
+
+    return $sum;
+}
+
+sub medium
+{
+    my ($self) = @_;
+
+    my $str_ref = $self->str_ref;
+
+    return
+    (
+        # avoid 000/111
+           ($$str_ref =~ s/^(?=(?:.*1){$m1}).*?\K (?=.*?[ 0]{3})/0/m)
+        or ($$str_ref =~ s/^(?=(?:.*0){$m1}).*?\K (?=.*?[ 1]{3})/1/m)
+        or ($$str_ref =~ s/^(?=(?:.*1){$m1}).*?[ 0]{3}.*?\K /0/m)
+        or ($$str_ref =~ s/^(?=(?:.*0){$m1}).*?[ 1]{3}.*?\K /1/m)
+        or _medium_helper($str_ref)
+    );
+}
+
 sub hard
 {
     my ($self) = @_;
@@ -254,41 +292,7 @@ sub tips
     );
 }
 
-sub _medium_helper
-{
-    my ($str_ref) = @_;
 
-    my ($sum, $new) = 0;
-
-    I_LOOP:
-    for my $i ($$str_ref =~ /^\d* \d* \d*$/gm) # cet as opposite
-    {
-        my $p = $i =~ s/ /[01]/gr;
-        if ($$str_ref !~ /($p)/)
-        {
-            next I_LOOP;
-        }
-        $new = $1 ^ $i =~ tr| 01|\1\0\0|r;
-        $sum += ($$str_ref =~ s/$i/$new/);
-    }
-
-    return $sum;
-}
-
-sub medium
-{
-    my ($str_ref) = @_;
-
-    return
-    (
-        # avoid 000/111
-           ($$str_ref =~ s/^(?=(?:.*1){$m1}).*?\K (?=.*?[ 0]{3})/0/m)
-        or ($$str_ref =~ s/^(?=(?:.*0){$m1}).*?\K (?=.*?[ 1]{3})/1/m)
-        or ($$str_ref =~ s/^(?=(?:.*1){$m1}).*?[ 0]{3}.*?\K /0/m)
-        or ($$str_ref =~ s/^(?=(?:.*0){$m1}).*?[ 1]{3}.*?\K /1/m)
-        or _medium_helper($str_ref)
-    );
-}
 
 
 sub code_or_transpose
@@ -374,7 +378,7 @@ for my $puz (@puzzles)
         print("\n$$str_ref\n");
 
         return code_or_transpose(\&tips, $str_ref)
-        || code_or_transpose(\&medium, $str_ref)
+        || obj__code_or_transpose('medium', $obj)
         || obj__code_or_transpose('hard', $obj)
         || $do_fork->($str_ref);
     };
