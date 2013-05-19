@@ -196,7 +196,7 @@ sub medium
     0;
 }
 
-sub hard ()
+sub hard
 {
     do {  # 101010/101--- -> 101-0-
         my ($sum, $new, $mod) = 0;
@@ -241,8 +241,8 @@ for (@puzzles)
             (transpose() + tips() ? 1 + transpose() : ($_ = $prev, 0)) ||
             medium() ||
             (transpose() + medium() ? 1 + transpose() : ($_ = $prev, 0)) ||
-            hard ||
-            (transpose() + hard ? 1 + transpose() : ($_ = $prev, 0)) ||
+            hard() ||
+            (transpose() + hard() ? 1 + transpose() : ($_ = $prev, 0)) ||
             do { / / && print("fork\n") + ++$fork + push @stack,
                 s/^.*\K /1/sr; s/^.*\K /0/s };
 
