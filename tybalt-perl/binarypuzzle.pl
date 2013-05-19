@@ -295,31 +295,6 @@ sub earlyvalidate
     return;
 }
 
-
-sub code_or_transpose
-{
-    my ($code_ref, $str_ref) = @_;
-
-    if ($code_ref->($str_ref))
-    {
-        return 1;
-    }
-    else
-    {
-        transpose($str_ref);
-        if ($code_ref->($str_ref))
-        {
-            transpose($str_ref);
-            return 1;
-        }
-        else
-        {
-            $$str_ref = $prev;
-            return 0;
-        }
-    }
-}
-
 sub obj__code_or_transpose
 {
     my ($meth, $obj) = @_;
