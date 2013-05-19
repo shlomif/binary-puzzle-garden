@@ -175,7 +175,7 @@ sub tips
     0;
 }
 
-sub medium ()
+sub medium
 {
     s/^(?=(?:.*1){$m1}).*?\K (?=.*?[ 0]{3})/0/m or # avoid 000/111
     s/^(?=(?:.*0){$m1}).*?\K (?=.*?[ 1]{3})/1/m or
@@ -186,7 +186,7 @@ sub medium ()
         my ($sum, $new) = 0;
         for my $i (/^\d* \d* \d*$/gm) # cet as opposite
         {
-            my $p = $i =~ s/ /[01]/gr; 
+            my $p = $i =~ s/ /[01]/gr;
             /($p)/ or next;
             $new = $1 ^ $i =~ tr| 01|\1\0\0|r;
             $sum += s/$i/$new/;
@@ -239,8 +239,8 @@ for (@puzzles)
             $count++, earlyvalidate() while print("\n$_\n"),
             tips() ||
             (transpose() + tips() ? 1 + transpose() : ($_ = $prev, 0)) ||
-            medium ||
-            (transpose() + medium ? 1 + transpose() : ($_ = $prev, 0)) ||
+            medium() ||
+            (transpose() + medium() ? 1 + transpose() : ($_ = $prev, 0)) ||
             hard ||
             (transpose() + hard ? 1 + transpose() : ($_ = $prev, 0)) ||
             do { / / && print("fork\n") + ++$fork + push @stack,
