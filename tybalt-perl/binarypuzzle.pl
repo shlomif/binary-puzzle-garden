@@ -161,7 +161,7 @@ sub earlyvalidate
     /^(\d+)\n\C*\1\n/m and die "error: duplicate row <$1>\n$both";
 }
 
-sub tips ()
+sub tips
 {
     s/^(?=(?:.*1){$half}).*?\K /0/m or # max 1, needs 0
     s/^(?=(?:.*0){$half}).*?\K /1/m or # max 0, needs 1
@@ -237,8 +237,8 @@ for (@puzzles)
         eval
         {
             $count++, earlyvalidate() while print("\n$_\n"),
-            tips ||
-            (transpose() + tips ? 1 + transpose() : ($_ = $prev, 0)) ||
+            tips() ||
+            (transpose() + tips() ? 1 + transpose() : ($_ = $prev, 0)) ||
             medium ||
             (transpose() + medium ? 1 + transpose() : ($_ = $prev, 0)) ||
             hard ||
