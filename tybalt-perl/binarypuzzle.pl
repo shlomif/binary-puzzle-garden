@@ -145,7 +145,7 @@ sub transpose
     return 0;
 }
 
-sub earlyvalidate ()
+sub earlyvalidate
 {
     transpose();
     my $both = "\n$prev\n\n$_\n";
