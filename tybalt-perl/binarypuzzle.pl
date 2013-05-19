@@ -161,6 +161,7 @@ sub earlyvalidate
 
     my $verify = sub {
         my ($dim, $v) = @_;
+
         if (my ($match) = $v =~ /(([01])\2\2)/)
         {
             die "three $match in a $dim$both";
@@ -173,6 +174,8 @@ sub earlyvalidate
         {
             die "error: duplicate $dim <$1>\n$both";
         }
+
+        return;
     };
 
     $verify->('column', $$str_ref);
