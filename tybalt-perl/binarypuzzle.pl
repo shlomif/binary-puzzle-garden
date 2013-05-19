@@ -141,6 +141,7 @@ my ($half, $m1);
 package BinaryPuzzle::Board;
 
 use List::MoreUtils (qw( any ));
+use List::Util (qw( first ));
 
 use MooX qw/late/;
 
@@ -285,6 +286,13 @@ sub code_or_transpose
     }
 }
 
+sub call_moves
+{
+    my ($self) = @_;
+
+    return (first { $self->code_or_transpose($_) } qw(tips medium hard));
+}
+
 sub earlyvalidate
 {
     my ($self) = @_;
@@ -359,10 +367,7 @@ for my $puz (@puzzles)
 
         print("\n$$str_ref\n");
 
-        return $obj->code_or_transpose('tips')
-        || $obj->code_or_transpose('medium')
-        || $obj->code_or_transpose('hard')
-        || $do_fork->($obj);
+        return $obj->call_moves() || $do_fork->($obj);
     };
 
     STACK:
