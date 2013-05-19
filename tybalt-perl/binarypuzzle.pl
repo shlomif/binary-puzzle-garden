@@ -220,7 +220,7 @@ sub hard ()
 	0;
 	}
 
-for (@puzzles[-1])
+for (@puzzles)
 	{
 	tr/-/ /;
 	$half = tr/\n// / 2;
