@@ -139,16 +139,18 @@ my ($half, $m1, $prev);
 
 sub transpose
 {
-    $prev = $_;
+    my ($str_ref) = @_;
+
+    $prev = $$str_ref;
     my $new = '';
-    $new .= "\n" while s/^(.)/ $new .= $1; ''/gem;
-    $_ = $new;
+    $new .= "\n" while $$str_ref =~ s/^(.)/ $new .= $1; ''/gem;
+    $$str_ref = $new;
     return 0;
 }
 
 sub earlyvalidate
 {
-    transpose();
+    transpose(\$_);
     my $both = "\n$prev\n\n$_\n";
 
     my $verify = sub {
@@ -177,6 +179,11 @@ sub earlyvalidate
 
 sub tips
 {
+    my ($str_ref) = @_;
+    local $_ = $$str_ref;
+
+    my $ret =
+    (
     s/^(?=(?:.*1){$half}).*?\K /0/m or # max 1, needs 0
     s/^(?=(?:.*0){$half}).*?\K /1/m or # max 0, needs 1
 
@@ -186,17 +193,26 @@ sub tips
     s/ 11/011/ or # avoid 111
     s/1 1/101/ or
     s/11 /110/ or
-    0;
+    0
+    );
+
+    $$str_ref = $_;
+
+    return $ret;
 }
 
 sub medium
 {
+    my ($str_ref) = @_;
+    local $_ = $$str_ref;
+
+    my $ret = (
     s/^(?=(?:.*1){$m1}).*?\K (?=.*?[ 0]{3})/0/m or # avoid 000/111
     s/^(?=(?:.*0){$m1}).*?\K (?=.*?[ 1]{3})/1/m or
     s/^(?=(?:.*1){$m1}).*?[ 0]{3}.*?\K /0/m or
     s/^(?=(?:.*0){$m1}).*?[ 1]{3}.*?\K /1/m or
 
-    do{
+     do{
         my ($sum, $new) = 0;
         for my $i (/^\d* \d* \d*$/gm) # cet as opposite
         {
@@ -207,12 +223,20 @@ sub medium
         }
         $sum;
     } or
-    0;
+    0);
+
+    $$str_ref = $_;
+
+    return $ret;
 }
 
 sub hard
 {
-    do {  # 101010/101--- -> 101-0-
+    my ($str_ref) = @_;
+
+    local $_ = $$str_ref;
+
+    my $ret = (do {  # 101010/101--- -> 101-0-
         my ($sum, $new, $mod) = 0;
         for my $i (/^\d* \d* \d* \d*$/gm) # find single of 3, set oppo
         {
@@ -231,28 +255,31 @@ sub hard
         }
         $sum;
     } or
-    0;
+    0);
+
+    $$str_ref = $_;
+    return $ret;
 }
 
 sub code_or_transpose
 {
-    my ($code_ref) = @_;
+    my ($code_ref, $str_ref) = @_;
 
-    if ($code_ref->())
+    if ($code_ref->($str_ref))
     {
         return 1;
     }
     else
     {
-        transpose();
-        if ($code_ref->())
+        transpose($str_ref);
+        if ($code_ref->($str_ref))
         {
-            transpose();
+            transpose($str_ref);
             return 1;
         }
         else
         {
-            $_ = $prev;
+            $$str_ref = $prev;
             return 0;
         }
     }
@@ -283,9 +310,9 @@ for (@puzzles)
     my $try_move = sub {
         print("\n$_\n");
 
-        return code_or_transpose(\&tips)
-        || code_or_transpose(\&medium)
-        || code_or_transpose(\&hard)
+        return code_or_transpose(\&tips, \$_)
+        || code_or_transpose(\&medium, \$_)
+        || code_or_transpose(\&hard, \$_)
         || $do_fork->();
     };
 
