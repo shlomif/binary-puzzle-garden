@@ -298,7 +298,10 @@ for (@puzzles)
 
             print "count: $count  fork: $fork  backup: $backup\n\n";
 
-            / / and die "incomplete";  # validate
+            if (/ /)
+            {
+                die "incomplete";
+            }
             earlyvalidate();
         };
         $@ ? print "failed $@" : last;
