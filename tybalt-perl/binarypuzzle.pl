@@ -239,7 +239,8 @@ sub hard
     my ($str_ref) = @_;
 
     my $ret = (do {  # 101010/101--- -> 101-0-
-        my ($sum, $new, $mod) = 0;
+        my $sum = 0;
+        my ($new, $mod);
         # find single of 3, set oppo
         SINGLE_3:
         for my $i ($$str_ref =~ /^\d* \d* \d* \d*$/gm)
