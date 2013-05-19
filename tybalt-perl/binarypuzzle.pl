@@ -317,12 +317,14 @@ for my $puz (@puzzles)
     };
 
     my $try_move = sub {
-        print("\n$_\n");
+        my ($str_ref) = @_;
 
-        return code_or_transpose(\&tips, \$_)
-        || code_or_transpose(\&medium, \$_)
-        || code_or_transpose(\&hard, \$_)
-        || $do_fork->(\$_);
+        print("\n$$str_ref\n");
+
+        return code_or_transpose(\&tips, $str_ref)
+        || code_or_transpose(\&medium, $str_ref)
+        || code_or_transpose(\&hard, $str_ref)
+        || $do_fork->($str_ref);
     };
 
     STACK:
@@ -333,7 +335,7 @@ for my $puz (@puzzles)
 
         eval
         {
-            while ($try_move->())
+            while ($try_move->(\$_))
             {
                 $count++;
                 earlyvalidate(\$_);
@@ -341,7 +343,7 @@ for my $puz (@puzzles)
 
             print "count: $count  fork: $fork  backup: $backup\n\n";
 
-            if (/ /)
+            if ($_ =~ / /)
             {
                 die "incomplete";
             }
