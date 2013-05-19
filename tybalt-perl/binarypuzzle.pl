@@ -184,23 +184,24 @@ sub earlyvalidate
 sub tips
 {
     my ($str_ref) = @_;
-    local $_ = $$str_ref;
+    my $ret;
 
-    my $ret =
-    (
-    s/^(?=(?:.*1){$half}).*?\K /0/m or # max 1, needs 0
-    s/^(?=(?:.*0){$half}).*?\K /1/m or # max 0, needs 1
+    for ($$str_ref)
+    {
+        $ret =
+        (
+            s/^(?=(?:.*1){$half}).*?\K /0/m or # max 1, needs 0
+            s/^(?=(?:.*0){$half}).*?\K /1/m or # max 0, needs 1
 
-    s/ 00/100/ or # avoid 000
-    s/0 0/010/ or
-    s/00 /001/ or
-    s/ 11/011/ or # avoid 111
-    s/1 1/101/ or
-    s/11 /110/ or
-    0
-    );
-
-    $$str_ref = $_;
+            s/ 00/100/ or # avoid 000
+            s/0 0/010/ or
+            s/00 /001/ or
+            s/ 11/011/ or # avoid 111
+            s/1 1/101/ or
+            s/11 /110/ or
+            0
+        );
+    }
 
     return $ret;
 }
