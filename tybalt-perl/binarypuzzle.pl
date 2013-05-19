@@ -240,11 +240,11 @@ for (@puzzles)
     $half = tr/\n// / 2;
     $m1 = $half - 1;
 
-    my @stack = $_;
+    my @stack = ($_);
 
     my ($count, $fork, $backup) = (0, 0, -1);
 
-    while($_ = pop @stack)
+    while ($_ = pop @stack)
     {
         $backup++;
         print "new\n";
