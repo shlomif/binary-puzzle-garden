@@ -278,6 +278,15 @@ for (@puzzles)
         return s/^.*\K /0/s;
     };
 
+    my $try_move = sub {
+        print("\n$_\n");
+
+        return code_or_transpose(\&tips)
+        || code_or_transpose(\&medium)
+        || code_or_transpose(\&hard)
+        || $do_fork->();
+    };
+
     while ($_ = pop @stack)
     {
         $backup++;
@@ -285,14 +294,7 @@ for (@puzzles)
 
         eval
         {
-            while (do {
-                    print("\n$_\n");
-                    code_or_transpose(\&tips)
-                    || code_or_transpose(\&medium)
-                    || code_or_transpose(\&hard)
-                    || $do_fork->()
-                }
-            )
+            while ($try_move->())
             {
                 $count++;
                 earlyvalidate();
