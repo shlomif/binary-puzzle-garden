@@ -241,10 +241,18 @@ sub hard
     my $ret = (do {  # 101010/101--- -> 101-0-
         my ($sum, $new, $mod) = 0;
         # find single of 3, set oppo
+        SINGLE_3:
         for my $i ($$str_ref =~ /^\d* \d* \d* \d*$/gm)
         {
             my $p = $i =~ s/ /[01]/gr;
-            $$str_ref =~ /($p)/ ? ($new = $1) : next;
+            if (my ($m) = $$str_ref =~ /($p)/)
+            {
+                $new = $m;
+            }
+            else
+            {
+                next SINGLE_3;
+            }
             if( $i =~ tr/0// < $i =~ tr/1// ) # needs singleton 1
             {
                 $mod = ($i =~ tr/ 01/1 /r & $new) =~ tr/01/ 0/r | $i;
