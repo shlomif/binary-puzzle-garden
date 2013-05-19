@@ -302,13 +302,16 @@ for (@puzzles)
     my $backup = -1;
 
     my $do_fork = sub {
-        if (/ /)
+        my ($str_ref) = @_;
+
+        if ($$str_ref =~ / /)
         {
             print("fork\n");
             $fork++;
-            push @stack, s/^.*\K /1/rs;
+            push @stack, $$str_ref =~ s/^.*\K /1/rs;
         }
-        return s/^.*\K /0/s;
+
+        return $$str_ref =~ s/^.*\K /0/s;
     };
 
     my $try_move = sub {
@@ -317,7 +320,7 @@ for (@puzzles)
         return code_or_transpose(\&tips, \$_)
         || code_or_transpose(\&medium, \$_)
         || code_or_transpose(\&hard, \$_)
-        || $do_fork->();
+        || $do_fork->(\$_);
     };
 
     while ($_ = pop @stack)
