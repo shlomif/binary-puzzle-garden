@@ -140,6 +140,50 @@ END
 
 my ($half, $m1, $prev);
 
+package BinaryPuzzle::Board;
+
+use MooX qw/late/;
+
+has 'str_ref' => (isa => 'ScalarRef[Str]', is => 'rw');
+
+sub hard
+{
+    my ($self) = @_;
+
+    my $str_ref = $self->str_ref;
+
+    my $sum = 0;
+    my ($new, $mod);
+    # find single of 3, set oppo
+    SINGLE_3:
+    for my $i ($$str_ref =~ /^\d* \d* \d* \d*$/gm)
+    {
+        my $p = $i =~ s/ /[01]/gr;
+        if (my ($m) = $$str_ref =~ /($p)/)
+        {
+            $new = $m;
+        }
+        else
+        {
+            next SINGLE_3;
+        }
+        if( $i =~ tr/0// < $i =~ tr/1// ) # needs singleton 1
+        {
+            $mod = ($i =~ tr/ 01/1 /r & $new) =~ tr/01/ 0/r | $i;
+        }
+        else
+        {
+            $mod = ($i =~ tr/ 01/1 /r & $new) =~ tr/01/1 /r | $i;
+        }
+        $sum += ($$str_ref =~ s/$i/$mod/);
+        print "i $i  mod $mod\n";
+    }
+
+    return $sum;
+}
+
+package main;
+
 sub transpose
 {
     my ($str_ref) = @_;
@@ -246,38 +290,6 @@ sub medium
     );
 }
 
-sub hard
-{
-    my ($str_ref) = @_;
-
-    my $sum = 0;
-    my ($new, $mod);
-    # find single of 3, set oppo
-    SINGLE_3:
-    for my $i ($$str_ref =~ /^\d* \d* \d* \d*$/gm)
-    {
-        my $p = $i =~ s/ /[01]/gr;
-        if (my ($m) = $$str_ref =~ /($p)/)
-        {
-            $new = $m;
-        }
-        else
-        {
-            next SINGLE_3;
-        }
-        if( $i =~ tr/0// < $i =~ tr/1// ) # needs singleton 1
-        {
-            $mod = ($i =~ tr/ 01/1 /r & $new) =~ tr/01/ 0/r | $i;
-        }
-        else
-        {
-            $mod = ($i =~ tr/ 01/1 /r & $new) =~ tr/01/1 /r | $i;
-        }
-        $sum += ($$str_ref =~ s/$i/$mod/);
-        print "i $i  mod $mod\n";
-    }
-    return $sum;
-}
 
 sub code_or_transpose
 {
@@ -303,6 +315,30 @@ sub code_or_transpose
     }
 }
 
+sub obj__code_or_transpose
+{
+    my ($meth, $obj) = @_;
+
+    if ($obj->$meth())
+    {
+        return 1;
+    }
+    else
+    {
+        transpose($obj->str_ref);
+        if ($obj->$meth())
+        {
+            transpose($obj->str_ref);
+            return 1;
+        }
+        else
+        {
+            ${$obj->str_ref} = $prev;
+            return 0;
+        }
+    }
+}
+
 for my $puz (@puzzles)
 {
     $puz =~ tr/-/ /;
@@ -316,6 +352,8 @@ for my $puz (@puzzles)
     my $count = 0;
     my $fork = 0;
     my $backup = -1;
+
+    my $obj;
 
     my $do_fork = sub {
         my ($str_ref) = @_;
@@ -337,13 +375,18 @@ for my $puz (@puzzles)
 
         return code_or_transpose(\&tips, $str_ref)
         || code_or_transpose(\&medium, $str_ref)
-        || code_or_transpose(\&hard, $str_ref)
+        || obj__code_or_transpose('hard', $obj)
         || $do_fork->($str_ref);
     };
 
     STACK:
     while (my $state = pop @stack)
     {
+        $obj = BinaryPuzzle::Board->new(
+            {
+                str_ref => \$state,
+            }
+        );
         $backup++;
         print "new\n";
 
