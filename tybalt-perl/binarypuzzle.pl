@@ -268,6 +268,16 @@ for (@puzzles)
 
     my ($count, $fork, $backup) = (0, 0, -1);
 
+    my $do_fork = sub {
+        if (/ /)
+        {
+            print("fork\n");
+            $fork++;
+            push @stack, s/^.*\K /1/rs;
+        }
+        return s/^.*\K /0/s;
+    };
+
     while ($_ = pop @stack)
     {
         $backup++;
@@ -280,15 +290,7 @@ for (@puzzles)
                     code_or_transpose(\&tips)
                     || code_or_transpose(\&medium)
                     || code_or_transpose(\&hard)
-                    || do {
-                        if (/ /)
-                        {
-                            print("fork\n");
-                            $fork++;
-                            push @stack, s/^.*\K /1/rs;
-                        }
-                        s/^.*\K /0/s;
-                    };
+                    || $do_fork->()
                 }
             )
             {
