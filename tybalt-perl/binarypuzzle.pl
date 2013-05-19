@@ -207,40 +207,40 @@ sub tips
     );
 }
 
+sub _medium_helper
+{
+    my ($str_ref) = @_;
+
+    my ($sum, $new) = 0;
+
+    I_LOOP:
+    for my $i ($$str_ref =~ /^\d* \d* \d*$/gm) # cet as opposite
+    {
+        my $p = $i =~ s/ /[01]/gr;
+        if ($$str_ref !~ /($p)/)
+        {
+            next I_LOOP;
+        }
+        $new = $1 ^ $i =~ tr| 01|\1\0\0|r;
+        $sum += ($$str_ref =~ s/$i/$new/);
+    }
+
+    return $sum;
+}
+
 sub medium
 {
     my ($str_ref) = @_;
 
-    my $ret;
-
-    for ($$str_ref)
-    {
-        $ret =
-        (
-            s/^(?=(?:.*1){$m1}).*?\K (?=.*?[ 0]{3})/0/m or # avoid 000/111
-            s/^(?=(?:.*0){$m1}).*?\K (?=.*?[ 1]{3})/1/m or
-            s/^(?=(?:.*1){$m1}).*?[ 0]{3}.*?\K /0/m or
-            s/^(?=(?:.*0){$m1}).*?[ 1]{3}.*?\K /1/m or
-
-            do {
-                my ($sum, $new) = 0;
-                I_LOOP:
-                for my $i (/^\d* \d* \d*$/gm) # cet as opposite
-                {
-                    my $p = $i =~ s/ /[01]/gr;
-                    if ($_ !~ /($p)/)
-                    {
-                        next I_LOOP;
-                    }
-                    $new = $1 ^ $i =~ tr| 01|\1\0\0|r;
-                    $sum += s/$i/$new/;
-                }
-                $sum;
-            }
-        );
-    }
-
-    return $ret;
+    return
+    (
+        # avoid 000/111
+           ($$str_ref =~ s/^(?=(?:.*1){$m1}).*?\K (?=.*?[ 0]{3})/0/m)
+        or ($$str_ref =~ s/^(?=(?:.*0){$m1}).*?\K (?=.*?[ 1]{3})/1/m)
+        or ($$str_ref =~ s/^(?=(?:.*1){$m1}).*?[ 0]{3}.*?\K /0/m)
+        or ($$str_ref =~ s/^(?=(?:.*0){$m1}).*?[ 1]{3}.*?\K /1/m)
+        or _medium_helper($str_ref)
+    );
 }
 
 sub hard
