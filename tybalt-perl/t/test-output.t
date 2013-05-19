@@ -4,14 +4,6 @@ use strict;
 use warnings;
 
 use Test::More tests => 1;
-<<<<<<< HEAD
-
-use Test::Differences (qw( eq_or_diff ));
-
-{
-    my $WS = ' ';
-    my $good_output = <<"EOF_GAME";
-=======
 use Test::Differences (qw( eq_or_diff ));
 
 {
@@ -12061,7 +12053,6 @@ new
 
 count: 47  fork: 0  backup: 0
 
->>>>>>> tybalt_refactoring
 new
 
  0${WS}${WS}${WS}${WS}${WS}${WS}
@@ -12545,16 +12536,6 @@ ${WS}${WS}${WS}${WS}${WS}${WS}${WS}${WS}
 
 count: 47  fork: 0  backup: 0
 
-<<<<<<< HEAD
-EOF_GAME
-
-
-    # TEST
-    eq_or_diff (
-        scalar(`$^X binarypuzzle.pl`),
-        $good_output,
-        "Good output is OK."
-=======
 EOF
 
     # TEST
@@ -12562,7 +12543,6 @@ EOF
         scalar(`$^X binarypuzzle.pl`),
         $good_output,
         "Testing for good output.",
->>>>>>> tybalt_refactoring
     );
 }
 
