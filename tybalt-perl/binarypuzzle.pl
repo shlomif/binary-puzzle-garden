@@ -234,6 +234,17 @@ sub hard
     0;
 }
 
+sub code_or_transpose
+{
+    my ($code_ref) = @_;
+
+    return $code_ref->() ||
+    (transpose() + $code_ref->()
+        ? (1 + transpose())
+        : do { $_ = $prev; 0}
+    );
+}
+
 for (@puzzles)
 {
     tr/-/ /;
@@ -248,16 +259,14 @@ for (@puzzles)
     {
         $backup++;
         print "new\n";
+
         eval
         {
             $count++, earlyvalidate() while print("\n$_\n"),
-            tips() ||
-            (transpose() + tips() ? 1 + transpose() : ($_ = $prev, 0)) ||
-            medium() ||
-            (transpose() + medium() ? 1 + transpose() : ($_ = $prev, 0)) ||
-            hard() ||
-            (transpose() + hard() ? 1 + transpose() : ($_ = $prev, 0)) ||
-            do { / / && print("fork\n") + ++$fork + push @stack,
+            code_or_transpose(\&tips)
+            || code_or_transpose(\&medium)
+            || code_or_transpose(\&hard)
+            || do { / / && print("fork\n") + ++$fork + push @stack,
                 s/^.*\K /1/sr; s/^.*\K /0/s };
 
             print "count: $count  fork: $fork  backup: $backup\n\n";
