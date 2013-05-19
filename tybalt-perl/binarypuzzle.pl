@@ -238,11 +238,24 @@ sub code_or_transpose
 {
     my ($code_ref) = @_;
 
-    return $code_ref->() ||
-    (transpose() + $code_ref->()
-        ? (1 + transpose())
-        : do { $_ = $prev; 0}
-    );
+    if ($code_ref->())
+    {
+        return 1;
+    }
+    else
+    {
+        transpose();
+        if ($code_ref->())
+        {
+            transpose();
+            return 1;
+        }
+        else
+        {
+            $_ = $prev;
+            return 0;
+        }
+    }
 }
 
 for (@puzzles)
