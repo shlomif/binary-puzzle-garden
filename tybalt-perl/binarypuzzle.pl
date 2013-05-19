@@ -152,18 +152,25 @@ sub earlyvalidate
     my $both = "\n$prev\n\n$_\n";
 
     my $verify = sub {
-        my ($dim) = @_;
-        /(000)/ || /(111)/ and die "three $1 in a $dim$both";
-        if (my @m = grep tr/1// != tr/0//, /^\d+$/gm)
+        my ($dim, $v) = @_;
+        if (my ($match) = $v =~ /(([01])\2\2)/)
+        {
+            die "three $match in a $dim$both";
+        }
+        if (my @m = grep { tr/1// != tr/0// } ($v =~ /^\d+$/gm))
         {
             die "unequal $dim count @m$both";
         }
-        /^(\d+)\n\C*\1\n/m and die "error: duplicate $dim <$1>\n$both";
+        if ($v =~ /^(\d+)\n\C*\1\n/m)
+        {
+            die "error: duplicate $dim <$1>\n$both";
+        }
     };
 
-    $verify->('column');
+    $verify->('column', $_);
+    $verify->('row', $prev);
+
     $_ = $prev;
-    $verify->('row');
 
     return;
 }
