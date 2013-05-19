@@ -145,6 +145,7 @@ sub transpose
     my $new = '';
     $new .= "\n" while $$str_ref =~ s/^(.)/ $new .= $1; ''/gem;
     $$str_ref = $new;
+
     return 0;
 }
 
