@@ -136,7 +136,7 @@ my @puzzles = (<<END) =~ /(?:.+\n)+/g;
 
 END
 
-my ($half, $m1);
+my ($m1);
 
 package BinaryPuzzle::Board;
 
@@ -145,6 +145,7 @@ use List::Util (qw( first ));
 
 use MooX qw/late/;
 
+has 'half' => (isa => 'Int', is => 'ro');
 has 'str_ref' => (isa => 'ScalarRef[Str]', is => 'rw');
 has 'prev' => (isa => 'Str', is => 'rw', default => sub { ''; });
 
@@ -174,6 +175,8 @@ sub _move_tips
     my ($self) = @_;
 
     my $str_ref = $self->str_ref;
+
+    my $half = $self->half;
 
     return
     (
@@ -345,7 +348,7 @@ package main;
 for my $puz (@puzzles)
 {
     $puz =~ tr/-/ /;
-    $half = ($puz =~ tr/\n//) / 2;
+    my $half = ($puz =~ tr/\n//) / 2;
     $m1 = $half - 1;
 
     my @stack;
@@ -387,6 +390,7 @@ for my $puz (@puzzles)
         my $obj = BinaryPuzzle::Board->new(
             {
                 str_ref => \$state,
+                half => $half,
             }
         );
         $backup++;
