@@ -136,8 +136,6 @@ my @puzzles = (<<END) =~ /(?:.+\n)+/g;
 
 END
 
-my ($m1);
-
 package BinaryPuzzle::Board;
 
 use List::MoreUtils (qw( any ));
@@ -212,11 +210,20 @@ sub _medium_helper
     return $sum;
 }
 
+sub _calc_half_minus_1
+{
+    my ($self) = @_;
+
+    return $self->half - 1;
+}
+
 sub _move_medium
 {
     my ($self) = @_;
 
     my $str_ref = $self->str_ref;
+
+    my $m1 = $self->_calc_half_minus_1;
 
     return
     (
@@ -349,7 +356,6 @@ for my $puz (@puzzles)
 {
     $puz =~ tr/-/ /;
     my $half = ($puz =~ tr/\n//) / 2;
-    $m1 = $half - 1;
 
     my @stack;
 
