@@ -106,12 +106,11 @@ sub _medium_helper
     for my $i ($$str_ref =~ /^\d* \d* \d*$/gm) # cet as opposite
     {
         my $p = $i =~ s/ /[01]/gr;
-        if ($$str_ref !~ /($p)/)
+        if (my ($match) = ($$str_ref =~ /($p)/))
         {
-            next I_LOOP;
+            $new = $match ^ ($i =~ tr| 01|\1\0\0|r);
+            $sum += ($$str_ref =~ s/$i/$new/);
         }
-        $new = $1 ^ ($i =~ tr| 01|\1\0\0|r);
-        $sum += ($$str_ref =~ s/$i/$new/);
     }
 
     return $sum;
