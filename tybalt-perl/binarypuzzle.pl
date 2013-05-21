@@ -371,7 +371,7 @@ for my $puz (@puzzles)
 
         my $str_ref = $obj->str_ref;
 
-        if ($$str_ref =~ / /)
+        if ($obj->is_incomplete())
         {
             print("fork\n");
             $fork++;
