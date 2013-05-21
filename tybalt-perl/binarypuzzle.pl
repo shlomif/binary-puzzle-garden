@@ -110,7 +110,7 @@ sub _medium_helper
         {
             next I_LOOP;
         }
-        $new = $1 ^ $i =~ tr| 01|\1\0\0|r;
+        $new = $1 ^ ($i =~ tr| 01|\1\0\0|r);
         $sum += ($$str_ref =~ s/$i/$new/);
     }
 
