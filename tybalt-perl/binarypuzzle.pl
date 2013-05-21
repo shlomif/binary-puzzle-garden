@@ -295,6 +295,15 @@ sub call_moves
     return (first { $self->_code_or_transpose($_) } qw(tips medium hard));
 }
 
+sub is_incomplete
+{
+    my ($self) = @_;
+
+    my $str_ref = $self->str_ref;
+
+    return ($$str_ref =~ / /);
+}
+
 sub earlyvalidate
 {
     my ($self) = @_;
@@ -393,7 +402,7 @@ for my $puz (@puzzles)
 
             print "count: $count  fork: $fork  backup: $backup\n\n";
 
-            if ($state =~ / /)
+            if ($obj->is_incomplete())
             {
                 die "incomplete";
             }
