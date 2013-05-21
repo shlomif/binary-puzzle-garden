@@ -41,7 +41,15 @@ use List::Util (qw( first ));
 
 use MooX qw/late/;
 
-has 'half' => (isa => 'Int', is => 'ro');
+has 'half' => (isa => 'Int', is => 'ro', lazy => 1, default =>
+    sub
+    {
+        my ($self) = @_;
+
+        return ((${$self->str_ref} =~ tr/\n//) / 2);
+    }
+);
+
 has 'str_ref' => (isa => 'ScalarRef[Str]', is => 'rw');
 has 'prev' => (isa => 'Str', is => 'rw', default => sub { ''; });
 
@@ -356,7 +364,6 @@ END
 for my $puz (@puzzles)
 {
     $puz =~ tr/-/ /;
-    my $half = ($puz =~ tr/\n//) / 2;
 
     my @stack;
 
@@ -397,7 +404,6 @@ for my $puz (@puzzles)
         my $obj = BinaryPuzzle::Board->new(
             {
                 str_ref => \$state,
-                half => $half,
             }
         );
         $backup++;
