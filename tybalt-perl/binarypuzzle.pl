@@ -2,6 +2,7 @@
 =head1 COPYRIGHT & LICENSE
 
 Copyright 2012 Richard Klement.
+Copyright 2013 Shlomi Fish.
 
 This program is distributed under the MIT (X11) License:
 L<http://www.opensource.org/licenses/mit-license.php>
