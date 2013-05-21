@@ -100,7 +100,7 @@ sub _medium_helper
 {
     my ($str_ref) = @_;
 
-    my ($sum, $new) = 0;
+    my $sum = 0;
 
     I_LOOP:
     for my $i ($$str_ref =~ /^\d* \d* \d*$/gm) # cet as opposite
@@ -108,7 +108,7 @@ sub _medium_helper
         my $p = $i =~ s/ /[01]/gr;
         if (my ($match) = ($$str_ref =~ /($p)/))
         {
-            $new = $match ^ ($i =~ tr| 01|\1\0\0|r);
+            my $new = $match ^ ($i =~ tr| 01|\1\0\0|r);
             $sum += ($$str_ref =~ s/$i/$new/);
         }
     }
