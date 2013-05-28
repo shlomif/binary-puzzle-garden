@@ -362,22 +362,6 @@ end
 
 def get_10x10_hard_board_1__final()
     input_str = <<'EOF'
-|  0       |
-|0 0  1    |
-|        1 |
-|      0  0|
-|1 00 1    |
-|          |
-|  0  1 1  |
-|1       11|
-|   0      |
-|1   1 1 1 |
-EOF
-    return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
-end
-
-def get_10x10_hard_board_1__final()
-    input_str = <<'EOF'
 |1101100100|
 |0101011001|
 |0010101011|
