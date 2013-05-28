@@ -212,6 +212,10 @@ module Binary_Puzzle_Solver
             return
         end
 
+        def get_moves
+            return @old_moves
+        end
+
         def add_move(m)
             @new_moves.push(m)
 

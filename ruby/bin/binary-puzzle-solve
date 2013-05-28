@@ -5,4 +5,25 @@ require 'binary_puzzle_solver'
 filename = ARGV.shift
 board = Binary_Puzzle_Solver.gen_board_from_string_v1(IO.read(filename))
 
+board.add_to_iters_quota(1_000_000_000);
+board.try_to_solve_using(
+    :methods => [
+        :check_and_handle_sequences_in_row,
+        :check_and_handle_known_unknown_sameknown_in_row,
+        :check_and_handle_cells_of_one_value_in_row_were_all_found,
+        :check_exceeded_numbers_while_accounting_for_two_unknown_gaps,
+        :check_try_placing_last_of_certain_digit_in_row,
+    ]
+);
 
+puts "[Start Moves]"
+board.get_moves.each do |m|
+    puts "Put #{m.val} in x=#{m.coord.x} y=#{m.coord.y} due to:"
+    puts "    #{m.reason}"
+    puts "    Based on #{m.dir}"
+end
+puts "[End Moves]"
+
+puts "------------------------------"
+
+puts board.as_string()
