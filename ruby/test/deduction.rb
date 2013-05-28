@@ -376,22 +376,6 @@ EOF
     return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
 end
 
-def get_10x10_hard_board_1__intermediate_2()
-    input_str = <<'EOF'
-|1 0  0  0 |
-|010  1  0 |
-|001  01011|
-|101  10100|
-|1100110010|
-|001  01101|
-|010  10110|
-|1      011|
-|0  0   101|
-|1   101010|
-EOF
-    return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
-end
-
 describe "construct_board" do
     it "6*6 Easy board No. 1 should" do
 
