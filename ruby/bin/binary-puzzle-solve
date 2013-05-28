@@ -1,0 +1,8 @@
+#!/usr/bin/env ruby
+
+require 'binary_puzzle_solver'
+
+filename = ARGV.shift
+board = Binary_Puzzle_Solver.gen_board_from_string_v1(IO.read(filename))
+
+

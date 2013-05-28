@@ -6,6 +6,7 @@ require "binary_puzzle_solver/version"
 Gem::Specification.new do |s|
     s.name        = "binary_puzzle_solver"
     s.version     = Binary_Puzzle_Solver::VERSION
+    s.executables << 'binary-puzzle-solve'
     s.platform    = Gem::Platform::RUBY
     s.authors     = ["Shlomi Fish"]
     s.email       = ["shlomif@cpan.org"]
