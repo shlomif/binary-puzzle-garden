@@ -376,6 +376,38 @@ EOF
     return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
 end
 
+def get_10x10_hard_board_2__initial()
+    input_str = <<'EOF'
+|   0  1  0|
+|  1 1   0 |
+| 0     10 |
+| 0        |
+|    0     |
+|  1      0|
+|   1  0   |
+| 0      0 |
+| 00    0 0|
+|   0  1 0 |
+EOF
+    return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
+end
+
+def get_10x10_hard_board_2__final()
+    input_str = <<'EOF'
+|0110011010|
+|0110100101|
+|1001010101|
+|1001101010|
+|0110010101|
+|1011001010|
+|0101100110|
+|0010110101|
+|1001011010|
+|1100101001|
+EOF
+    return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
+end
+
 describe "construct_board" do
     it "6*6 Easy board No. 1 should" do
 
@@ -876,6 +908,29 @@ describe "rudimentary_deduction" do
         ).should == ONE
 
         final_board = get_10x10_hard_board_1__final()
+
+        # binding.pry
+
+        compare_boards(board, final_board)
+    end
+
+    it "Solving 10*10 Hard board No. 2 should" do
+
+        board = get_10x10_hard_board_2__initial()
+
+        board.add_to_iters_quota(1_000_000_000);
+
+        board.try_to_solve_using(
+            :methods => [
+                :check_and_handle_sequences_in_row,
+                :check_and_handle_known_unknown_sameknown_in_row,
+                :check_and_handle_cells_of_one_value_in_row_were_all_found,
+                :check_exceeded_numbers_while_accounting_for_two_unknown_gaps,
+                :check_try_placing_last_of_certain_digit_in_row,
+            ]
+        );
+
+        final_board = get_10x10_hard_board_2__final()
 
         # binding.pry
 
