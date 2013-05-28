@@ -376,7 +376,23 @@ EOF
     return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
 end
 
-def get_10x10_hard_board_1__intermediate_1()
+def get_10x10_hard_board_1__final()
+    input_str = <<'EOF'
+|1101100100|
+|0101011001|
+|0010101011|
+|1011010100|
+|1100110010|
+|0011001101|
+|0100110110|
+|1001001011|
+|0110010101|
+|1010101010|
+EOF
+    return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
+end
+
+def get_10x10_hard_board_1__intermediate_2()
     input_str = <<'EOF'
 |1 0  0  0 |
 |010  1  0 |
@@ -391,7 +407,6 @@ def get_10x10_hard_board_1__intermediate_1()
 EOF
     return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
 end
-
 
 describe "construct_board" do
     it "6*6 Easy board No. 1 should" do
@@ -888,7 +903,13 @@ describe "rudimentary_deduction" do
             ]
         );
 
-        final_board = get_10x10_hard_board_1__intermediate_1()
+        board.get_cell_state(
+            Binary_Puzzle_Solver::Coord.new(:x => 9, :y => 1)
+        ).should == ONE
+
+        final_board = get_10x10_hard_board_1__final()
+
+        # binding.pry
 
         compare_boards(board, final_board)
     end

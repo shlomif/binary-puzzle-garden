@@ -571,20 +571,27 @@ module Binary_Puzzle_Solver
             gaps = {}
 
             next_gap = []
+
+            add_gap = lambda {
+                l = next_gap.length
+                if (l > 0)
+                    if not gaps[l]
+                        gaps[l] = []
+                    end
+                    gaps[l] << next_gap
+                    next_gap = []
+                end
+            }
+
             row.iter_of_handles().each do |cell_h|
                 if (cell_h.get_state == Cell::UNKNOWN)
                     next_gap << cell_h.x
                 else
-                    l = next_gap.length
-                    if (l > 0)
-                        if not gaps[l]
-                            gaps[l] = []
-                        end
-                        gaps[l] << next_gap
-                        next_gap = []
-                    end
+                    add_gap.call()
                 end
             end
+
+            add_gap.call()
 
             if (gaps.has_key?(2)) then
                 implicit_counts = {Cell::ZERO => 0, Cell::ONE => 0,}
