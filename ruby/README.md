@@ -1,6 +1,8 @@
-# BinaryPuzzleSolver
+# Binary\_Puzzle\_Solver
 
-TODO: Write a gem description
+This gem provides an API for solving the Binary Puzzles from
+[BinaryPuzzle.com](http://www.binarypuzzle.com/) . In the future
+it will also provide a command-line interface.
 
 ## Installation
 
