@@ -28,7 +28,7 @@ software under the MIT/X11 license.
 =item * Steve Klabnik
 
 Writing a
-L<http://timelessrepo.com/making-ruby-gems,tutorial for making ruby Gems> which
+L<tutorial for making ruby Gems|http://timelessrepo.com/making-ruby-gems> which
 proved to be useful. Also answered some questions on IRC
 
 =item * judyfor from #ruby-lang on Freenode
