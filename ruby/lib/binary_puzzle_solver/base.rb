@@ -264,7 +264,7 @@ module Binary_Puzzle_Solver
         end
 
         def list_views
-            return [get_view(:rotate => false), get_view(:rotate => true), ]
+            return [false, true].map { |v| get_view(:rotate => v) }
         end
 
         def set_cell_state(coord, state)
