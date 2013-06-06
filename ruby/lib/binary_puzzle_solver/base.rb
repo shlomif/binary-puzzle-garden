@@ -729,13 +729,11 @@ module Binary_Puzzle_Solver
         end
 
         def validate_rows()
-            complete_rows_map = Hash.new
-
             is_final = true
 
             dim_range(row_dim()).each do |row_idx|
                 row = get_row_handle(row_idx)
-                ret = row.validate( :complete_rows_map => complete_rows_map )
+                ret = row.validate(:foo => false)
                 is_final &&= ret[:is_final]
             end
 
@@ -805,21 +803,12 @@ module Binary_Puzzle_Solver
                 x.get_state() == v }.map { |h| h.x }
         end
 
-        def check_for_duplicated(complete_rows_map)
+        def check_for_duplicated()
             summary = get_summary()
 
             if not summary.are_both_not_exceeded() then
                 raise GameIntegrityException, "Value exceeded"
             elsif summary.are_both_full() then
-                s = get_string()
-                complete_rows_map[s] ||= []
-                dups = complete_rows_map[s]
-                dups << idx
-                if (dups.length > 1)
-                    i, j = dups[0], dups[1]
-                    raise GameIntegrityException, \
-                        "Duplicate Rows - #{i} and #{j}"
-                end
                 return true
             else
                 return false
@@ -858,11 +847,9 @@ module Binary_Puzzle_Solver
         end
 
         def validate(params)
-            complete_rows_map = params[:complete_rows_map]
-
             check_for_too_many_consecutive()
 
-            return { :is_final => check_for_duplicated(complete_rows_map), };
+            return { :is_final => check_for_duplicated(), };
         end
     end
 
