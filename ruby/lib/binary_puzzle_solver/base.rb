@@ -165,6 +165,7 @@ module Binary_Puzzle_Solver
     class Board
 
         attr_reader :iters_quota, :num_iters_done
+
         def initialize (params)
             @dim_limits = {:x => params[:x], :y => params[:y]}
             @cells = dim_range(:y).map {
@@ -173,6 +174,10 @@ module Binary_Puzzle_Solver
             @row_summaries = {
                 :x => dim_range(:x).map { RowSummary.new(limit(:y)); },
                 :y => dim_range(:y).map { RowSummary.new(limit(:x)); }
+            }
+            @complete_rows_map = {
+                :x => Hash.new,
+                :y => Hash.new
             }
             @old_moves = []
             @new_moves = []
@@ -260,8 +265,28 @@ module Binary_Puzzle_Solver
 
         def set_cell_state(coord, state)
             _get_cell(coord).set_state(state)
-            get_row_summary(:dim => :x, :idx => coord.x).inc_count(state)
-            get_row_summary(:dim => :y, :idx => coord.y).inc_count(state)
+
+            mymap = @complete_rows_map
+            views = [get_view(:rotate => false), get_view(:rotate => true), ]
+            views.each do |v|
+                row_dim = v.row_dim()
+                real_row_dim = v.mapped_row_dim()
+                row_idx = coord.method(real_row_dim).call()
+                summary = v.get_row_summary(:dim => row_dim, :idx => row_idx)
+
+                # puts "Coord = (x=#{coord.x},y=#{coord.y}) row_dim = #{row_dim} RowIdx = #{row_idx} mapped_row_dim = #{v.mapped_row_dim}"
+                summary.inc_count(state)
+
+                if summary.are_both_full() then
+                    str = v.get_row_handle(row_idx).get_string()
+                    mymap[real_row_dim][str] ||= []
+                    arr = mymap[real_row_dim][str]
+                    arr << row_idx
+                    if (arr.length > 1) then
+                        raise GameIntegrityException, "Duplicate rows at dim #{row_dim} #{arr.join(',')}"
+                    end
+                end
+            end
             return
         end
 
@@ -423,6 +448,10 @@ module Binary_Puzzle_Solver
             return :x
         end
 
+        def mapped_row_dim()
+            return _calc_mapped_dir(row_dim())
+        end
+
         def get_row_handle(idx)
             return RowHandle.new(self, idx)
         end
@@ -444,8 +473,14 @@ module Binary_Puzzle_Solver
             return
         end
 
+        def set_cell_state(coord, state)
+            @board.set_cell_state(
+                _calc_mapped_coord(coord), state
+            )
+        end
+
         def perform_and_append_move(params)
-            set_cell_state(params[:coord], params[:val])
+            set_cell_state( params[:coord], params[:val] )
             _append_move(params)
         end
 
