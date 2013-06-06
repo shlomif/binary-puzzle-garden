@@ -263,12 +263,15 @@ module Binary_Puzzle_Solver
             return @cells[y][x]
         end
 
+        def list_views
+            return [get_view(:rotate => false), get_view(:rotate => true), ]
+        end
+
         def set_cell_state(coord, state)
             _get_cell(coord).set_state(state)
 
             mymap = @complete_rows_map
-            views = [get_view(:rotate => false), get_view(:rotate => true), ]
-            views.each do |v|
+            list_views().each do |v|
                 row_dim = v.row_dim()
                 real_row_dim = v.mapped_row_dim()
                 row_idx = coord.method(real_row_dim).call()
@@ -325,7 +328,7 @@ module Binary_Puzzle_Solver
 
         def try_to_solve_using (params)
             methods_list = params[:methods]
-            views = [get_view(:rotate => false), get_view(:rotate => true), ]
+            views = list_views()
 
             catch :out_of_iters do
                 first_iter = true
@@ -374,11 +377,9 @@ module Binary_Puzzle_Solver
         end
 
         def validate()
-            views = [get_view(:rotate => false), get_view(:rotate => true), ]
-
             is_final = true
 
-            views.each do |v|
+            list_views().each do |v|
                 view_final = v.validate_rows()
                 is_final &&= view_final
             end
@@ -728,7 +729,6 @@ module Binary_Puzzle_Solver
         end
 
         def validate_rows()
-            # TODO
             complete_rows_map = Hash.new
 
             is_final = true
