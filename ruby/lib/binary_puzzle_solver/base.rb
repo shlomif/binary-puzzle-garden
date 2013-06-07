@@ -702,6 +702,16 @@ module Binary_Puzzle_Solver
         def check_try_placing_last_of_certain_digit_in_row(params)
             row_idx = params[:idx]
 
+            return _generic_check_try_placing_last_digit(
+                :idx => row_idx,
+                :callback_method => :_do_values_have_a_three_in_a_row,
+            )
+        end
+
+        def _generic_check_try_placing_last_digit(params)
+            row_idx = params[:idx]
+            callback_method = params[:callback_method]
+
             row = get_row_handle(row_idx)
 
             summary = row.get_summary()
@@ -728,7 +738,7 @@ module Binary_Puzzle_Solver
                 end
 
                 # Is there a three in a row?
-                result = _do_values_have_a_three_in_a_row(
+                result = method(callback_method).call(
                     :idx => row_idx, :v_s => v_s
                 )
 
@@ -758,7 +768,7 @@ module Binary_Puzzle_Solver
             return is_final
         end
 
-        private :_do_values_have_a_three_in_a_row
+        private :_do_values_have_a_three_in_a_row, :_generic_check_try_placing_last_digit
     end
 
     class RowHandle
