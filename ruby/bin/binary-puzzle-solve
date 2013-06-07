@@ -13,6 +13,7 @@ board.try_to_solve_using(
         :check_and_handle_cells_of_one_value_in_row_were_all_found,
         :check_exceeded_numbers_while_accounting_for_two_unknown_gaps,
         :check_try_placing_last_of_certain_digit_in_row,
+        :check_try_placing_last_of_certain_digit_in_row_to_avoid_dups,
     ]
 );
 
