@@ -80,14 +80,18 @@ module Binary_Puzzle_Solver
             return
         end
 
-        def get_char()
-            if state == ZERO
+        def self.get_state_char(val)
+            if val == ZERO
                 return '0'
-            elsif state == ONE
+            elsif val == ONE
                 return '1'
             else
-                raise RuntimeError, "get_char() called on Unset state"
+                raise RuntimeError, "get_state_char() called on Unset state"
             end
+        end
+
+        def get_char()
+            return Cell.get_state_char(state)
         end
     end
 
@@ -752,8 +756,14 @@ module Binary_Puzzle_Solver
             return view.get_row_summary(:idx => idx, :dim => row_dim());
         end
 
+        def self.calc_iter_of_states_str(iter)
+            return iter.map { |v| Cell.get_state_char(v) }.join('')
+        end
+
         def get_string()
-            return iter_of_handles().map { |cell_h| cell_h.get_char() }.join('')
+            return RowHandle.calc_iter_of_states_str(
+                iter_of_handles().map { |cell_h| cell_h.get_state() }
+            )
         end
 
         def col_dim()
