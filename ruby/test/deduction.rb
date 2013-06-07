@@ -468,6 +468,18 @@ EOF
     return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
 end
 
+def get_6x6_very_hard_board_1__final()
+    input_str = <<'EOF'
+|101010|
+|001101|
+|010011|
+|110010|
+|101100|
+|010101|
+EOF
+    return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
+end
+
 describe "construct_board" do
     it "6*6 Easy board No. 1 should" do
 
@@ -1059,5 +1071,9 @@ describe "rudimentary_deduction" do
         board.get_cell_state(
             Binary_Puzzle_Solver::Coord.new(:x => 2, :y => 3)
         ).should == ZERO
+
+        final_board = get_6x6_very_hard_board_1__final()
+
+        compare_boards(board, final_board)
     end
 end
