@@ -687,6 +687,18 @@ module Binary_Puzzle_Solver
             end
         end
 
+        def _do_values_have_a_three_in_a_row(params)
+            row_idx = params[:idx]
+            v_s = params[:v_s]
+
+            return {
+                :verdict => ((0 .. (v_s.length - 3)).to_a.index { |i|
+                    (1 .. 2).all? { |offset| v_s[i] == v_s[i+offset] }
+                }),
+                :reason => "Trying opposite value that is the last remaining results in three-in-a-row",
+            }
+        end
+
         def check_try_placing_last_of_certain_digit_in_row(params)
             row_idx = params[:idx]
 
@@ -716,16 +728,18 @@ module Binary_Puzzle_Solver
                 end
 
                 # Is there a three in a row?
-                if ((0 .. (v_s.length - 3)).to_a.index { |i|
-                    (1 .. 2).all? { |offset| v_s[i] == v_s[i+offset] }
-                }) then
-                perform_and_append_move(
-                    :coord => row.get_coord(x),
-                    :val => oppose_v,
-                    :reason => "Trying opposite value that is the last remaining results in three-in-a-row",
-                    :dir => col_dim()
+                result = _do_values_have_a_three_in_a_row(
+                    :idx => row_idx, :v_s => v_s
                 )
-                return
+
+                if (result[:verdict])
+                    perform_and_append_move(
+                        :coord => row.get_coord(x),
+                        :val => oppose_v,
+                        :reason => result[:reason],
+                        :dir => col_dim()
+                    )
+                    return
                 end
             end
 
