@@ -271,6 +271,10 @@ module Binary_Puzzle_Solver
             return [false, true].map { |v| get_view(:rotate => v) }
         end
 
+        def get_complete_map(dir)
+            return @complete_rows_map[dir]
+        end
+
         def set_cell_state(coord, state)
             _get_cell(coord).set_state(state)
 
@@ -455,6 +459,10 @@ module Binary_Puzzle_Solver
 
         def mapped_row_dim()
             return _calc_mapped_dir(row_dim())
+        end
+
+        def get_complete_row_map()
+            return @board.get_complete_map(mapped_row_dim())
         end
 
         def get_row_handle(idx)
@@ -697,6 +705,30 @@ module Binary_Puzzle_Solver
                 }),
                 :reason => "Trying opposite value that is the last remaining results in three-in-a-row",
             }
+        end
+
+        def _are_values_duplicates(params)
+            row_idx = params[:idx]
+            v_s = params[:v_s]
+
+            str = RowHandle.calc_iter_of_states_str(v_s)
+            mymap = get_complete_row_map()
+
+            verdict = (mymap.has_key?(str) and (mymap[str].length > 0));
+
+            return {
+                :verdict => verdict,
+                :reason => "Trying opposite value that is the last remaining results in a duplicate row",
+            }
+        end
+
+        def check_try_placing_last_of_certain_digit_in_row_to_avoid_dups(params)
+            row_idx = params[:idx]
+
+            return _generic_check_try_placing_last_digit(
+                :idx => row_idx,
+                :callback_method => :_are_values_duplicates,
+            )
         end
 
         def check_try_placing_last_of_certain_digit_in_row(params)
