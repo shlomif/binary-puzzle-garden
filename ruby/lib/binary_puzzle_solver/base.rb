@@ -800,7 +800,7 @@ module Binary_Puzzle_Solver
             return is_final
         end
 
-        private :_do_values_have_a_three_in_a_row, :_generic_check_try_placing_last_digit
+        private :_do_values_have_a_three_in_a_row, :_generic_check_try_placing_last_digit, :_are_values_duplicates
     end
 
     class RowHandle
