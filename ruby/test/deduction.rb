@@ -63,7 +63,7 @@ def compare_boards(got, expected)
     return
 end
 
-def get_6x6_easy_board_1()
+def get_6x6_easy_board_1__initial()
     input_str = <<'EOF'
 |1  0  |
 |  00 1|
@@ -76,7 +76,7 @@ EOF
 end
 
 def get_6x6_easy_board_1__intermediate_1()
-    str = <<'EOF'
+    input_str = <<'EOF'
 |101010|
 |010011|
 |100101|
@@ -84,10 +84,10 @@ def get_6x6_easy_board_1__intermediate_1()
 |001101|
 |110100|
 EOF
-    return Binary_Puzzle_Solver.gen_board_from_string_v1(str)
+    return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
 end
 
-def get_6x6_easy_board_2()
+def get_6x6_easy_board_2__initial()
     input_str = <<'EOF'
 |  0  1|
 |1 00  |
@@ -111,7 +111,7 @@ EOF
     return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
 end
 
-def get_6x6_medium_board_1()
+def get_6x6_medium_board_1__initial()
     input_str = <<'EOF'
 |    00|
 |      |
@@ -543,7 +543,7 @@ end
 describe "construct_board" do
     it "6*6 Easy board No. 1 should" do
 
-        board = get_6x6_easy_board_1()
+        board = get_6x6_easy_board_1__initial()
 
         ONE = Binary_Puzzle_Solver::Cell::ONE
         ZERO = Binary_Puzzle_Solver::Cell::ZERO
@@ -638,7 +638,7 @@ end
 describe "rudimentary_deduction" do
     it "6*6 Easy board No. 1 should" do
 
-        board = get_6x6_easy_board_1()
+        board = get_6x6_easy_board_1__initial()
 
         # ONE = Binary_Puzzle_Solver::Cell::ONE
         # ZERO = Binary_Puzzle_Solver::Cell::ZERO
@@ -660,7 +660,7 @@ describe "rudimentary_deduction" do
 
     it "6*6 Easy board No. 1 should" do
 
-        board = get_6x6_easy_board_1()
+        board = get_6x6_easy_board_1__initial()
 
         view = board.get_view(:rotate => true)
         view.check_and_handle_sequences_in_row(:idx => 5)
@@ -678,7 +678,7 @@ describe "rudimentary_deduction" do
 
     it "6*6 Easy board No. 1 should flush moves properly" do
 
-        board = get_6x6_easy_board_1()
+        board = get_6x6_easy_board_1__initial()
 
         # ONE = Binary_Puzzle_Solver::Cell::ONE
         # ZERO = Binary_Puzzle_Solver::Cell::ZERO
@@ -699,7 +699,7 @@ describe "rudimentary_deduction" do
 
     it "6*6 Easy board No. 1 should" do
 
-        board = get_6x6_easy_board_1()
+        board = get_6x6_easy_board_1__initial()
 
         # ONE = Binary_Puzzle_Solver::Cell::ONE
         # ZERO = Binary_Puzzle_Solver::Cell::ZERO
@@ -737,7 +737,7 @@ describe "rudimentary_deduction" do
 
     it "6*6 Easy board No. 1 should" do
 
-        board = get_6x6_easy_board_1()
+        board = get_6x6_easy_board_1__initial()
 
         # ONE = Binary_Puzzle_Solver::Cell::ONE
         # ZERO = Binary_Puzzle_Solver::Cell::ZERO
@@ -764,7 +764,7 @@ describe "rudimentary_deduction" do
 
     it "6*6 Easy process should" do
 
-        board = get_6x6_easy_board_1()
+        board = get_6x6_easy_board_1__initial()
 
         board.add_to_iters_quota(1_000_000_000);
 
@@ -781,7 +781,7 @@ describe "rudimentary_deduction" do
 
         compare_boards(board, final_board)
 
-        resume_board = get_6x6_easy_board_1()
+        resume_board = get_6x6_easy_board_1__initial()
 
         resume_board.add_to_iters_quota(10);
 
@@ -806,7 +806,7 @@ describe "rudimentary_deduction" do
 
     it "Solving 6*6 Easy board No. 2 should" do
 
-        board = get_6x6_easy_board_2()
+        board = get_6x6_easy_board_2__initial()
 
         board.add_to_iters_quota(1_000_000_000);
 
@@ -824,7 +824,7 @@ describe "rudimentary_deduction" do
 
     it "Solving 6*6 Medium board No. 1 should" do
 
-        board = get_6x6_medium_board_1()
+        board = get_6x6_medium_board_1__initial()
 
         board.validate().should == :non_final
 
