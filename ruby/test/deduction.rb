@@ -75,7 +75,7 @@ EOF
     return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
 end
 
-def get_6x6_easy_board_1__intermediate_board()
+def get_6x6_easy_board_1__intermediate_1()
     str = <<'EOF'
 |101010|
 |010011|
@@ -99,7 +99,7 @@ EOF
     return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
 end
 
-def get_6x6_easy_board_2__intermediate_board()
+def get_6x6_easy_board_2__intermediate_1()
     input_str = <<'EOF'
 |100101|
 |110010|
@@ -777,7 +777,7 @@ describe "rudimentary_deduction" do
 
         good_num_iters = board.num_iters_done()
 
-        final_board = get_6x6_easy_board_1__intermediate_board()
+        final_board = get_6x6_easy_board_1__intermediate_1()
 
         compare_boards(board, final_board)
 
@@ -817,7 +817,7 @@ describe "rudimentary_deduction" do
             ]
         );
 
-        final_board = get_6x6_easy_board_2__intermediate_board()
+        final_board = get_6x6_easy_board_2__intermediate_1()
 
         compare_boards(board, final_board)
     end
