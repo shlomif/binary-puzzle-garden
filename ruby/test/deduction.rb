@@ -63,481 +63,159 @@ def compare_boards(got, expected)
     return
 end
 
+def get_binarypuzzle_com_numbered_puzzle(params)
+    return Binary_Puzzle_Solver.gen_board_from_string_v1(
+        IO.read(
+            File.join(
+                'test', 'data', 'boards', 'binarypuzzle.com', 'numbered',
+                params[:size],
+                params[:difficulty],
+                params[:number],
+                "#{params[:stage]}.binpuz-board.txt"
+            )
+        )
+    )
+end
+
 def get_6x6_easy_board_1__initial()
-    input_str = <<'EOF'
-|1  0  |
-|  00 1|
-| 00  1|
-|      |
-|00 1  |
-| 1  00|
-EOF
-    return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
+    return get_binarypuzzle_com_numbered_puzzle(:size => "6x6", :difficulty => "easy", :number => "1", :stage => "initial");
 end
 
 def get_6x6_easy_board_1__intermediate_1()
-    input_str = <<'EOF'
-|101010|
-|010011|
-|100101|
-|011010|
-|001101|
-|110100|
-EOF
-    return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
+    return get_binarypuzzle_com_numbered_puzzle(:size => "6x6", :difficulty => "easy", :number => "1", :stage => "intermediate_1");
 end
 
 def get_6x6_easy_board_2__initial()
-    input_str = <<'EOF'
-|  0  1|
-|1 00  |
-| 1    |
-|    1 |
-|  1  0|
-|00 1  |
-EOF
-    return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
+    return get_binarypuzzle_com_numbered_puzzle(:size => "6x6", :difficulty => "easy", :number => "2", :stage => "initial");
 end
 
 def get_6x6_easy_board_2__intermediate_1()
-    input_str = <<'EOF'
-|100101|
-|110010|
-|011001|
-|100110|
-|011010|
-|001101|
-EOF
-    return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
+    return get_binarypuzzle_com_numbered_puzzle(:size => "6x6", :difficulty => "easy", :number => "2", :stage => "intermediate_1");
 end
 
 def get_6x6_medium_board_1__initial()
-    input_str = <<'EOF'
-|    00|
-|      |
-| 1    |
-|01 1  |
-|0   0 |
-|  1   |
-EOF
-    return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
+    return get_binarypuzzle_com_numbered_puzzle(:size => "6x6", :difficulty => "medium", :number => "1", :stage => "initial");
 end
 
 def get_6x6_medium_board_1__after_easy_moves()
-    input_str = <<'EOF'
-|   100|
-| 01   |
-|110   |
-|0101  |
-|001 0 |
-|101   |
-EOF
-    return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
+    return get_binarypuzzle_com_numbered_puzzle(:size => "6x6", :difficulty => "medium", :number => "1", :stage => "after_easy_moves");
 end
 
 def get_6x6_medium_board_1__after_cells_of_one_value_in_row_were_all_found()
-    input_str = <<'EOF'
-|110100|
-|001011|
-|1100  |
-|0101  |
-|001101|
-|1010  |
-EOF
-    return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
+    return get_binarypuzzle_com_numbered_puzzle(:size => "6x6", :difficulty => "medium", :number => "1", :stage => "after_cells_of_one_value_in_row_were_all_found");
 end
 
 def get_6x6_medium_board_1__final()
-    input_str = <<'EOF'
-|110100|
-|001011|
-|110010|
-|010101|
-|001101|
-|101010|
-EOF
-    return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
+    return get_binarypuzzle_com_numbered_puzzle(:size => "6x6", :difficulty => "medium", :number => "1", :stage => "final");
 end
 
 def get_8x8_easy_board_1__initial()
-    input_str = <<'EOF'
-|       0|
-| 00  1  |
-| 0   1 0|
-|  1     |
-|00 1  1 |
-|    1   |
-|11   0 1|
-| 1     1|
-EOF
-    return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
+    return get_binarypuzzle_com_numbered_puzzle(:size => "8x8", :difficulty => "easy", :number => "1", :stage => "initial");
 end
 
 def get_8x8_easy_board_1__final()
-    input_str = <<'EOF'
-|01101010|
-|10010101|
-|10010110|
-|01101001|
-|00110110|
-|10011010|
-|11001001|
-|01100101|
-EOF
-    return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
+    return get_binarypuzzle_com_numbered_puzzle(:size => "8x8", :difficulty => "easy", :number => "1", :stage => "final");
 end
 
 def get_8x8_medium_board_1__initial()
-    input_str = <<'EOF'
-|    0 0 |
-|0 0 0 0 |
-|        |
-|    1 1 |
-|0  0    |
-|0  00   |
-|       1|
-| 1 1    |
-EOF
-    return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
+    return get_binarypuzzle_com_numbered_puzzle(:size => "8x8", :difficulty => "medium", :number => "1", :stage => "initial");
 end
 
 def get_8x8_medium_board_1__final()
-    input_str = <<'EOF'
-|10100101|
-|01010101|
-|10101010|
-|10011010|
-|01100101|
-|01100110|
-|10011001|
-|01011010|
-EOF
-    return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
+    return get_binarypuzzle_com_numbered_puzzle(:size => "8x8", :difficulty => "medium", :number => "1", :stage => "final");
 end
 
 def get_6x6_hard_board_1__initial()
-    input_str = <<'EOF'
-|   1  |
-|  0  1|
-|0   0 |
-| 11   |
-|      |
-|1   0 |
-EOF
-    return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
+    return get_binarypuzzle_com_numbered_puzzle(:size => "6x6", :difficulty => "hard", :number => "1", :stage => "initial");
 end
 
 def get_6x6_hard_board_1__intermediate()
-    input_str = <<'EOF'
-|0  1  |
-|1 0  1|
-|0   0 |
-|0110  |
-|1     |
-|1   0 |
-EOF
-    return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
+    return get_binarypuzzle_com_numbered_puzzle(:size => "6x6", :difficulty => "hard", :number => "1", :stage => "intermediate");
 end
 
 def get_6x6_hard_board_1__final()
-    input_str = <<'EOF'
-|010110|
-|100101|
-|011001|
-|011010|
-|100110|
-|101001|
-EOF
-    return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
+    return get_binarypuzzle_com_numbered_puzzle(:size => "6x6", :difficulty => "hard", :number => "1", :stage => "final");
 end
 
 def get_6x6_hard_board_2__initial()
-    input_str = <<'EOF'
-| 11  1|
-|00    |
-|      |
-|  1  0|
-|      |
-|   0  |
-EOF
-    return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
+    return get_binarypuzzle_com_numbered_puzzle(:size => "6x6", :difficulty => "hard", :number => "2", :stage => "initial");
 end
 
 def get_6x6_hard_board_2__intermediate()
-    input_str = <<'EOF'
-|011001|
-|001   |
-|1 0   |
-|  1  0|
-|  0   |
-| 1001 |
-EOF
-    return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
+    return get_binarypuzzle_com_numbered_puzzle(:size => "6x6", :difficulty => "hard", :number => "2", :stage => "intermediate");
 end
 
 def get_6x6_hard_board_2__intermediate_2()
-    input_str = <<'EOF'
-|011001|
-|001101|
-|100110|
-|011010|
-|100101|
-|110010|
-EOF
-    return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
+    return get_binarypuzzle_com_numbered_puzzle(:size => "6x6", :difficulty => "hard", :number => "2", :stage => "intermediate_2");
 end
 
 def get_6x6_hard_board_3__initial()
-    input_str = <<'EOF'
-|1 0  0|
-|      |
-| 11   |
-| 1  1 |
-|     0|
-|  01  |
-EOF
-    return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
+    return get_binarypuzzle_com_numbered_puzzle(:size => "6x6", :difficulty => "hard", :number => "3", :stage => "initial");
 end
 
 def get_6x6_hard_board_3__intermediate()
-    input_str = <<'EOF'
-|100110|
-|101001|
-|011001|
-|010110|
-|101010|
-|010101|
-EOF
-    return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
+    return get_binarypuzzle_com_numbered_puzzle(:size => "6x6", :difficulty => "hard", :number => "3", :stage => "intermediate");
 end
 
 def get_10x10_easy_board_1__initial()
-    input_str = <<'EOF'
-|       1  |
-| 00  0  1 |
-| 0  1  0 0|
-|  1   1   |
-|1 1      1|
-|       1  |
-| 0  1   0 |
-|    11   0|
-| 0 0  1  0|
-|0   0   1 |
-EOF
-    return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
+    return get_binarypuzzle_com_numbered_puzzle(:size => "10x10", :difficulty => "easy", :number => "1", :stage => "initial");
 end
 
 def get_10x10_easy_board_1__final()
-    input_str = <<'EOF'
-|0110010101|
-|1001100110|
-|1001101010|
-|0110011001|
-|1010100101|
-|0101010110|
-|1001101001|
-|0110110100|
-|1010011010|
-|0101001011|
-EOF
-    return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
+    return get_binarypuzzle_com_numbered_puzzle(:size => "10x10", :difficulty => "easy", :number => "1", :stage => "final");
 end
 
 
 def get_10x10_hard_board_1__initial()
-    input_str = <<'EOF'
-|  0       |
-|0 0  1    |
-|        1 |
-|      0  0|
-|1 00 1    |
-|          |
-|  0  1 1  |
-|1       11|
-|   0      |
-|1   1 1 1 |
-EOF
-    return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
+    return get_binarypuzzle_com_numbered_puzzle(:size => "10x10", :difficulty => "hard", :number => "1", :stage => "initial");
 end
 
 def get_10x10_hard_board_1__final()
-    input_str = <<'EOF'
-|1101100100|
-|0101011001|
-|0010101011|
-|1011010100|
-|1100110010|
-|0011001101|
-|0100110110|
-|1001001011|
-|0110010101|
-|1010101010|
-EOF
-    return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
+    return get_binarypuzzle_com_numbered_puzzle(:size => "10x10", :difficulty => "hard", :number => "1", :stage => "final");
 end
 
 def get_10x10_hard_board_2__initial()
-    input_str = <<'EOF'
-|   0  1  0|
-|  1 1   0 |
-| 0     10 |
-| 0        |
-|    0     |
-|  1      0|
-|   1  0   |
-| 0      0 |
-| 00    0 0|
-|   0  1 0 |
-EOF
-    return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
+    return get_binarypuzzle_com_numbered_puzzle(:size => "10x10", :difficulty => "hard", :number => "2", :stage => "initial");
 end
 
 def get_10x10_hard_board_2__final()
-    input_str = <<'EOF'
-|0110011010|
-|0110100101|
-|1001010101|
-|1001101010|
-|0110010101|
-|1011001010|
-|0101100110|
-|0010110101|
-|1001011010|
-|1100101001|
-EOF
-    return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
+    return get_binarypuzzle_com_numbered_puzzle(:size => "10x10", :difficulty => "hard", :number => "2", :stage => "final");
 end
 
 def get_12x12_hard_board_1__initial()
-    input_str = <<'EOF'
-|      1 1  0|
-|    0 1   1 |
-|  1 0    0 0|
-|00      1   |
-|    00   0  |
-|  0 0   1   |
-|      00 0 0|
-| 00  1      |
-|  0    1    |
-|00       0  |
-|       00   |
-|00   0      |
-EOF
-    return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
+    return get_binarypuzzle_com_numbered_puzzle(:size => "12x12", :difficulty => "hard", :number => "1", :stage => "initial");
 end
 
 def get_12x12_hard_board_1__final()
-    input_str = <<'EOF'
-|011010101100|
-|010100110011|
-|101101010010|
-|001011001101|
-|110100110010|
-|100100101101|
-|011011001010|
-|100101010101|
-|110010110100|
-|001011001011|
-|110101100100|
-|001010011011|
-EOF
-    return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
+    return get_binarypuzzle_com_numbered_puzzle(:size => "12x12", :difficulty => "hard", :number => "1", :stage => "final");
 end
 
 def get_6x6_very_hard_board_1__initial()
-    input_str = <<'EOF'
-|  1   |
-|00 1  |
-|0     |
-|      |
-|   1  |
-|    0 |
-EOF
-    return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
+    return get_binarypuzzle_com_numbered_puzzle(:size => "6x6", :difficulty => "very_hard", :number => "1", :stage => "initial");
 end
 
 def get_6x6_very_hard_board_1__intermediate_1()
-    input_str = <<'EOF'
-|101010|
-|001101|
-|010011|
-|1  010|
-|   10 |
-| 1010 |
-EOF
-    return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
+    return get_binarypuzzle_com_numbered_puzzle(:size => "6x6", :difficulty => "very_hard", :number => "1", :stage => "intermediate_1");
 end
 
 def get_6x6_very_hard_board_1__final()
-    input_str = <<'EOF'
-|101010|
-|001101|
-|010011|
-|110010|
-|101100|
-|010101|
-EOF
-    return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
+    return get_binarypuzzle_com_numbered_puzzle(:size => "6x6", :difficulty => "very_hard", :number => "1", :stage => "final");
 end
 
 def get_6x6_very_hard_board_2__initial()
-    input_str = <<'EOF'
-| 0    |
-|      |
-|1     |
-| 0  0 |
-|1  0  |
-| 0   0|
-EOF
-    return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
+    return get_binarypuzzle_com_numbered_puzzle(:size => "6x6", :difficulty => "very_hard", :number => "2", :stage => "initial");
 end
 
 def get_6x6_very_hard_board_2__final()
-    input_str = <<'EOF'
-|001011|
-|010011|
-|110100|
-|001101|
-|110010|
-|101100|
-EOF
-    return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
+    return get_binarypuzzle_com_numbered_puzzle(:size => "6x6", :difficulty => "very_hard", :number => "2", :stage => "final");
 end
 
 def get_12x12_very_hard_board_1__initial()
-    input_str = <<'EOF'
-|       00 1 |
-|  1       1 |
-|   0 0  0  0|
-|     0      |
-| 11 1  1 0  |
-| 11 0 00    |
-|          1 |
-|1  00   0   |
-|            |
-|  1     1   |
-|   0  0  0 0|
-|  10   0    |
-EOF
-    return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
+    return get_binarypuzzle_com_numbered_puzzle(:size => "12x12", :difficulty => "very_hard", :number => "1", :stage => "initial");
 end
 
 def get_12x12_very_hard_board_1__intermediate_1()
-    input_str = <<'EOF'
-|110100100110|
-|001101001011|
-|110010110100|
-|100100101101|
-|011011010010|
-|011001001101|
-|100110110010|
-|101001010011|
-|010110101100|
-|001101011001|
-|110011010010|
-|001010101101|
-EOF
-    return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
+    return get_binarypuzzle_com_numbered_puzzle(:size => "12x12", :difficulty => "very_hard", :number => "1", :stage => "intermediate_1");
 end
 
 describe "construct_board" do
