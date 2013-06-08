@@ -504,6 +504,42 @@ EOF
     return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
 end
 
+def get_12x12_very_hard_board_1__initial()
+    input_str = <<'EOF'
+|       00 1 |
+|  1       1 |
+|   0 0  0  0|
+|     0      |
+| 11 1  1 0  |
+| 11 0 00    |
+|          1 |
+|1  00   0   |
+|            |
+|  1     1   |
+|   0  0  0 0|
+|  10   0    |
+EOF
+    return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
+end
+
+def get_12x12_very_hard_board_1__intermediate_1()
+    input_str = <<'EOF'
+|110100100110|
+|001101001011|
+|110010110100|
+|100100101101|
+|011011010010|
+|011001001101|
+|100110110010|
+|101001010011|
+|010110101100|
+|001101011001|
+|110011010010|
+|001010101101|
+EOF
+    return Binary_Puzzle_Solver.gen_board_from_string_v1(input_str)
+end
+
 describe "construct_board" do
     it "6*6 Easy board No. 1 should" do
 
@@ -1119,6 +1155,30 @@ describe "rudimentary_deduction" do
         );
 
         final_board = get_6x6_very_hard_board_2__final()
+
+        # binding.pry
+
+        compare_boards(board, final_board)
+    end
+
+    it "Solving 12*12 Very Hard board No. 1 should" do
+
+        board = get_12x12_very_hard_board_1__initial()
+
+        board.add_to_iters_quota(1_000_000_000);
+
+        board.try_to_solve_using(
+            :methods => [
+                :check_and_handle_sequences_in_row,
+                :check_and_handle_known_unknown_sameknown_in_row,
+                :check_and_handle_cells_of_one_value_in_row_were_all_found,
+                :check_exceeded_numbers_while_accounting_for_two_unknown_gaps,
+                :check_try_placing_last_of_certain_digit_in_row,
+                :check_try_placing_last_of_certain_digit_in_row_to_avoid_dups,
+            ]
+        );
+
+        final_board = get_12x12_very_hard_board_1__intermediate_1()
 
         # binding.pry
 
