@@ -166,7 +166,19 @@ module Binary_Puzzle_Solver
         end
     end
 
-    class Board
+    class BaseClass
+        def opposite_value(val)
+            if (val == Cell::ZERO)
+                return Cell::ONE
+            elsif (val == Cell::ONE)
+                return Cell::ZERO
+            else
+                raise RuntimeError, "'#{val}' must be zero or one."
+            end
+        end
+    end
+
+    class Board < BaseClass
 
         attr_reader :iters_quota, :num_iters_done
 
@@ -324,15 +336,6 @@ module Binary_Puzzle_Solver
             return @row_summaries[dim][idx]
         end
 
-        def opposite_value(val)
-            if (val == Cell::ZERO)
-                return Cell::ONE
-            elsif (val == Cell::ONE)
-                return Cell::ZERO
-            else
-                raise RuntimeError, "'#{val}' must be zero or one."
-            end
-        end
 
         def try_to_solve_using (params)
             methods_list = params[:methods]
@@ -623,27 +626,8 @@ module Binary_Puzzle_Solver
             gaps = row.calc_gaps()
 
             if (gaps.has_key?(2)) then
-                implicit_counts = {Cell::ZERO => 0, Cell::ONE => 0,}
-                gaps[2].each do |gap|
-                    x_s = []
-                    if (gap[0] > 0)
-                        x_s << gap[0]-1
-                    end
-                    if (gap[-1] < row.max_idx)
-                        x_s << gap[-1]+1
-                    end
 
-                    bordering_values = {Cell::ZERO => 0, Cell::ONE => 0,}
-                    x_s.each do |x|
-                        bordering_values[row.get_state(x)] += 1
-                    end
-
-                    for v in [Cell::ZERO, Cell::ONE] do
-                       if bordering_values[opposite_value(v)] > 0
-                           implicit_counts[v] += 1
-                       end
-                    end
-                end
+                implicit_counts = row.calc_gaps_implicit_counts(gaps)
 
                 summ = row.get_summary()
 
@@ -765,6 +749,51 @@ module Binary_Puzzle_Solver
             return
         end
 
+        def check_remaining_gap_of_three_with_implicits(params)
+            row_idx = params[:idx]
+
+            row = get_row_handle(row_idx)
+
+            gaps = row.calc_gaps()
+
+            if (gaps.has_key?(2) and gaps.has_key?(3)) then
+
+                implicit_counts = row.calc_gaps_implicit_counts(gaps)
+
+                summ = row.get_summary()
+
+                v = [Cell::ZERO, Cell::ONE].find {
+                    |v| summ.get_count(v) + implicit_counts[v] \
+                        == summ.half_limit() - 1
+                }
+
+                if v then
+                    opposite_val = opposite_value(v)
+                    gap_3 = gaps[3][0]
+
+
+                    for idx in [0,-1] do
+                        opposite_idx = (idx == 0) ? -1 : 0
+                        edge_offset = (idx == 0) ? (-1) : 1
+                        if (gap_3[idx] > 0 and gap_3[idx] < row.max_idx()) then
+                            if (row.get_state(gap_3[idx]+edge_offset) \
+                                == opposite_val) then
+                                perform_and_append_move(
+                                    :coord => row.get_coord(gap_3[opposite_idx]),
+                                    :val => opposite_val,
+                                    :reason => \
+                                    "Gap of 3 with 2 of the value remaining must not form 3 of a kind (with implicits)",
+                                    :dir => row.col_dim()
+                                )
+                            end
+                        end
+                    end
+                end
+            end
+
+            return
+        end
+
         def validate_rows()
             is_final = true
 
@@ -780,7 +809,7 @@ module Binary_Puzzle_Solver
         private :_do_values_have_a_three_in_a_row, :_generic_check_try_placing_last_digit, :_are_values_duplicates
     end
 
-    class RowHandle
+    class RowHandle < BaseClass
         attr_reader :view, :idx
         def initialize (init_view, init_idx)
             @view = init_view
@@ -924,6 +953,32 @@ module Binary_Puzzle_Solver
             add_gap.call()
 
             return gaps
+        end
+
+        def calc_gaps_implicit_counts(gaps)
+            implicit_counts = {Cell::ZERO => 0, Cell::ONE => 0,}
+            gaps[2].each do |gap|
+                x_s = []
+                if (gap[0] > 0)
+                    x_s << gap[0]-1
+                end
+                if (gap[-1] < max_idx())
+                    x_s << gap[-1]+1
+                end
+
+                bordering_values = {Cell::ZERO => 0, Cell::ONE => 0,}
+                x_s.each do |x|
+                    bordering_values[get_state(x)] += 1
+                end
+
+                for v in [Cell::ZERO, Cell::ONE] do
+                   if bordering_values[opposite_value(v)] > 0
+                       implicit_counts[v] += 1
+                   end
+                end
+            end
+
+            return implicit_counts
         end
     end
 

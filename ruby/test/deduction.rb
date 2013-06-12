@@ -893,5 +893,24 @@ describe "rudimentary_deduction" do
         # binding.pry
 
         compare_boards(board, intermediate_board)
+
+        board.try_to_solve_using(
+            :methods => [
+                :check_and_handle_sequences_in_row,
+                :check_and_handle_known_unknown_sameknown_in_row,
+                :check_and_handle_cells_of_one_value_in_row_were_all_found,
+                :check_exceeded_numbers_while_accounting_for_two_unknown_gaps,
+                :check_try_placing_last_of_certain_digit_in_row,
+                :check_try_placing_last_of_certain_digit_in_row_to_avoid_dups,
+                :check_remaining_gap_of_three_with_implicits,
+            ]
+        );
+
+        board.get_cell_state(
+            Binary_Puzzle_Solver::Coord.new(:x => 4, :y => 5)
+        ).should == ONE
+        board.get_cell_state(
+            Binary_Puzzle_Solver::Coord.new(:x => 6, :y => 5)
+        ).should == ONE
     end
 end
