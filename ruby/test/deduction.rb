@@ -912,5 +912,9 @@ describe "rudimentary_deduction" do
         board.get_cell_state(
             Binary_Puzzle_Solver::Coord.new(:x => 6, :y => 5)
         ).should == ONE
+
+        intermediate_board = get_14x14_very_hard_board_1__intermediate_2()
+
+        compare_boards(board, intermediate_board)
     end
 end
