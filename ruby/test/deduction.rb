@@ -218,6 +218,14 @@ def get_12x12_very_hard_board_1__intermediate_1()
     return get_binarypuzzle_com_numbered_puzzle(:size => "12x12", :difficulty => "very_hard", :number => "1", :stage => "intermediate_1");
 end
 
+def get_14x14_very_hard_board_1__initial()
+    return get_binarypuzzle_com_numbered_puzzle(:size => "14x14", :difficulty => "very_hard", :number => "1", :stage => "initial");
+end
+
+def get_14x14_very_hard_board_1__intermediate_1()
+    return get_binarypuzzle_com_numbered_puzzle(:size => "14x14", :difficulty => "very_hard", :number => "1", :stage => "intermediate_1");
+end
+
 describe "construct_board" do
     it "6*6 Easy board No. 1 should" do
 
@@ -861,5 +869,29 @@ describe "rudimentary_deduction" do
         # binding.pry
 
         compare_boards(board, final_board)
+    end
+
+    it "Solving 14*14 Very Hard board No. 1 should" do
+
+        board = get_14x14_very_hard_board_1__initial()
+
+        board.add_to_iters_quota(1_000_000_000);
+
+        board.try_to_solve_using(
+            :methods => [
+                :check_and_handle_sequences_in_row,
+                :check_and_handle_known_unknown_sameknown_in_row,
+                :check_and_handle_cells_of_one_value_in_row_were_all_found,
+                :check_exceeded_numbers_while_accounting_for_two_unknown_gaps,
+                :check_try_placing_last_of_certain_digit_in_row,
+                :check_try_placing_last_of_certain_digit_in_row_to_avoid_dups,
+            ]
+        );
+
+        intermediate_board = get_14x14_very_hard_board_1__intermediate_1()
+
+        # binding.pry
+
+        compare_boards(board, intermediate_board)
     end
 end
