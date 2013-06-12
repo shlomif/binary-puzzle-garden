@@ -620,30 +620,7 @@ module Binary_Puzzle_Solver
 
             row = get_row_handle(row_idx)
 
-            gaps = {}
-
-            next_gap = []
-
-            add_gap = lambda {
-                l = next_gap.length
-                if (l > 0)
-                    if not gaps[l]
-                        gaps[l] = []
-                    end
-                    gaps[l] << next_gap
-                    next_gap = []
-                end
-            }
-
-            row.iter_of_handles().each do |cell_h|
-                if (cell_h.get_state == Cell::UNKNOWN)
-                    next_gap << cell_h.x
-                else
-                    add_gap.call()
-                end
-            end
-
-            add_gap.call()
+            gaps = row.calc_gaps()
 
             if (gaps.has_key?(2)) then
                 implicit_counts = {Cell::ZERO => 0, Cell::ONE => 0,}
@@ -918,6 +895,35 @@ module Binary_Puzzle_Solver
             check_for_too_many_consecutive()
 
             return { :is_final => check_for_duplicated(), };
+        end
+
+        def calc_gaps
+            gaps = {}
+
+            next_gap = []
+
+            add_gap = lambda {
+                l = next_gap.length
+                if (l > 0)
+                    if not gaps[l]
+                        gaps[l] = []
+                    end
+                    gaps[l] << next_gap
+                    next_gap = []
+                end
+            }
+
+            iter_of_handles().each do |cell_h|
+                if (cell_h.get_state == Cell::UNKNOWN)
+                    next_gap << cell_h.x
+                else
+                    add_gap.call()
+                end
+            end
+
+            add_gap.call()
+
+            return gaps
         end
     end
 
