@@ -336,9 +336,33 @@ module Binary_Puzzle_Solver
             return @row_summaries[dim][idx]
         end
 
+        def _validate_method_list (methods_list)
+            valid_methods_arr = [
+                :check_and_handle_sequences_in_row,
+                :check_and_handle_known_unknown_sameknown_in_row,
+                :check_and_handle_cells_of_one_value_in_row_were_all_found,
+                :check_exceeded_numbers_while_accounting_for_two_unknown_gaps,
+                :check_try_placing_last_of_certain_digit_in_row,
+                :check_try_placing_last_of_certain_digit_in_row_to_avoid_dups,
+                :check_remaining_gap_of_three_with_implicits,
+            ]
+
+            valid_mathods_hash = valid_methods_arr.inject({}) {
+                |h,v| h[v] = true; h
+            }
+
+            methods_list.each do |m|
+                if not valid_mathods_hash.has_key?(m) then
+                    raise RuntimeError, "Method #{m} is not valid to be used."
+                end
+            end
+        end
+
 
         def try_to_solve_using (params)
             methods_list = params[:methods]
+            _validate_method_list(methods_list)
+
             views = list_views()
 
             catch :out_of_iters do
