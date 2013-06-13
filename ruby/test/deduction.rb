@@ -226,6 +226,10 @@ def get_14x14_very_hard_board_1__intermediate_1()
     return get_binarypuzzle_com_numbered_puzzle(:size => "14x14", :difficulty => "very_hard", :number => "1", :stage => "intermediate_1");
 end
 
+def get_14x14_very_hard_board_1__intermediate_2()
+    return get_binarypuzzle_com_numbered_puzzle(:size => "14x14", :difficulty => "very_hard", :number => "1", :stage => "intermediate_2");
+end
+
 describe "construct_board" do
     it "6*6 Easy board No. 1 should" do
 
