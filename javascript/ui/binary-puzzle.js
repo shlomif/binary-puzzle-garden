@@ -124,6 +124,9 @@ Class('Binary_Puzzle', {
         }
     },
     methods: {
+        calc_id: function (x, y) {
+             return "bin_puz_" + y + "_" + x;
+        },
         set_cell_const: function(x, y, value) {
             var that = this;
             that.cells[y][x].value = value;
@@ -151,9 +154,14 @@ Class('Binary_Puzzle', {
                 alert ("Cell " + y + " , " + x + " is const.");
                 return;
             }
-            that.cells[y][x].value = ' ';
+            that.cells[y][x].value = value;
         },
 
+        toggle_val: function(x,y) {
+            var that = this;
+            var lookup_tab = {' ': '0', '0': '1', '1': ' '};
+            that.set_cell(x,y, lookup_tab[that.get_val(x,y)]);
+        },
     },
     }
 );
@@ -203,7 +211,7 @@ function populate_game(string, selector)
         _perl_range(0, puz.height-1).map(function (y) {
             return "<tr>" +
                 _perl_range(0, puz.width-1).map(function (x) {
-                    return "<td id=\"bin_puz_" + y + "_" + x +
+                    return "<td id=\"" + puz.calc_id(y,x) +
                         "\"" + (puz.get_is_const(x,y) ?
                             " class=\"const\"" : "") +
                         ">" + puz.get_val(x,y) + "</td>";
@@ -212,4 +220,21 @@ function populate_game(string, selector)
         }).join("\n") +
         "</table>"
     );
+
+    for (var y = 0 ; y < puz.height; y++) {
+        for (var x = 0 ; x < puz.width; x++) {
+            if (! puz.get_is_const(x,y)) {
+                (function (my_x, my_y) {
+                    $("#" + puz.calc_id(my_x,my_y)).click(
+                        function() {
+                            puz.toggle_val(my_x, my_y);
+                            $("#" + puz.calc_id(my_x,my_y)).html(
+                                puz.get_val(my_x, my_y)
+                            );
+                        }
+                    )
+                })(x,y);
+            }
+        }
+    }
 }
