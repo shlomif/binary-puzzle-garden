@@ -10,6 +10,7 @@
 <link rel="stylesheet" href="style.css" type="text/css" media="screen, projection" title="Normal" />
 <link rel="stylesheet" href="print.css" type="text/css" media="print" />
 <script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="joose.mini.js"></script>
 <script type="text/javascript" src="binary-puzzle.js"></script>
 <style type="text/css">
 .game, .game td, .game tr, .game img
@@ -32,5 +33,24 @@
 
 <div id="bin_puz_board_wrapper"></div>
 
+<script type="text/javascript">
+var s = "|010110   01  1|\n" +
+"|10011001010101|\n" +
+"|10100110101  0|\n" +
+"|0110011001 0 1|\n" +
+"|0101100110  01|\n" +
+"|10011011001  0|\n" +
+"|01100100110 1 |\n" +
+"| 011001101010 |\n" +
+"| 1001101 0101 |\n" +
+"|0010 1 0110101|\n" +
+"| 011001  1001 |\n" +
+"| 1001    01   |\n" +
+"|0110     0    |\n" +
+"|1001  0  1 0  |\n" +
+    "";
+
+populate_game(s, '#bin_puz_board_wrapper');
+</script>
 </body>
 </html>

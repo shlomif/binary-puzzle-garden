@@ -1,3 +1,4 @@
+"use strict";
 var N_squares = 5;
 var count_of_ons = 0;
 
@@ -102,4 +103,111 @@ function user_press_button(x, y)
     {
         alert("Congratulations! You solved the game!");
     }
+}
+
+Class('Binary_Puzzle', {
+    has: {
+        height: { is: ro, },
+        width: { is: ro, },
+        cells: { is: rw, init: function() {
+            var that = this;
+            var ret = new Array;
+            for (var y = 0 ; y < that.height; y++) {
+                var row = new Array;
+                for (var x = 0 ; x < that.width; x++) {
+                    row.push({ is_const: false, value: ' '});
+                }
+                ret.push(row);
+            }
+            return ret;
+        },
+    },
+    methods: {
+        set_cell_const: function(x, y, value) {
+            var that = this;
+            that.cells[y][x].value = value;
+            that.cells[y][x].is_const = ((value == ' ') ? false : true);
+
+            return;
+        },
+
+        get_is_const: function(x,y) {
+            var that = this;
+
+            return that.celss[y][x].is_const;
+        },
+
+        get_val: function(x,y) {
+            var that = this;
+
+            return that.celss[y][x].value;
+        },
+
+        set_cell: function(x,y, value) {
+            var that = this;
+
+            if (that.cells[y][x].is_const) {
+                alert ("Cell " + y + " , " + x + " is const.");
+                return;
+            }
+            that.cells[y][x].value = ' ';
+        },
+
+    },
+);
+
+var puz;
+
+function populate_game(string, selector)
+{
+    var lines = string.split("\n");
+    var values = [];
+    lines.forEach(function (l) {
+        var chars = l.split('');
+        if (chars.shift() != '|') {
+            alert ("Line '" + l + "' is wrong.");
+        }
+        if (chars.pop() != '|') {
+            alert ("Line '" + l + "' is wrong.");
+        }
+        if (chars.filter(function (e) { return ! e.match(/^[01 ]$/); }).length > 0) {
+            alert ("Line '" + l + "' is wrong.");
+        }
+        values.push(chars);
+    });
+    puz = new Binary_Puzzle({
+        height: values.length,
+        width: values[0].length,
+    });
+
+    for (var y = 0 ; y < puz.height; y++) {
+        for (var x = 0 ; x < puz.width; x++) {
+            puz.set_cell_const(y, x, values[y][x]);
+        }
+    }
+
+    var _perl_range = function(start, end) {
+        var ret = [];
+
+        for (var i = start; i <= end; i++) {
+            ret.push(i);
+        }
+
+        return ret;
+    };
+
+    $(selector).html(
+        "<table class=\"bin_puz\">" +
+        _perl_range(0, puz.height-1).map(function (y) {
+            return "<tr>" +
+                _perl_range(0, puz.width-1).map(function (x) {
+                    return "<td id=\"bin_puz_" + y + "_" + x +
+                        "\"" + (puz.get_is_const(x,y) ?
+                            " class=\"const\"" : "") +
+                        ">" + puz.get_val(x,y) + "</td>";
+                }).join("\n") +
+                "</tr>\n";
+        }).join("\n") +
+        "</table>"
+    );
 }
