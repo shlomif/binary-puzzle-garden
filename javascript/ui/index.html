@@ -13,16 +13,24 @@
 <script type="text/javascript" src="joose.mini.js"></script>
 <script type="text/javascript" src="binary-puzzle.js"></script>
 <style type="text/css">
-.game, .game td, .game tr, .game img
+.bin_puz, .bin_puz td, .bin_puz tr, .bin_puz img
 {
+    border: black 1px solid;
     border-collapse: collapse;
-    border-width: 0;
-    border: none;
     border-spacing: 0;
-    padding: 0;
     margin: 0;
+    font-family: Courier, Fixed;
 }
-.game img
+.bin_puz td
+{
+    color: red;
+    padding: 5px;
+}
+.bin_puz td.const
+{
+    color: black;
+}
+.bin_puz img
 {
     display: block;
 }
@@ -47,7 +55,7 @@ var s = "|010110   01  1|\n" +
 "| 011001  1001 |\n" +
 "| 1001    01   |\n" +
 "|0110     0    |\n" +
-"|1001  0  1 0  |\n" +
+"|1001  0  1 0  |" +
     "";
 
 populate_game(s, '#bin_puz_board_wrapper');

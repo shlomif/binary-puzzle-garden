@@ -121,6 +121,7 @@ Class('Binary_Puzzle', {
             }
             return ret;
         },
+        }
     },
     methods: {
         set_cell_const: function(x, y, value) {
@@ -134,13 +135,13 @@ Class('Binary_Puzzle', {
         get_is_const: function(x,y) {
             var that = this;
 
-            return that.celss[y][x].is_const;
+            return that.cells[y][x].is_const;
         },
 
         get_val: function(x,y) {
             var that = this;
 
-            return that.celss[y][x].value;
+            return that.cells[y][x].value;
         },
 
         set_cell: function(x,y, value) {
@@ -154,6 +155,7 @@ Class('Binary_Puzzle', {
         },
 
     },
+    }
 );
 
 var puz;
