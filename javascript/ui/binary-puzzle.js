@@ -212,9 +212,9 @@ function populate_game(string, selector)
             return "<tr>" +
                 _perl_range(0, puz.width-1).map(function (x) {
                     return "<td id=\"" + puz.calc_id(y,x) +
-                        "\"" + (puz.get_is_const(x,y) ?
-                            " class=\"const\"" : "") +
-                        ">" + puz.get_val(x,y) + "</td>";
+                        "\" class=\"" +
+                        (puz.get_is_const(x,y) ? "const" : "non_const") +
+                            "\">" + puz.get_val(x,y) + "</td>";
                 }).join("\n") +
                 "</tr>\n";
         }).join("\n") +
