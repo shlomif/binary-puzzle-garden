@@ -230,6 +230,10 @@ def get_14x14_very_hard_board_1__intermediate_2()
     return get_binarypuzzle_com_numbered_puzzle(:size => "14x14", :difficulty => "very_hard", :number => "1", :stage => "intermediate_2");
 end
 
+def get_14x14_very_hard_board_1__final()
+    return get_binarypuzzle_com_numbered_puzzle(:size => "14x14", :difficulty => "very_hard", :number => "1", :stage => "final");
+end
+
 describe "construct_board" do
     it "6*6 Easy board No. 1 should" do
 
@@ -943,6 +947,10 @@ describe "rudimentary_deduction" do
         board.get_cell_state(
             Binary_Puzzle_Solver::Coord.new(:x => 13, :y => 10)
         ).should == ZERO
+
+        final_board = get_14x14_very_hard_board_1__final()
+
+        compare_boards(board, final_board)
 
     end
 end
