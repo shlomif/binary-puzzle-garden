@@ -192,7 +192,7 @@ function populate_game(string, selector)
 
     for (var y = 0 ; y < puz.height; y++) {
         for (var x = 0 ; x < puz.width; x++) {
-            puz.set_cell_const(y, x, values[y][x]);
+            puz.set_cell_const(x, y, values[y][x]);
         }
     }
 
@@ -211,7 +211,7 @@ function populate_game(string, selector)
         _perl_range(0, puz.height-1).map(function (y) {
             return "<tr>" +
                 _perl_range(0, puz.width-1).map(function (x) {
-                    return "<td id=\"" + puz.calc_id(y,x) +
+                    return "<td id=\"" + puz.calc_id(x,y) +
                         "\" class=\"" +
                         (puz.get_is_const(x,y) ? "const" : "non_const") +
                             "\">" + puz.get_val(x,y) + "</td>";
