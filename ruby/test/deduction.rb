@@ -920,5 +920,29 @@ describe "rudimentary_deduction" do
         intermediate_board = get_14x14_very_hard_board_1__intermediate_2()
 
         compare_boards(board, intermediate_board)
+
+        board.try_to_solve_using(
+            :methods => [
+                :check_and_handle_sequences_in_row,
+                :check_and_handle_known_unknown_sameknown_in_row,
+                :check_and_handle_cells_of_one_value_in_row_were_all_found,
+                :check_exceeded_numbers_while_accounting_for_two_unknown_gaps,
+                :check_try_placing_last_of_certain_digit_in_row,
+                :check_try_placing_last_of_certain_digit_in_row_to_avoid_dups,
+                :check_remaining_gap_of_three_with_implicits,
+                :check_exceeded_digits_taking_large_gaps_into_account,
+            ]
+        );
+
+        board.get_cell_state(
+            Binary_Puzzle_Solver::Coord.new(:x => 13, :y => 8)
+        ).should == ZERO
+        board.get_cell_state(
+            Binary_Puzzle_Solver::Coord.new(:x => 13, :y => 13)
+        ).should == ZERO
+        board.get_cell_state(
+            Binary_Puzzle_Solver::Coord.new(:x => 13, :y => 10)
+        ).should == ZERO
+
     end
 end

@@ -345,6 +345,7 @@ module Binary_Puzzle_Solver
                 :check_try_placing_last_of_certain_digit_in_row,
                 :check_try_placing_last_of_certain_digit_in_row_to_avoid_dups,
                 :check_remaining_gap_of_three_with_implicits,
+                :check_exceeded_digits_taking_large_gaps_into_account,
             ]
 
             valid_mathods_hash = valid_methods_arr.inject({}) {
@@ -796,6 +797,7 @@ module Binary_Puzzle_Solver
                     gap_3 = gaps[3][0]
 
 
+                    # Copied - refactor
                     for idx in [0,-1] do
                         opposite_idx = (idx == 0) ? -1 : 0
                         edge_offset = (idx == 0) ? (-1) : 1
@@ -810,6 +812,72 @@ module Binary_Puzzle_Solver
                                     :dir => row.col_dim()
                                 )
                             end
+                        end
+                    end
+                end
+            end
+
+            return
+        end
+
+        def check_exceeded_digits_taking_large_gaps_into_account(params)
+            row_idx = params[:idx]
+
+            row = get_row_handle(row_idx)
+
+            gaps = row.calc_gaps()
+            summ = row.get_summary()
+
+            values_sorted = [Cell::ZERO, Cell::ONE].sort { |a,b|
+                summ.get_count(a) <=> summ.get_count(b) }
+
+            v = values_sorted[-1]
+
+            to_add = 0
+            (3 .. row.max_idx()).each do |len|
+                if gaps.has_key?(len) then
+                    to_add += gaps[len].length
+                end
+            end
+
+            if summ.get_count(v) + to_add == summ.half_limit() then
+                opposite_val = opposite_value(v)
+                (3 .. row.max_idx()).each do |len|
+                    if gaps.has_key?(len) then
+                        if (len == 3) then
+                            gaps[len].each do |gap_3|
+                                # Copied - refactor
+                                for idx in [0,-1] do
+                                    opposite_idx = (idx == 0) ? -1 : 0
+                                    edge_offset = (idx == 0) ? (-1) : 1
+                                    if (gap_3[idx] > 0 and gap_3[idx] < row.max_idx()) then
+                                        if (row.get_state(gap_3[idx]+edge_offset) \
+                                            == opposite_val) then
+                                            perform_and_append_move(
+                                                :coord => row.get_coord(gap_3[opposite_idx]),
+                                                :val => opposite_val,
+                                                :reason => \
+                                                "With gaps of 3, exceeded value cannot be at the opposite edge of the opposite value.",
+                                                :dir => row.col_dim()
+                                            )
+                                        end
+                                    end
+                                end
+                            end
+                        elsif (len == 4) then
+                            gaps[len].each do |gap|
+                                [0, -1].each do |i|
+                                    perform_and_append_move(
+                                        :coord => row.get_coord(gap[i]),
+                                        :val => opposite_val,
+                                        :reason => \
+                                        "With gaps of 4, exceeded value cannot be at edges.",
+                                        :dir => row.col_dim()
+                                    )
+                                end
+                            end
+                        else # len >= 5
+                            raise GameIntegrityException, "Too large a gap."
                         end
                     end
                 end
