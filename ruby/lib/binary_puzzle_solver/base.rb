@@ -876,6 +876,19 @@ module Binary_Puzzle_Solver
                                     )
                                 end
                             end
+                        elsif (len == 5) then
+                            gaps[len].each do |gap|
+                                o = opposite_val
+                                gap.zip([o,o,v,o,o]) do |pos_v|
+                                    perform_and_append_move(
+                                        :coord => row.get_coord(gap[pos_v[0]]),
+                                        :val => pos_v[1],
+                                        :reason => \
+                                        "With gaps of 5, exceeded value pattern must be 00100.",
+                                        :dir => row.col_dim()
+                                    )
+                                end
+                            end
                         else # len >= 5
                             raise GameIntegrityException, "Too large a gap."
                         end
