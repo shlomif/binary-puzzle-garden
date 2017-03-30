@@ -43,14 +43,14 @@ class Object
 end
 
 def compare_boards(got, expected)
-    got.max_idx(:x).should == expected.max_idx(:x)
-    got.max_idx(:y).should == expected.max_idx(:y)
+    expect(got.max_idx(:x)).to eq(expected.max_idx(:x))
+    expect(got.max_idx(:y)).to eq(expected.max_idx(:y))
 
     (0 .. got.max_idx(:y)).each do |y|
         (0 .. got.max_idx(:x)).each do |x|
             coord = Binary_Puzzle_Solver::Coord.new(:x => x, :y => y)
             begin
-            got.get_cell_state(coord).should == expected.get_cell_state(coord)
+            expect(got.get_cell_state(coord)).to eq(expected.get_cell_state(coord))
             rescue
                 puts "Wrong coord in x=#{x} y=#{y}"
                 puts "Got ==\n#{got.as_string()}\n"
@@ -251,88 +251,88 @@ describe "construct_board" do
         ZERO = Binary_Puzzle_Solver::Cell::ZERO
         UNKNOWN = Binary_Puzzle_Solver::Cell::UNKNOWN
 
-        board.get_cell_state(
+        expect(board.get_cell_state(
             Binary_Puzzle_Solver::Coord.new(:x => 0, :y => 0)
-        ).should == ONE
-        board.get_cell_state(
+        )).to eq(ONE)
+        expect(board.get_cell_state(
             Binary_Puzzle_Solver::Coord.new(:x => 3, :y => 0)
-        ).should == ZERO
-        board.get_cell_state(
+        )).to eq(ZERO)
+        expect(board.get_cell_state(
             Binary_Puzzle_Solver::Coord.new(:x => 1, :y => 0)
-        ).should == UNKNOWN
-        board.get_cell_state(
+        )).to eq(UNKNOWN)
+        expect(board.get_cell_state(
             Binary_Puzzle_Solver::Coord.new(:x => 2, :y => 1)
-        ).should == ZERO
-        board.get_cell_state(
+        )).to eq(ZERO)
+        expect(board.get_cell_state(
             Binary_Puzzle_Solver::Coord.new(:x => 5, :y => 1)
-        ).should == ONE
+        )).to eq(ONE)
 
         # Check for dimensions of the board.
-        board.limit(:y).should == 6
-        board.limit(:x).should == 6
-        board.max_idx(:y).should == 5
-        board.max_idx(:x).should == 5
+        expect(board.limit(:y)).to eq(6)
+        expect(board.limit(:x)).to eq(6)
+        expect(board.max_idx(:y)).to eq(5)
+        expect(board.max_idx(:x)).to eq(5)
 
         view = board.get_view(:rotate => false)
 
-        view.get_cell_state(
+        expect(view.get_cell_state(
             Binary_Puzzle_Solver::Coord.new(:x => 0, :y => 0)
-        ).should == ONE
-        view.get_cell_state(
+        )).to eq(ONE)
+        expect(view.get_cell_state(
             Binary_Puzzle_Solver::Coord.new(:x => 3, :y => 0)
-        ).should == ZERO
-        view.get_cell_state(
+        )).to eq(ZERO)
+        expect(view.get_cell_state(
             Binary_Puzzle_Solver::Coord.new(:x => 1, :y => 0)
-        ).should == UNKNOWN
-        view.get_cell_state(
+        )).to eq(UNKNOWN)
+        expect(view.get_cell_state(
             Binary_Puzzle_Solver::Coord.new(:x => 2, :y => 1)
-        ).should == ZERO
-        view.get_cell_state(
+        )).to eq(ZERO)
+        expect(view.get_cell_state(
             Binary_Puzzle_Solver::Coord.new(:x => 5, :y => 1)
-        ).should == ONE
+        )).to eq(ONE)
 
-        view.get_row_summary(:dim => :x, :idx => 3
-        ).get_count(ONE).should == 1
-        view.get_row_summary(:dim => :x, :idx => 3
-        ).get_count(ZERO).should == 2
-        view.get_row_summary(:dim => :x, :idx => 0
-        ).get_count(ONE).should == 1
-        view.get_row_summary(:dim => :x, :idx => 0
-        ).get_count(ZERO).should == 1
-        view.get_row_summary(:dim => :y, :idx => 1
-        ).get_count(ZERO).should == 2
-        view.get_row_summary(:dim => :y, :idx => 1
-        ).get_count(ONE).should == 1
+        expect(view.get_row_summary(:dim => :x, :idx => 3
+        ).get_count(ONE)).to eq(1)
+        expect(view.get_row_summary(:dim => :x, :idx => 3
+        ).get_count(ZERO)).to eq(2)
+        expect(view.get_row_summary(:dim => :x, :idx => 0
+        ).get_count(ONE)).to eq(1)
+        expect(view.get_row_summary(:dim => :x, :idx => 0
+        ).get_count(ZERO)).to eq(1)
+        expect(view.get_row_summary(:dim => :y, :idx => 1
+        ).get_count(ZERO)).to eq(2)
+        expect(view.get_row_summary(:dim => :y, :idx => 1
+        ).get_count(ONE)).to eq(1)
 
         # Check for dimensions of the view.
-        view.limit(:y).should == 6
-        view.limit(:x).should == 6
-        view.max_idx(:y).should == 5
-        view.max_idx(:x).should == 5
+        expect(view.limit(:y)).to eq(6)
+        expect(view.limit(:x)).to eq(6)
+        expect(view.max_idx(:y)).to eq(5)
+        expect(view.max_idx(:x)).to eq(5)
 
         rotated_view = board.get_view(:rotate => true)
 
-        rotated_view.get_cell_state(
+        expect(rotated_view.get_cell_state(
             Binary_Puzzle_Solver::Coord.new(:y => 0, :x => 0)
-        ).should == ONE
-        rotated_view.get_cell_state(
+        )).to eq(ONE)
+        expect(rotated_view.get_cell_state(
             Binary_Puzzle_Solver::Coord.new(:y => 3, :x => 0)
-        ).should == ZERO
-        rotated_view.get_cell_state(
+        )).to eq(ZERO)
+        expect(rotated_view.get_cell_state(
             Binary_Puzzle_Solver::Coord.new(:y => 1, :x => 0)
-        ).should == UNKNOWN
-        rotated_view.get_cell_state(
+        )).to eq(UNKNOWN)
+        expect(rotated_view.get_cell_state(
             Binary_Puzzle_Solver::Coord.new(:y => 2, :x => 1)
-        ).should == ZERO
-        rotated_view.get_cell_state(
+        )).to eq(ZERO)
+        expect(rotated_view.get_cell_state(
             Binary_Puzzle_Solver::Coord.new(:y => 5, :x => 1)
-        ).should == ONE
+        )).to eq(ONE)
 
         # Check for dimensions of the rotated_view.
-        rotated_view.limit(:y).should == 6
-        rotated_view.limit(:x).should == 6
-        rotated_view.max_idx(:y).should == 5
-        rotated_view.max_idx(:x).should == 5
+        expect(rotated_view.limit(:y)).to eq(6)
+        expect(rotated_view.limit(:x)).to eq(6)
+        expect(rotated_view.max_idx(:y)).to eq(5)
+        expect(rotated_view.max_idx(:x)).to eq(5)
 
     end
 end
@@ -349,14 +349,14 @@ describe "rudimentary_deduction" do
         view = board.get_view(:rotate => false)
         view.check_and_handle_sequences_in_row(:idx => 1)
 
-        board.get_cell_state(
+        expect(board.get_cell_state(
             Binary_Puzzle_Solver::Coord.new(:x => 1, :y => 1)
-        ).should == ONE
-        board.get_cell_state(
+        )).to eq(ONE)
+        expect(board.get_cell_state(
             Binary_Puzzle_Solver::Coord.new(:x => 4, :y => 1)
-        ).should == ONE
+        )).to eq(ONE)
 
-        board.num_moves_done.should == 2
+        expect(board.num_moves_done).to eq(2)
 
     end
 
@@ -367,14 +367,14 @@ describe "rudimentary_deduction" do
         view = board.get_view(:rotate => true)
         view.check_and_handle_sequences_in_row(:idx => 5)
 
-        board.get_cell_state(
+        expect(board.get_cell_state(
             Binary_Puzzle_Solver::Coord.new(:x => 5, :y => 0)
-        ).should == ZERO
-        board.get_cell_state(
+        )).to eq(ZERO)
+        expect(board.get_cell_state(
             Binary_Puzzle_Solver::Coord.new(:x => 5, :y => 3)
-        ).should == ZERO
+        )).to eq(ZERO)
 
-        board.num_moves_done.should == 2
+        expect(board.num_moves_done).to eq(2)
 
     end
 
@@ -395,7 +395,7 @@ describe "rudimentary_deduction" do
         view.check_and_handle_sequences_in_row(:idx => 5)
 
         # Checking that the moves were flushed.
-        board.num_moves_done.should == 2
+        expect(board.num_moves_done).to eq(2)
 
     end
 
@@ -410,30 +410,30 @@ describe "rudimentary_deduction" do
         view = board.get_view(:rotate => false)
         view.check_and_handle_sequences_in_row(:idx => 1)
 
-        board.get_cell_state(
+        expect(board.get_cell_state(
             Binary_Puzzle_Solver::Coord.new(:x => 1, :y => 1)
-        ).should == ONE
-        board.get_cell_state(
+        )).to eq(ONE)
+        expect(board.get_cell_state(
             Binary_Puzzle_Solver::Coord.new(:x => 4, :y => 1)
-        ).should == ONE
+        )).to eq(ONE)
 
-        board.num_moves_done.should == 2
+        expect(board.num_moves_done).to eq(2)
 
         m = board.get_new_move(0)
 
         # Move has (x=1,y=1) coordinate.
-        m.coord.x.should == 1
-        m.coord.y.should == 1
-        m.dir.should == :x
-        m.val.should == ONE
+        expect(m.coord.x).to eq(1)
+        expect(m.coord.y).to eq(1)
+        expect(m.dir).to eq(:x)
+        expect(m.val).to eq(ONE)
 
         m = board.get_new_move(1)
 
         # Move has (x=1,y=1) coordinate.
-        m.coord.x.should == 4
-        m.coord.y.should == 1
-        m.dir.should == :x
-        m.val.should == ONE
+        expect(m.coord.x).to eq(4)
+        expect(m.coord.y).to eq(1)
+        expect(m.dir).to eq(:x)
+        expect(m.val).to eq(ONE)
 
     end
 
@@ -448,19 +448,19 @@ describe "rudimentary_deduction" do
         view = board.get_view(:rotate => true)
         view.check_and_handle_known_unknown_sameknown_in_row(:idx => 1)
 
-        board.get_cell_state(
+        expect(board.get_cell_state(
             Binary_Puzzle_Solver::Coord.new(:x => 1, :y => 3)
-        ).should == ONE
+        )).to eq(ONE)
 
-        board.num_moves_done.should == 1
+        expect(board.num_moves_done).to eq(1)
 
         m = board.get_new_move(0)
 
         # Move has (x=1,y=1) coordinate.
-        m.coord.x.should == 1
-        m.coord.y.should == 3
-        m.dir.should == :y
-        m.val.should == ONE
+        expect(m.coord.x).to eq(1)
+        expect(m.coord.y).to eq(3)
+        expect(m.dir).to eq(:y)
+        expect(m.val).to eq(ONE)
 
     end
 
@@ -503,7 +503,7 @@ describe "rudimentary_deduction" do
             ]
         );
 
-        resume_board.num_iters_done.should == good_num_iters
+        expect(resume_board.num_iters_done).to eq(good_num_iters)
     end
 
     it "Solving 6*6 Easy board No. 2 should" do
@@ -528,7 +528,7 @@ describe "rudimentary_deduction" do
 
         board = get_6x6_medium_board_1__initial()
 
-        board.validate().should == :non_final
+        expect(board.validate()).to eq(:non_final)
 
         board.add_to_iters_quota(1_000_000_000);
 
@@ -565,7 +565,7 @@ describe "rudimentary_deduction" do
 
         compare_boards(board, final_board)
 
-        board.validate().should == :final
+        expect(board.validate()).to eq(:final)
     end
 
     it "Solving 8*8 Easy board No. 1 should" do
@@ -737,9 +737,9 @@ describe "rudimentary_deduction" do
             ]
         );
 
-        board.get_cell_state(
+        expect(board.get_cell_state(
             Binary_Puzzle_Solver::Coord.new(:x => 9, :y => 1)
-        ).should == ONE
+        )).to eq(ONE)
 
         final_board = get_10x10_hard_board_1__final()
 
@@ -827,12 +827,12 @@ describe "rudimentary_deduction" do
             ]
         );
 
-        board.get_cell_state(
+        expect(board.get_cell_state(
             Binary_Puzzle_Solver::Coord.new(:x => 1, :y => 3)
-        ).should == ONE
-        board.get_cell_state(
+        )).to eq(ONE)
+        expect(board.get_cell_state(
             Binary_Puzzle_Solver::Coord.new(:x => 2, :y => 3)
-        ).should == ZERO
+        )).to eq(ZERO)
 
         final_board = get_6x6_very_hard_board_1__final()
 
@@ -922,12 +922,12 @@ describe "rudimentary_deduction" do
             ]
         );
 
-        board.get_cell_state(
+        expect(board.get_cell_state(
             Binary_Puzzle_Solver::Coord.new(:x => 4, :y => 5)
-        ).should == ONE
-        board.get_cell_state(
+        )).to eq(ONE)
+        expect(board.get_cell_state(
             Binary_Puzzle_Solver::Coord.new(:x => 6, :y => 5)
-        ).should == ONE
+        )).to eq(ONE)
 
         intermediate_board = get_14x14_very_hard_board_1__intermediate_2()
 
@@ -946,15 +946,15 @@ describe "rudimentary_deduction" do
             ]
         );
 
-        board.get_cell_state(
+        expect(board.get_cell_state(
             Binary_Puzzle_Solver::Coord.new(:x => 13, :y => 8)
-        ).should == ZERO
-        board.get_cell_state(
+        )).to eq(ZERO)
+        expect(board.get_cell_state(
             Binary_Puzzle_Solver::Coord.new(:x => 13, :y => 13)
-        ).should == ZERO
-        board.get_cell_state(
+        )).to eq(ZERO)
+        expect(board.get_cell_state(
             Binary_Puzzle_Solver::Coord.new(:x => 13, :y => 10)
-        ).should == ZERO
+        )).to eq(ZERO)
 
         final_board = get_14x14_very_hard_board_1__final()
 
