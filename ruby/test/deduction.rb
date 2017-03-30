@@ -31,7 +31,7 @@
 
 require "binary_puzzle_solver.rb"
 require "rspec"
-require "pry"
+# require "pry"
 
 class Object
     def ok()
