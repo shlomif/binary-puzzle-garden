@@ -11,3 +11,8 @@ Thanks to Meir Maor for giving a talk about Scala on
 start working on this, first in Scala (which turned out to be a dead end, due
 to the fact it didn't build properly with JDK 1.7.x, which is what I had)
 and afterwards in Ruby.
+
+## Links
+
+* [Hacker News Discussion](https://news.ycombinator.com/item?id=14618239) - with comments.
+* [0hh1](http://0hh1.com/) - another interface to the game.
